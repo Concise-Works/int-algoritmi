@@ -1,0 +1,112 @@
+\usepackage[dvipsnames]{xcolor} % Required for specifying custom colors
+\usepackage[showframe=false]{geometry} % Required for adjusting page dimensions and margins
+
+% Packages for custom shapes and boxes
+\usepackage{tikz} % Required for drawing custom shapes
+\usepackage[framemethod=TikZ]{mdframed} % Required for creating the theorem, definition, exercise and corollary boxes
+\input{Configs/boxes} % This file contains the code for the boxes
+
+% Packages for math symbols and images
+\usepackage{amssymb} % Math symbols such as \mathbb
+\usepackage{amsmath} % Required for \begin{align}...\end{align}
+\usepackage{graphicx} % Required for including images
+
+% Tables
+\usepackage{multirow} % Required for creating multirow cells in tables
+\usepackage{array} % Required for creating tables
+\usepackage{colortbl} % Add this line to import the colortbl package
+\setlength{\tabcolsep}{18pt} % Default value: 6pt
+\renewcommand{\arraystretch}{1.5} % Default value: 1
+\usepackage{changepage} % Required for adjusting the width of the table
+
+% Code blocks
+\usepackage{listings} % Required for inserting code snippets
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{sql}{language=SQL,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    morekeywords={DATABASE, USE, AUTO_INCREMENT},
+}
+
+% commands
+
+% Tikz
+\tikzset{
+    pics/machine/.style={
+            code={
+                    \coordinate (-in) at ({-0.5*\pgfkeysvalueof{/tikz/machine/width}},0);
+                    \coordinate (-out) at ({0.5*\pgfkeysvalueof{/tikz/machine/width}},0);
+                    \coordinate (-north) at (0,{0.5*\pgfkeysvalueof{/tikz/machine/height}});
+                    \coordinate (-south) at (0,{-0.5*\pgfkeysvalueof{/tikz/machine/height}});
+                    \path[/tikz/machine/filling]
+                    ([shift={(-0.75em,0.5em)}]-in)
+                    -- ([shift={(0,0.25em)}]-in)
+                    -- ([shift={(0,-5pt)}]-north -| -in)
+                    arc[start angle=180, end angle=90, radius=5pt]
+                    -- ([shift={(-5pt,0)}]-north -| -out)
+                    arc[start angle=90, end angle=0, radius=5pt]
+                    -- ([shift={(0,0.25em)}]-out)
+                    -- ([shift={(0.75em,0.5em)}]-out)
+                    -- ([shift={(0.75em,-0.5em)}]-out)
+                    -- ([shift={(0,-0.25em)}]-out)
+                    -- ([shift={(0,5pt)}]-south -| -out)
+                    arc[start angle=360, end angle=270, radius=5pt]
+                    -- ([shift={(5pt,0)}]-south -| -in)
+                    arc[start angle=270, end angle=180, radius=5pt]
+                    -- ([shift={(0,-0.25em)}]-in)
+                    -- ([shift={(-0.75em,-0.5em)}]-in)
+                    -- cycle;
+                    \draw[/tikz/machine/border]
+                    ([shift={(-0.75em,0.5em)}]-in)
+                    -- ([shift={(0,0.25em)}]-in)
+                    -- ([shift={(0,-5pt)}]-north -| -in)
+                    arc[start angle=180, end angle=90, radius=5pt]
+                    -- ([shift={(-5pt,0)}]-north -| -out)
+                    arc[start angle=90, end angle=0, radius=5pt]
+                    -- ([shift={(0,0.25em)}]-out)
+                    -- ([shift={(0.75em,0.5em)}]-out);
+                    \draw[/tikz/machine/border]
+                    ([shift={(0.75em,-0.5em)}]-out)
+                    -- ([shift={(0,-0.25em)}]-out)
+                    -- ([shift={(0,5pt)}]-south -| -out)
+                    arc[start angle=360, end angle=270, radius=5pt]
+                    -- ([shift={(5pt,0)}]-south -| -in)
+                    arc[start angle=270, end angle=180, radius=5pt]
+                    -- ([shift={(0,-0.25em)}]-in)
+                    -- ([shift={(-0.75em,-0.5em)}]-in);
+                    \node (-node) at (0,0) {#1};
+                }
+        },
+    machine/width/.initial={10.5em},
+    machine/height/.initial={5em},
+    machine/filling/.style={
+            left color=cyan!50!OliveGreen!25,
+            right color=cyan!50!OliveGreen!25,
+            middle color=cyan!50!OliveGreen!10
+        },
+    machine/border/.style={
+            OliveGreen!50!cyan
+        }
+}
+
+\newcommand{\Div}{%
+    \par\noindent\hrulefill\par
+}
