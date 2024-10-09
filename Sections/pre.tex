@@ -1,0 +1,148 @@
+\begin{theo}[Common Derivatives]
+
+    \begin{tabular}{ll}
+        Power Rule: For \( n \neq 0 \) & \( \frac{d}{dx}(x^n) = n \cdot x^{n-1} \) . E.g., \( \frac{d}{dx}(x^2) = 2x \) \\
+        Derivative of a Constant: & \( \frac{d}{dx}(c) = 0 \) . E.g., \( \frac{d}{dx}(5) = 0 \) \\
+        Derivative of \( \ln \): & \( \frac{d}{dx}(\ln x) = \frac{1}{x} \) \\
+        Derivative of \( \log_a \): & \( \frac{d}{dx}(\log_a x) = \frac{1}{x \ln a} \) \\
+        Derivative of \( \sqrt{x} \): & \( \frac{d}{dx}(\sqrt{x}) = \frac{1}{2\sqrt{x}} \) \\
+        Derivative of function \( f(x) \): & \( \frac{d}{dx}(x) = 1 \) . E.g., \( \frac{d}{dx}(5x) = 5 \) \\
+        Derivative of the Exponential Function: & \( \frac{d}{dx}(e^x) = e^x \) \\
+    \end{tabular}
+\end{theo}
+
+\begin{theo}[L'Hopital's Rule]
+
+    \label{thm:lhospital}
+    
+    Let \(f(x)\) and \(g(x)\) be two functions. If \(\lim_{x\to a}f(x) = 0\) and \(\lim_{x\to a}g(x) = 0\), or\\ \(\lim_{x\to a}f(x) = \pm\infty\) and \(\lim_{x\to a}g(x) = \pm\infty\), then:
+    \[\lim_{x\to a}\dfrac{f(x)}{g(x)} = \lim_{x\to a}\dfrac{f'(x)}{g'(x)}\]
+    Where \(f'(x)\) and \(g'(x)\) are the derivatives of \(f(x)\) and \(g(x)\) respectively.
+\end{theo}
+
+\newpage 
+
+\begin{theo}[Exponents Rules]
+
+    \label{thm:addexp}
+    
+    For $a,b,x\in\mathbb{R}$, we have:
+    \Large
+    \[x^a\cdot x^b = x^{a+b} \text{ and } (x^a)^b=x^{ab}\]
+    \[x^a\cdot y^a = (xy)^a \text{ and } \dfrac{x^a}{y^a} = \left(\dfrac{x}{y}\right)^a\]
+    \normalsize
+
+\end{theo}
+
+\begin{Note}
+    \textbf{Note:} The $:=$ symbol is short for ``is defined as.'' For example, $x:=y$ means $x$ is defined as $y$.
+\end{Note}
+
+\begin{Def}[Logarithm]
+
+    Let $a,x\in\mathbb{R}$, $a>0$, $a\neq 1$. Logarithm $x$ base $a$ is denoted as $\log_a(x)$, and is defined as:
+    \Large
+    \[\log_a(x)=y\Longleftrightarrow a^y=x\]
+    \normalsize
+    Meaning $log$ is inverse of the exponential function, i.e., $\log_a(x):=(a^y)^{-1}$.
+\end{Def}
+\begin{Tip}
+    To remember the order $log_a(x)=a^y$, think, ``base $a$,'' as $a$ is the base of our $log$ and $y$.
+\end{Tip}
+
+\begin{theo}[Logarithm Rules]
+
+    \label{thm:logrules}
+    
+    For $a,b,x\in\mathbb{R}$, we have:
+    \Large
+    \[\log_a(x)+\log_a(y)=\log_a(xy) \text{ and } \log_a(x)-\log_a(y)=\log_a\left(\dfrac{x}{y}\right)\]
+    \[\log_a(x^b)=b\log_a(x) \text{ and } \log_a(x)=\dfrac{\log_b(x)}{\log_b(a)}\]
+    \normalsize
+\end{theo}
+
+\newpage
+
+\begin{Def}[Permutations]
+    
+        Let $n$ be a positive integer. Then the number of distinct ways to arrange $n$ objects in order is it's \textit{ permutation}. Denoted:
+        \Large
+        \[n!:=n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot2\cdot1\]
+        \normalsize
+\end{Def}
+
+\begin{Def}[Combinations]
+
+    Let $n$ and $k$ be positive integers. Where order doesn't matter, the number of distinct ways to choose $k$ objects from $n$ objects is it's \textit{combination}. Denoted:
+    \Large
+    \[\binom{n}{k}:=\dfrac{n!}{k!(n-k)!}\]
+    \normalsize
+
+    \noindent
+    Where $\binom{n}{k}$ is read as ``$n$ choose $k$.'', and $\binom{\cdot}{\cdot}$, the \textit{binomial coefficient}.
+    
+\end{Def}
+
+\begin{theo}[Binomial Theorem]
+
+    \label{thm:binomial}
+    
+    Let \(a\) and \(b\) be real numbers, and \(n\) a non-negative integer. The binomial expansion of \((a + b)^n\) is given by:
+    
+    \[
+    (a + b)^n = \sum_{k=0}^{n} \binom{n}{k} a^{n-k} b^k
+    \]
+    which expands explicitly as:
+    
+    \[
+    (a + b)^n = \binom{n}{0} a^n + \binom{n}{1} a^{n-1}b + \binom{n}{2} a^{n-2}b^2 + \cdots + \binom{n}{n-1} a b^{n-1} + \binom{n}{n} b^n
+    \]
+    \noindent
+    where \(\binom{n}{k}\) represents the binomial coefficient, defined as:
+    \Large
+    \[
+    \binom{n}{k} = \frac{n!}{k!(n-k)!}
+    \]
+    \normalsize
+    for \(0 \leq k \leq n\).
+
+\end{theo}
+
+\newpage
+
+\begin{theo}[Binomial Expansion of \(2^n\)]
+
+    \label{thm:binomial_2n}
+
+    For any non-negative integer \(n\), the following identity holds:
+    
+    \[
+    2^n = \sum_{i=0}^{n} \binom{n}{i} = (1 + 1)^n.
+    \]
+
+\end{theo}
+
+\begin{Def}[Well-Ordering Principle]
+
+    \label{def:well_ordering_principle}
+
+    Every non-empty set of positive integers has a least element.
+\end{Def}
+
+\begin{Def}[``Without Loss of Generality'']
+
+    \label{def:wlog}
+
+    A phrase that indicates that the proceeding logic also applies to the other cases.
+    i.e., For a proposition not to lose the assumption that it works other ways as well.
+
+\end{Def}
+\begin{theo}[Pigeon Hole Principle]
+
+    Let \( n, m \in \mathbb{Z}^+ \) with \( n < m \). Then if we distribute \( m \) pigeons into \( n \) pigeonholes, there must be at least one pigeonhole with more than one pigeon.
+\end{theo}
+
+
+
+
+
