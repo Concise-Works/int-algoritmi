@@ -1,0 +1,63 @@
+\section{Asymptotic Notation}
+
+Asymptotic analysis is a method for describing the limiting behavior of functions as inputs grow infinitely.
+
+\begin{Def}[Asymptotic]
+    
+    Let \(f(n)\) and \(g(n)\) be two functions. As \(n\) grows, if \(f(n)\) grows closer to \(g(n)\) never reaching, we say that \underline{``$f(n)$ is \textbf{asymptotic} to \(g(n)\).''}\\
+    
+    \noindent
+    We call the point where \(f(n)\) starts behaving similarly to \(g(n)\) the \underline{\textbf{threshold} \(n_0\).} After this point $n_0$, \(f(n)\) follows the same general path as \(g(n)\).
+\end{Def}
+
+
+\begin{Def}[Big-O: (Upper Bound)]
+
+    Let $f$ and $g$ be functions. $f(n)$ our function of interest, and $g(n)$
+    our function of comparison.\\
+
+    \noindent
+    Then we say $f(n)=O(g(n))$, ``$f(n)$ \textbf{is big-O of} $g(n)$,'' if $f(n)$ 
+    grows no faster than $g(n)$, up to a constant factor.
+    Let $n_0$ be our asymptotic threshold. Then, for all $n\geq n_0$,
+    \large
+    \[0\leq f(n) \leq c\cdot g(n)\]
+    \normalsize
+    
+    \noindent
+    Represented as the ratio $\dfrac{f(n)}{g(n)}\leq c$ for all $n\geq n_0$. Analytically we write,
+    \Large
+    \[\lim_{n\to\infty}\dfrac{f(n)}{g(n)}< \infty\]
+    \normalsize
+    \noindent
+    Meaning, as we chase infinity, our numerator grows slower than the denominator, bounded, never reaching infinity. 
+\end{Def}
+
+\newpage
+
+\noindent
+\textbf{Examples:}
+\begin{enumerate}
+    \item[(i.)] $3n^2+2n+1=O(n^2)$
+    \item[(ii.)] $n^{100}=O(2^n)$
+    \item[(iii.)] $\log n=O(\sqrt{n})$ 
+\end{enumerate}
+
+\begin{Proof}[$\log n = O(\sqrt{n})$]
+We setup our ratio:
+\[\lim_{n\to\infty}\dfrac{\log n}{\sqrt{n}}\]
+\noindent
+Since $\log n$ and $\sqrt{n}$ grow infinitely without bound, they are of indeterminate form $\frac{\infty}{\infty}$. We apply L'Hopital's Rule, which states
+that taking derivatives of the numerator and denominator will yield an evaluateable limit:
+\Large
+\[\lim_{n\to\infty}\dfrac{\log n}{\sqrt{n}}=\lim_{n\to\infty}\dfrac{\frac{d}{dn}\log n}{\frac{d}{dn}\sqrt{n}}\]
+\normalsize
+\noindent
+Yielding derivatives, $\log n = \frac{1}{n}$ and $\sqrt{n}=\frac{1}{2\sqrt{n}}$. We substitute these back into our limit:
+\Large
+\[\lim_{n\to\infty}\dfrac{\frac{1}{n}}{\frac{1}{2\sqrt{n}}}=\lim_{n\to\infty}\dfrac{2\sqrt{n}}{n}=\lim_{n\to\infty}\dfrac{2}{\sqrt{n}}=0\]
+\normalsize
+\noindent
+Our limit approaches 0, as we have a constant factor in the numerator, and a growing denominator. Thus, $\log n = O(\sqrt{n})$, as $0<\infty$.
+\end{Proof}
+

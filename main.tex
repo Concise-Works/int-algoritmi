@@ -1,13 +1,16 @@
-\documentclass{article}
+\documentclass{memoir}
 \input{Configs/configs}
 
-\title{Algorithms}
-\author{Christian Rudder}
+\title{Introduction to Number Theory and Algorithms}
+\author{Christian J. Rudder}
 \date{August 2024}
+
+\chapterstyle{dash} % Chatper style
 
 \begin{document}
 
 \maketitle
+\setcounter{tocdepth}{2}
 
 \tableofcontents
 
@@ -22,6 +25,9 @@
 \vfill
 \newpage
 
-hello
+\chapter*{Prerequisites}
+\input{Sections/pre}
+\chapter{Asympotic Notation}
+\input{Sections/asymp}
 
 \end{document}

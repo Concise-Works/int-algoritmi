@@ -1,6 +1,6 @@
 \usepackage[dvipsnames]{xcolor} % Required for specifying custom colors
 \usepackage[showframe=false]{geometry} % Required for adjusting page dimensions and margins
-
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
 % Packages for custom shapes and boxes
 \usepackage{tikz} % Required for drawing custom shapes
 \usepackage[framemethod=TikZ]{mdframed} % Required for creating the theorem, definition, exercise and corollary boxes
@@ -9,6 +9,10 @@
 % Packages for math symbols and images
 \usepackage{amssymb} % Math symbols such as \mathbb
 \usepackage{amsmath} % Required for \begin{align}...\end{align}
+\DeclareMathOperator{\lcm}{lcm}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \usepackage{graphicx} % Required for including images
 
 % Tables
@@ -19,33 +23,15 @@
 \renewcommand{\arraystretch}{1.5} % Default value: 1
 \usepackage{changepage} % Required for adjusting the width of the table
 
-% Code blocks
-\usepackage{listings} % Required for inserting code snippets
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
-\lstdefinestyle{sql}{language=SQL,
-    backgroundcolor=\color{backcolour},
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,
-    breaklines=true,
-    captionpos=b,
-    keepspaces=true,
-    numbers=left,
-    numbersep=5pt,
-    showspaces=false,
-    showstringspaces=false,
-    showtabs=false,
-    tabsize=2,
-    morekeywords={DATABASE, USE, AUTO_INCREMENT},
-}
+% Package for customizing captions
+\usepackage{caption}  % Required for customizing captions
 
+\usepackage{setspace} % Required for adjusting line spacing
+\usepackage{etoolbox} % For \ifstrempty
+
+
+\usepackage{algorithm2e}
 % commands
 
 % Tikz
@@ -107,6 +93,29 @@
         }
 }
 
+% Color Text
+\definecolor{BlueText}{RGB}{0,51,204}
+\newcommand{\bt}[1]{\textcolor{BlueText}{#1}}
+
 \newcommand{\Div}{%
     \par\noindent\hrulefill\par
 }
+
+\renewcommand{\clearforchapter}{ \newpage}
+
+\makeatletter
+\NewCommandCopy\@@pmod\pmod
+\DeclareRobustCommand{\pmod}{\@ifstar\@pmods\@@pmod}
+\def\@pmods#1{\mkern4mu({\operator@font mod}\mkern 6mu#1)}
+\makeatother
+
+
+
+\newcolumntype{g}{>{\columncolor{OliveGreen!10}}c}
+
+\newcommand{\qres}{(\mathbb{Z}_p^*)^2}
+\newcommand{\ires}{(\mathbb{Z}_n^*)^2}
+\newcommand{\pres}{\mathbb{Z}_p^*}
+\newcommand{\peres}{\mathbb{Z}_{p^{e}}^*}
+\newcommand{\gres}{\mathbb{Z}_n}
+\newcommand{\Z}{\mathbb{Z}}
