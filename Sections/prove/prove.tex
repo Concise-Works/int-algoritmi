@@ -1,0 +1,224 @@
+\section{Stable Matchings}
+
+In proving the correctness of algorithms we introduce the stable matching problem.
+A combinatorial optimization problem that seeks to find the best possible matching between two sets of elements.
+When we say ``best possible matching,'' we mean that the matching is stable, and that there is no other matching that is better.
+
+\begin{Def}[Stable Matching]
+
+    A matching is \textbf{stable} if there is no pair of elements that prefer each other over their current match.
+\end{Def}
+
+\begin{Def}[Unstable Matching]
+
+    A matching is \textbf{unstable} if there is a pair of elements that prefer each other over their current match.
+\end{Def}
+
+\noindent
+I.e., in verifying a stable matching, if any one pair of elements switch partners, the matching is unstable. If no pairs swap, the matching is stable.
+
+\subsection*{Scenario: \textit{Lunch Time}}
+Imagine it's lunch time at elementary school, and a group of kids $E=$\{Ena, Eda\} swap lunches with $A=$\{Ava, Adi\}.
+They each have a list of preferences from favorite to least favorite. We visualize the following preferences:
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{E's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd  \\  \hline   
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ena}    & Ava     & Adi    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Eda}      & Ava     & Adi   \\ \hline
+    \end{tabular}
+    \quad
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{A's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd\\ \hline
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ava}   & Ena     & Eda    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Adi}     & Ena   & Eda \\ \hline
+    \end{tabular}
+\end{table}
+
+\newpage
+
+\noindent
+Observe the following matchings:\\
+
+\noindent
+(1.) Pairs, Ena-Ava, Eda-Adi swapped lunches.
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{E's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd  \\  \hline   
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ena}    & \cellcolor{purple!15}Ava     & Adi    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Eda}      & Ava     & \cellcolor{purple!15}Adi   \\ \hline
+    \end{tabular}
+    \quad
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{A's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd\\ \hline
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ava}   & \cellcolor{purple!15}Ena     & Eda    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Adi}     & Ena   & \cellcolor{purple!15} Eda \\ \hline
+    \end{tabular}
+\end{table}
+
+\noindent
+ This matching is \textbf{stable}. Ena and Ava prefer each other's lunches. Eda will ask Ava to trade, and Ava will refuse because she prefers Ena's lunch. Adi does the same with Ena, but they also refuse.
+\begin{Tip}
+    If it's hard to keep track who is who, here's a possible order to read in: Ena got Ava, and Ena is their 1st choice. 
+    Eda got Adi, and Eda is their 2nd choice.
+\end{Tip}
+\noindent
+Changing the preference tables,\\
+
+\noindent
+(2.) Pairs, Ena-Adi, Eda-Ava swapped lunches.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{E's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd  \\  \hline   
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ena}    & Ava     & \cellcolor{purple!15}Adi    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Eda}      & Adi     & \cellcolor{purple!15}Ava   \\ \hline
+    \end{tabular}
+    \quad
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{A's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd\\ \hline
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ava}   & Ena     & Eda \cellcolor{purple!15}    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Adi}     & Ena  \cellcolor{purple!15} &  Eda \\ \hline
+    \end{tabular}
+\end{table}
+
+\noindent
+This matching is $\textbf{unstable}$. Ena and Ava would rather eat each other's lunches.\\
+\begin{Def}[Unique Stable Matching]
+
+    A matching is \textbf{uniquely stable} if between two sets of elements, there is only one possible stable matching.
+\end{Def}
+\noindent
+\textbf{Example:} If everyone uniquely prefers each other, there is only one stable matching.\\
+\newpage 
+\noindent
+(3.) Pairs, Ena-Ava, Eda-Adi swapped lunches.
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{E's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd  \\  \hline   
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ena}    & \cellcolor{purple!15}Ava     & Adi    \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Eda}      & \cellcolor{purple!15}Adi     & Ava   \\ \hline
+    \end{tabular}
+    \quad
+    \begin{tabular}{c|c|c|}
+    \multicolumn{3}{c}{\textbf{A's Preference List}} \\ \cline{2-3}
+    \cline{2-3}
+    \rowcolor{OliveGreen!10} 
+    \cellcolor{white}           & 1st       & 2nd\\ \hline
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Ava}   & Ena \cellcolor{purple!15}     & Eda     \\
+    \multicolumn{1}{|>{\columncolor{OliveGreen!10}}c|}{Adi}     & Eda  \cellcolor{purple!15} &  Ena \\ \hline
+    \end{tabular}
+\end{table}
+
+\noindent
+This matching is a \textbf{unique stable matching}. If rather Ena-Adi and Eda-Ava (2nd-choice parings), then both pairs would end up swapping to their 1st-choice.
+
+\section{Gale-Shapley Algorithm}
+
+\noindent
+We will now introduce the Gale-Shapley algorithm, for which we will prove its correctness, time complexity, and space complexity.
+
+\begin{theo}[Gale-Shapley Algorithm]
+
+    The \textbf{Gale-Shapley algorithm} is a method for finding a stable matching between two sets of elements. It is also known as the \textbf{Deferred Acceptance Algorithm}.\\
+
+    \noindent
+\textbf{Algorithm:}
+    Given sets $E={e_1,\dots,e_n}$ and $A={a_1,\dots,a_n}$. Then find a stable matching:
+    \begin{enumerate}
+        \item [(i.)] Each $e_i\in E$ proposes to their most preferred $a_j$.
+        \item [(ii.)] For each $a_j\in A$:
+        \begin{enumerate}
+            \item [(a.)] If $a_j$ is free, they accept the proposal.
+            \item [(b.)] If $a_j$ is already matched, $a_j$ either accepts or rejects. If $a_j$ accepts, the previous match is broken.
+        \end{enumerate}
+    \end{enumerate}
+    \noindent
+    Each $e_i$ continues to propose to their next most preferred $a_j$ until all $e_i$ are matched.\\
+
+    \noindent
+    \textbf{Claims:}
+    \begin{enumerate}
+        \item At least one stable matching is guaranteed.
+        \item Unless the table is unique, the proposing will always get their best choice unless it conflicts with another proposer.
+    \end{enumerate}
+\end{theo}
+\noindent
+First we will prove the correctness, then implement the algorithm and analyze its time and space complexity.
+
+\newpage
+
+\begin{Proof}[Gale-Shapley Algorithm]
+
+    \textbf{Claim 1:} Suppose, for sake of contradiction, that some $a_j \in A$ is not matched upon termination of the algorithm.
+    Then some $e_i \in E$ is also not matched assuming $|E| = |A|$. Then $e_i$ must have not proposed to $a_j$, contradicting
+    that $e_i$ proposed to all elements of $A$. Thus, the program only terminates when all $e_i$ are matched.\\
+
+    \noindent
+    \textbf{Claim 2:} Suppose $E$ proposes to $A$ with unique first choices. Then all $a_i\in A$ must accept their first proposal.
+    Now suppose $e_i,e_j\in E$ have a conflicting choice $a_i$. Then $a_i$ gets their preference only in that case. 
+    
+\end{Proof}
+\begin{Func}[Gale-Shapley Algorithm - \texttt{GS(E,A)}]
+    Finds a stable matching between two sets of elements:
+
+    \vspace{.5em}
+    \noindent
+    \textbf{Input:} Two sets, $E$ and $A$, of equal size.\\
+    \textbf{Output:} A stable matching between $E$ and $A$.\\
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{\KwRet{Matching $M$}}
+        \Fn{\texttt{GS(E,A)}}{
+            $M \gets \emptyset$\;
+            \While{there is some unmatched element in $E$}{
+                $e \gets$ next unmatched element in $E$\;
+                $a \gets$ next avalaible preferred choice of $e$\;
+                \If{$a$ is not yet matched}{
+                    match $e$ and $a$\;
+                    add the pair $(e, a)$ to $M$\;
+                }
+                \Else{
+                    \If{$a$ prefers $e$ over their current match}{
+                        match $e$ and $a$, replacing the current match\;
+                        update $M$ accordingly\;
+                    }
+                }
+            }
+            \KwRet{$M$}\;
+        }
+    \end{algorithm}
+
+    \noindent
+    \textbf{Time Complexity:} $O(n^2)$ time, where $n$ is the number of elements in $E$ and $A$. Worst-case,
+    each element in $E$ proposes to each element in $A$, i.e., $n\cdot n$ combinations to check.\\
+
+    \noindent
+    \textbf{Space Complexity:} $O(n^2)$ space, where we store $|E|\cdot|A|=n\cdot n$ pairs.
+\end{Func}
+
