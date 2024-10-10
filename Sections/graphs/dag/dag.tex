@@ -2,6 +2,7 @@
 Graphs may represent a variety of relationships, such as dependencies between tasks or the flow of information. 
 
 \begin{Def}[Directed-Acyclic Graph (DAG)]
+    
     A \textbf{directed-acyclic graph} is a directed graph with no cycles.
 \end{Def}
 
@@ -31,6 +32,7 @@ For each node to be processed its \textbf{dependencies} or parents must be proce
 Another possible ordering of $[1,2,3,4,5,6,7]$ is $[5, 6,1,2,3,4,7]$, as $5\rightarrow 6$ is independent.
 
 \begin{theo}[Topological Sort]
+    
     Given a DAG, a topological ordering can be found.
 \end{theo}
 \begin{figure}[h]
