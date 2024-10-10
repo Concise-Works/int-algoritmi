@@ -76,17 +76,71 @@ Node $a$ has a degree of 3, and node $c$ has a degree of 4.\\
 
 \begin{Def}[Connectivity]
 
-    A graph is \textbf{connected} if there is a path between every pair of vertices. 
-    A graph is \textbf{disconnected} if there are two vertices with no path between them.
+    A graph is \textbf{connected} if there is a path between every pair of vertices.\\
+    A graph is \textbf{disconnected} if there are two vertices with no path between them.\\
+    \underline{Connected graphs of $n$ nodes have at least $n-1$ edges.}
 \end{Def}
-\textbf{Example:} In Figure (\ref{fig:con_graph}), shows connected and disconnected graphs:\\
 \begin{figure}[h]
     \begin{center}
       \includegraphics[height=1.8in]{./Sections/graphs/con_graph.png}
     \end{center}
      \caption{A connected graph $a\leftrightarrow c \leftrightarrow d \leftrightarrow e$  and disconnected graph.}\label{fig:con_graph}
   \end{figure}
+
+  \newpage
+  \begin{Def}[Adjacency Matrix]
+      
+      An \textbf{adjacency matrix} is an $n\times n$ matrix where such that $A[i][j] = 1$ if there is an edge between nodes $i$ and $j$.
+
+  \end{Def}
+
   
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[height=1.5in]{./Sections/graphs/adj_matrix.png}
+  \end{center}
+   \caption{An adjacency matrix where the path $4\leftrightarrow2$ is highlighted ($A[2][4]$ or $A[4][2]$)}\label{fig:adj_matrix}
+\end{figure}
+\begin{theo}[Properties of Adjacency Matrix]
+
+  The following properties hold for adjacency matrices:
+    \begin{itemize}
+        \item An undirected graph is symmetric about the diagonal.
+        \item A directed graph is not symmetric about.
+        \item A weighted graph has the weight of the edge instead of binary.
+    \end{itemize}
+    \noindent
+    \textbf{Space Complexity:} $\Theta (n^2)$; \textbf{Time Complexities:}\\
+    \textbf{Check edges $A[i][j]$:} $\Theta (1)$; \textbf{List neighbors $A[i]$}: $\Theta(n)$; \textbf{List all edges:} $\Theta(n^2)$.
+\end{theo}
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[height=1.5in]{./Sections/graphs/adj_matrix_dir.png}
+  \end{center}
+   \caption{An adjacency matrix for a directed graph with path $4\leftrightarrow2$ highlighted ($A[2][4]$ and $A[4][2]$).}\label{fig:adj_matri_dir}
+\end{figure}
+
+\newpage
+\begin{Def}[Adjacency List]
+
+    An \textbf{adjacency list} is a list of keys where each key has a list of neighbors.\\
+
+    \noindent
+    Often taking form as a dictionary or hash-table:\\
+    \textbf{Space Complexity:} $\Theta (n+m)$ for $n$ nodes and $m$ total edges; \textbf{Time Complexities:}\\
+    \textbf{Check key:} $\Theta (1)$; \textbf{List neighbors:} $\Theta(\text{|outdegrees| of key})$; \textbf{List all edges:} $\Theta(n+m)$;
+    \textbf{Insert edge:} $\Theta(1)$.
+\end{Def}
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[height=1.5in]{./Sections/graphs/adj_list.png}
+  \end{center}
+   \caption{An adjacency list of a directed graph, $c$ highlighted with no outdegrees.}\label{fig:adj_list}
+\end{figure}
+
+
+
 
 
 
