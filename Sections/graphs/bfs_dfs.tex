@@ -207,7 +207,7 @@ We analyze the time and space complexity in the below Figure (\ref{fig:bfs_q_ana
                         \texttt{DFS-Visit($v$)}\;
                     }
                 }
-                $u$.state $\gets$ \texttt{returned}\;
+                $u$.state $\gets$ \texttt{finished}\;
                 time $\gets$ time + 1\;
                 $u.f \gets$ time\; // record finishing time\;
             }
@@ -216,4 +216,51 @@ We analyze the time and space complexity in the below Figure (\ref{fig:bfs_q_ana
         \noindent
         \textbf{Time and Space Complexity:} $O(n+m)$ where $n$ is the number of vertices and $m$ the number of edges.
     \end{Func}
+
+    \newpage
+
+    \begin{Proof}[DFS Correctness]
+
+        \textbf{Case 1:} When $s$ is discovered, there is a path of unvisited vertices from $s$ to $y$. We use induction on the length $L$ of the unvisited path from $x$ to $y$.
+        \begin{itemize}
+            \item \textbf{Base case:} There is an edge $(x, y)$, and $y$ is unvisited.
+            \item \textbf{Induction hypothesis:} Assume that the claim is true for all nodes reachable via $k$ unvisited nodes.
+            \item \textbf{Induction step:}
+            \begin{itemize}
+                \item Consider $u$ reachable via $k + 1$ unvisited nodes.
+                \item Let $z$ be the last node on the path before $y$, and $z$ is discovered from $x$ (by I.H.).
+                \item The edge $(z, y)$ will be explored from $x$, ensuring that $y$ is eventually visited.
+            \end{itemize}
+        \end{itemize}
+        \noindent
+        Thus, DFS-Visit($x$) explores all nodes reachable from $x$ through a path of unvisited nodes, as required.
+        \end{Proof}
+
+\begin{figure}[h]
+    \begin{center}
+      \includegraphics[height=3.5in]{./Sections/graphs/dfs.png}
+    \end{center}
+     \caption{A graph showing our $d$ discovered and $f$ finished times, denoted in pairs $(f,d)$.}\label{fig:dfs}
+  \end{figure}
+
+  \newpage
+  \begin{theo}[DFS and Cycles]
+
+    Let DFS run on graph $G$, then:
+    \[
+\left( G \text{ has a cycle} \right) \iff \left( \text{DFS run reveals \textcolor{red}{back edges}} \right)
+\]
+
+  \end{theo}
+  \begin{Proof}[Proof of Cycles and Back Edges]
+    \textbf{Proving} $\left( G \text{ has a cycle} \right) \Longleftarrow \left( \text{DFS run reveals \textcolor{red}{back edges}} \right)$: Every back edge creates a cycle.\\
+    \textbf{Proving} $\left( G \text{ has a cycle} \right) \Longrightarrow \left( \text{DFS run reveals \textcolor{red}{back edges}} \right)$ Suppose $G$ has a cycle:
+    \begin{itemize}
+        \item Let $u_1$ be the first discovered vertex in the cycle, and let $u_k$ be its predecessor in the cycle.
+        \item $u_k$ will be discovered while exploring $u_1$.
+        \item The edge $(u_k, u_1)$ will be a back edge.
+    \end{itemize}
+    \end{Proof}
+    
+   
     
