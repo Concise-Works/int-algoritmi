@@ -65,10 +65,13 @@
 
 \begin{Def}[Permutations]
     
-        Let $n$ be a positive integer. Then the number of distinct ways to arrange $n$ objects in order is it's \textit{ permutation}. Denoted:
+        Let $n\in\mathbb{Z^+}$. Then the number of distinct ways to arrange $n$ objects in order is it's \textit{ permutation}. Denoted:
+        $n!:=n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot2\cdot1$.
+         When we choose $r$ objects from $n$ objects, it's Denoted:
         \Large
-        \[n!:=n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot2\cdot1\]
+        \[^nP_r:=\dfrac{n!}{(n-r)!}\]
         \normalsize
+        Where $P(n,r)$ is read as ``$n$ permute $r$.''
 \end{Def}
 
 \begin{Def}[Combinations]
