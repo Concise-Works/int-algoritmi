@@ -213,16 +213,16 @@ We see in Figure (\ref{fig:cut_example}) that $G'=\{a\}$ and our cut-set are edg
 \end{theo}
 \noindent
 Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,b,c)$, yielding an even cut-set.
-
-\begin{theo}[Cut Property]
-
-    Given a graph $G$ and a cut-set $C$ with only one edge $e$, then $e$ is in the MST. As an MST must contain every node, the cut-set must be included to reach the sub-graph.
-\end{theo}
 \begin{theo}[Cycle Property]
     
-        In a graph with a cycle, the edge with the largest weight in that cycle is not in the MST.
-        As taking an edge from a cycle does not disconnect the graph, the largest edge is not necessary.
+    In a graph with a cycle, the edge with the largest weight in that cycle is not in the MST.
+    As taking an edge from a cycle does not disconnect the graph, the largest edge is not necessary.
 \end{theo}
+\begin{theo}[Cut Property]
+
+    Given a graph $G$ and a cut-set $C$, where $e$ is the lightest-node in $C$; $e$ must be in the MST. Reasoning, suppose $e\notin G$ and $G$ is a MST. Then adding $e$ creates a cycle. By the cycle property, $e$ must replace the heaviest edge in the cycle.
+\end{theo}
+
 
 \newpage
 \noindent
@@ -286,12 +286,12 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
 
     Given a connected graph $G$ with $n$ nodes and $m$ edges,
     \begin{enumerate}
-        \item [(i.)] initialize a visited nodes list $V$ and a queue $Q$.
-        \item [(ii.)] start at an arbitrary node $s$, adding $s$ to $V$.
-        \item [(iii.)] add all reachable edges to $Q$, pick the smallest edge and add it to $V$.
+        \item [(i.)] Initialize an MST $T$, and a priority queue $Q$, to track next shortest path.
+        \item [(ii.)] Start at an arbitrary node $s$, adding its children to the queue.
+        \item [(iii.)] extract the next item in $Q$ to $T$. Continue to add $e\in Q:e\notin T$. 
     \end{enumerate}
     \noindent
-    Every time a node is visited, it increases the scope of what is reachable each iteration. We add the smallest reachable edge that isn't visited until all nodes are visited.
+    Every new node visited, increases the scope of what is reachable each iteration. We add the smallest reachable edge that isn't visited until all nodes are visited.
 \end{theo}
 
 \vspace{-1.6em}
@@ -389,16 +389,63 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
 $$
 \begin{matrix}
 &\text{Round 1}&\text{Round 2}&\text{Round 3}&\text{Round 4}&\text{Round 5}&\text{Round 6}&\text{Round 7}&\text{Round 8}\\
-  Q&[b,c,g]&[c,g]&[e,d,g]   &[d,g',f,d',g] &[g',f,d',g]&[f,h,d',g] &[h,d',g]&[d',g]\\
+  Q&[b,c,g]&[c,g,c']&[e,d,g,c']   &[d,g',f,d',g,c'] &[g',f,d',g,c']&[f,d',g,c',h] &[d',g,c',h]&[d',g,c']\\
 \end{matrix}
 $$
     
-        \caption{Illustrating Prim's Algorithm run on Figure (\ref{fig:mst_example}).}
+        \caption{Prim's Algorithm traveling in the order $a\to b \to c \to e \to d \to g \to f \to h$.}
         \label{fig:prim_example}
     \end{figure}
 \noindent
-The rounds depict a min-heap $Q$, when the smallest edge is processed, it adds any new reachable edges to the queue. Where $g'$ and $d'$ are other found paths to $g$ and $d$. We start with 
-$a$ already processed, showing reachable items $b,c,g$.
+The rounds depict a min-heap $Q$, when the smallest edge is processed, it adds any new reachable edges. Where $c',g'$, and $d'$, are other found paths to $c,g,d$. We start with 
+$a$ already processed, showing $b,c,g$. Despite $h$ being at the end of the queue, it is the only edge left not visited.
 
 
+\newpage
+\begin{Tip}
+    Live Demo of Prim's Algorithm \url{https://www.youtube.com/watch?v=cplfcGZmX7I}. Note this version uses a visited list to check whether to process a node.
+\end{Tip}
+
+\begin{Func}[Prim's Algorithm - \texttt{PALG()}]
+    \textbf{Input:} A connected, undirected graph \( G\) of $V$ nodes. With weights \( w(u, v) \), and $u,v\in V$.\\
+    \textbf{Output:} Minimum Spanning Tree (MST) formed by edges \( \{(v, \texttt{parent}[v])\} \)\\
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \label{algo:prim}
+        $Q<weight, node>$; \tcp {Min-heap of <key, data>}
+        $V.forEach$(($v$) => $\{Q[v]\gets \infty\}$); \tcp{for each $v\in V$ set it's weight to $\infty$}
+        $Q[V_0]\gets 0$; \tcp{Picking arbitrary node $V_0$, pushing it to the top of $Q$}
+        $T$; \tcp{Hashtable where $T[u]$ is the parent $v$ of $u$}
+        
+        \vspace{.5em}
+        \While{\( Q \neq \emptyset \)}{
+            $ u \gets Q.Extract() $\;
+
+            \vspace{.5em}
+            \ForEach{\(v \in G[u] \)}{
+                $inQ\gets Q.Search(v)$; \tcp{return node if found in $Q$}
+                \tcp{If $v\in Q$ and our its weight is lighter}
+                
+                \vspace{.5em}
+                \If{inQ $\&\&$ $(w(u,v)<Q[v])$}
+                {
+                    $Q[v]\gets w(u,v)$\;
+                    $Q.Update()$\;
+                    $T[v]\gets u$\;
+                }
+
+            }
+            
+            % \For{each \( v \in G[u] \)}{
+            %     \If{\( v \notin V \text{ and } w(u, v) < \texttt{key}[v] \)}{
+            %         \( \texttt{key}[v] \gets w(u, v) \)\;
+            %         \( \texttt{parent}[v] \gets u \)\;
+            %         \( Q.\texttt{Decrease-Key}(v, \texttt{key}[v]) \)\;
+            %     }
+            % }
+        }
+        \KwRet{$T$}
+    \end{algorithm}
+\end{Func}
 

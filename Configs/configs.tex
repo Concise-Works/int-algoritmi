@@ -33,6 +33,7 @@
 \usepackage{subcaption} % for subfigures
 
 \usepackage[linesnumbered]{algorithm2e}
+\usepackage{algpseudocode}
 % commands
 
 % Tikz
@@ -120,3 +121,7 @@
 \newcommand{\peres}{\mathbb{Z}_{p^{e}}^*}
 \newcommand{\gres}{\mathbb{Z}_n}
 \newcommand{\Z}{\mathbb{Z}}
+
+
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}

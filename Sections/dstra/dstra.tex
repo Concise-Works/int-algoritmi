@@ -60,9 +60,8 @@ To visualize our proof consider paths the following diagram:
 
 \noindent
 Since $u\to y$ and $x\to y$ are at the same exact point of exit, i.e., say $s\to v\cong s\to y$, then to go from $y\to v$ must take some additional step.
-Therefore, $s\to y\to v$ is longer.\\
-\textbf{Proof Example:} Let $s\to y:= 3$ and $s\to v:= 3$, and all steps take $1$.
-Then $s\to y\to v = 4$, while $s\to v = 3$. Therefore $s\to v$ is the shortest path.
+Therefore, $s\to y\to v$ is longer. \textbf{E.g:} Let $s\to y:= 3$ and $s\to v:= 3$, and all steps take $1$.
+Then $s\to y\to v = 4$, while $s\to v = 3$. Therefore $s\to v$ is the shortest path.\\
 
 \noindent
 \textbf{Dijkstra Example (i):} To emphasize the BFS nature of Dijkstra's algorithm:
@@ -130,10 +129,11 @@ Then $s\to y\to v = 4$, while $s\to v = 3$. Therefore $s\to v$ is the shortest p
      \caption{A weighted graph with shortest paths.}\label{fig:dstra_ex1}
 \end{figure}
 
-\vspace{-1em}
+\vspace{-.5em}
 \noindent
 Where iterations and the queue look like:
 
+\vspace{-1em}
 $$\begin{matrix} \text{Iteration Init}&\text{from 1} & \text{from 2} & \text{from 6}&\text{from 3}&\text{from 5}\\ 1:0&1:0&1:0&1:0&1:0&1:0\\ 2:\infty&\textcolor{red}{2:2}&2:2&2:2&2:2&2:2\\ 3:\infty&3:\infty&\textcolor{red}{3:12}&3:12&3:12&3:12\\ 4:\infty&4:\infty&4:\infty&4:\infty&\textcolor{red}{4:22}&\textcolor{red}{4:14}\\ 5:\infty&5:\infty&5:\infty&\textcolor{red}{5:12}&5:12&5:12\\ 6:\infty&\textcolor{red}{6:10}&6:10&6:10&6:10&6:10\\ \end{matrix} $$
 $$\begin{matrix} \text{Queue Init}&\text{from 1} & \text{from 2} & \text{from 6}&\text{from 3}&\text{from 5}\\ [1]&[2,6]&[6,3]&[3,5]&[5,4]&[4] \end{matrix}$$
 
@@ -196,10 +196,10 @@ impossible to yield any shorter of a path $3$ as anything beyond $4$ must be lar
         \SetAlgoLined
         \SetKwProg{Fn}{Function}{:}{\KwRet{$d, parents$}}
         \Fn{\texttt{Dijkstra($G, s$)}}{
-            $\pi \gets \{\}$\tcp*{hash table, current best list for $v$}
-            $d \gets \{\}$\tcp*{hash table, distance of $v$}
-            $parents \gets \{\}$\tcp*{parents in shortest path tree}
-            $Q \gets \text{PQ()}$\tcp*{priority queue to track minimum $\pi$}
+            $\pi \gets \{\}$\tcp{hash table, current best list for $v$}
+            $d \gets \{\}$\tcp{hash table, distance of $v$}
+            $parents \gets \{\}$\tcp{parents in shortest path tree}
+            $Q \gets \text{PQ()}$\tcp{priority queue to track minimum $\pi$}
 
             $\pi[s] \gets 0$\;
             $Q.\texttt{INSERT}(\langle 0, s \rangle)$\;
