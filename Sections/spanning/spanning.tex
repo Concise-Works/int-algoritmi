@@ -284,7 +284,7 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
 \vspace{-1em}
 \begin{theo}[Prim's Algorithm]
 
-    Given a connected graph $G$ with $n$ nodes and $m$ edges,
+    Given a connected graph $G$ with $n$ nodes and $m$ edges, we produce the MST via:
     \begin{enumerate}
         \item [(i.)] Initialize an MST table $T$, and a priority queue $Q$ with each $n$ of weight $\infty$.
         \item [(ii.)] Start a round with an arbitrary node $s$, evaluating children nodes $v$.
@@ -397,7 +397,7 @@ points to $v$ node in $Q$. Once we update $R[v]$, we tell the $Q$ to sort the ne
 
 \noindent
 To check if a node has been visited before, doesn't matter in our case, as we update our solution $T$ with 
-a better solution once it is found. If one wanted to, they could use $T$'s entries as a visited list. If entries are
+a better solution once it is found. We additionally discard the lightest node each round to avoid infinite loops. If one wanted to, they could use $T$'s entries as a visited list. If entries are
 undefined upon access, then they have not been visited.\\
 
 \begin{figure}[h]
@@ -415,6 +415,142 @@ undefined upon access, then they have not been visited.\\
         \label{fig:prim_example}
     \end{figure}
 
+
+
 \noindent
+The above diagram shows Prim's algorithm each round, pick the lightest edge at the top of the heap, check its degrees which have not been, 
+update weights, re-balance the heap, and repeat. The algorithm will terminate when all nodes have been picked from the heap.\\ 
+
+\newpage
+\subsection{Union-Find Data Structure}
+\begin{Def}[Union-Find Data Structure]
+
+    A \textbf{Union-Find} data structure is a data structure that keeps track of a set of elements partitioned into multiple disjoint subsets. 
+    It supports two useful operations: \textbf{Union:} Merge two subsets into a single subset. \textbf{Find:} Determine which subset a particular element is in.
+\end{Def}
+
+\noindent
+We \textit{could} simply use a hash-table to keep track of the parent of each node, which gives us\\ 
+\textbf{Find O(1); However, Union is $\mathbf{O(n)}$}, as we would have to update every node to its new parent. Given a large set of $n$ nodes, with $m$ edges in a hash-table, to find and union all $n$ nodes
+results in \textbf{$\mathbf{O(n^2+m)}$}, as for every $n$ we find, we make $n$ updates, where our finds accumulate to the number of total edge connections.\\
+
+\noindent
+\textbf{Scenario - \textit{Follow The Leader:}}
+Say you have $n$ people playing rock-paper-scissors. If $n_i$ beats $n_j$, then $n_j$ follows $n_i$. This 
+creates large sets of people following a leader. When leader $n_k$ beats $n_i$, $n_i$ follows $n_k$ with $n_i$'s followers tagging along.\\
+
+\noindent
+Say we are trying to figure out which component $n_x$ is in. We ask $n_x$, ``who is your leader,'' they say $n_i$, then $n_i$ says $n_k$, and $n_k$ replies, ``I am the leader.'' 
+Therefore $n_x$ is in group $n_k$.
+\begin{Def}[Forest]
+
+    A \textbf{forest} is a collection of disjoint trees, where each tree has a \textbf{representative} $r$ node. We may
+    union-join trees $A$ and $B$ by making $A$ be $B$'s representative. Where $b\in B$ still point to $B$ and $B$ points to $A$.
+
+    \underline{Trees $S$ with smaller heights should be added to bigger trees $B$.} As height indicates the number of nodes who report to a leader.
+    By adding the bigger tree to the smaller, we increase the time complexity of finding leaf nodes.
+
+\end{Def}
+
+\vspace{-3.5em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=2.3in]{./Sections/spanning/forest-diag.png}
     
+    \vspace{-2em}
+    \caption{Showing disjoint nodes Union-Join with each other.}
+    \label{fig:forest_diag}
+\end{figure}
+
+\noindent
+In the above figure nodes we see in step two we have two disjoint trees, with leaders $a$ and $c$. In step three we join $a$ and $c$ by making $c$ point to $a$. Finally $e$ points to $a$ to join the group.\\
+
+\noindent
+We see a lot of redundancy, with nodes $n_x$ reporting to leaders $n_i$, until a final leader $n_k$ is reached. We may improve this overtime by setting $n_x$'s leader to $n_k$ directly.\\
+
+\vspace{-3em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=2.3in]{./Sections/spanning/path_compression.png}
+    
+    \vspace{-1em}
+    \caption{Showing a forest compress over multiple finds.}
+    \label{fig:path_compression}
+\end{figure}
+\noindent
+Given the figure above, we first ask $g$ who their leader is, they report to $c$ who reports to $a$. We now set $g$'s leader to $a$. We do the same for $f$ and $d$. Now once
+we ask $g,f,$ or $d$ who their leader is, they report to $a$ directly without the need to traverse the tree. This is called \textbf{Path Compression}.
+\begin{Def}[Path Compression]
+
+    \textbf{Path Compression} is a technique used in Union-Find data structures to flatten the structure of the tree. 
+    When we find the leader of a node, we set the node's parent to the leader directly. This reduces the time complexity of find operations for subsequent queries.
+\end{Def}
+
+We compare all of our techniques in the following table:
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{12pt}
+\begin{tabular}{|>{\columncolor{OliveGreen!10}}p{5.5cm}|p{1.5cm}|c|p{3cm}|}
+    \hline
+    \rowcolor{OliveGreen!20}
+    \textbf{Operation\textbackslash Implementation} & \textbf{Simple Array} & \textbf{Forest} & \textbf{Forest with Path \enspace Compression} \\
+    \hline
+    \textbf{Find (worst-case)} & $\Theta(1)$ & $\Theta(\log n)$ & $\Theta(\log n)$ \\
+    \hline
+    \textbf{Union of sets A, B (worst-case)} & $\Theta(n)$ & $\Theta(1)$ & $\Theta(1)$ \\
+    \hline
+    \textbf{Total for $n$ unions and $n$ finds, starting from singletons} & $\Theta(n^2)$ & $\Theta(n \log n)$ & $\Theta(m\cdot \alpha(m,n))$ \\
+    \hline
+    \end{tabular}
+    \caption{Time complexity comparison of different implementations.}
+    \end{table}
+\newpage
+\noindent 
+
+\begin{theo}[Kruskal's Algorithm]
+
+    Given a connected graph $G$ of $V$ nodes and $E$ edges, we produce the MST via:
+    \begin{enumerate}
+        \item [(i.)] Sort all $e\in E$ by weight in ascending order into an array $W$.
+        \item [(ii.)] Initialize a forest $T$ with all $V$ nodes as singletons.
+        \item [(iii.)] For each $e\in W$ Union-find its endpoints $u$ and $v$.
+        \begin{itemize}
+            \item If $u$ and $v$ are in different sets, Union-join $u$ and $v$.
+        \end{itemize}
+    \end{enumerate}
+    \noindent
+    Return the resulting forest $T$ as the MST.
+\end{theo}
+
+\begin{Note}
+    \textbf{Note:} If $u$ and $v$ were in the same set, Union-joining them would create a cycle, which is not a tree, and violates the cycle property of MSTs.
+\end{Note}
+
+\begin{Func}[Prim's Algorithm - \texttt{PALG()}]
+    \textbf{Input:} a connected graph $G$ of $V$ nodes and $E$ edges.\\
+    \textbf{Output:} Minimum Spanning Tree (MST) formed by forest Union-find data structure.\\
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \label{algo:prim}
+        $W[\ ]\gets Sort(E)$; \tcp {Sort all edges by weight}
+        $T\gets new \ UnionFind(G)$; \tcp{Initialize forest with all $G$'s nodes by themselves}
+        \ForEach{$e\in W$ and $T.size() < V-1$}{
+            $u,v\gets e$; \tcp{Get the endpoints of $e$}
+            \If{$T.Find(u)\neq T.Find(v)$}{
+                $T.Union(u,v)$; \tcp{Union-join $u$ and $v$}
+            }
+        }
+        \KwRet{$T$}
+    \end{algorithm}
+    \noindent\rule{\textwidth}{0.4pt}
+
+    \noindent
+    \textbf{Correctness:} By sorting all edges by 
+    \textbf{Time Complexity:} Line 7 we at worse check every adjacency list, $O(n+m)$ where $m$ is the number of edges of $n$ nodes. 
+    Say lines 8-9 takes $O(1)$ time to find $v\in Q$ via hash-table. Line 10 takes $O(\log n)$ time to re-balance the heap.
+    Thus, the time complexity is $O((n+m)\log n)$.\\
+    \textbf{Space Complexity:} $O(n+m)$, as we at most store the data items a hash-table representation of our graph.
+\end{Func}
 
