@@ -287,7 +287,7 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
     Given a connected graph $G$ with $n$ nodes and $m$ edges,
     \begin{enumerate}
         \item [(i.)] Initialize an MST table $T$, and a priority queue $Q$ with each $n$ of weight $\infty$.
-        \item [(ii.)] Start a round with an arbitrary node $s$, adding children nodes $v$ to the queue.
+        \item [(ii.)] Start a round with an arbitrary node $s$, evaluating children nodes $v$.
         \item [(iii.)] Update each $T[v]=s$, if $w(s,v)$ is lighter than $T[v]$.
         \item [(iv.)] End this round, take the top node in $Q$ as the new $s$, repeat (ii.)-(iv.) until all $n\in T$.
     \end{enumerate}
