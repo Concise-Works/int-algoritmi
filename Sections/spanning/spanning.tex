@@ -390,7 +390,7 @@ The above example shows how our parent table will result with the following tabl
 \end{Func}
 
 \noindent
-Line, 8 to 10 may require additional implementation. Since min-heaps only store weights, one 
+\underline{\textbf{Note:} Lines 8 to 10 may require additional implementation.} Since basic min-heaps only store weights, one 
 might need a direct reference to each member in the heap. Say a reference hash-table $R$, where $R[v]$ 
 points to $v$ node in $Q$. Once we update $R[v]$, we tell the $Q$ to sort the new $v$ weight. We say
 ``$DecreaseKey$'' as our new weight should be lighter, bubbling up the heap.\\
