@@ -1,5 +1,5 @@
 \newpage 
-\section{Minimum and Maximum spanning trees}
+\section{Spanning trees}
 
 \begin{Def}[Spanning Tree]
 
@@ -205,7 +205,7 @@ Next we revisit cycles and introduce \textbf{cuts}, which will have important im
     \label{fig:cut_example}
 \end{figure}
 \noindent
-We see in Figure (\ref{fig:cut_example}) that $G'=\{a\}$ and our cut-set are edge-pairs $(a,b)$ and $(a,c)$. Where the edge $(d,c)$ is not included as the cut $G'$ does not intersect it.
+We see in Figure (\ref{fig:cut_example}) that $G'=\{a\}$ and our cut-set contains edge-pairs $(a,b)$ and $(a,c)$. Where the edge $(d,c)$ is not included as the cut $G'$ does not intersect it.
 \begin{theo}[Cycles \& Cut-sets]
 
     If a cut-set crosses a cycle, then the cut-set intersects an even number of edges in the cycle.\\
@@ -220,13 +220,13 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
 \end{theo}
 \begin{theo}[Cut Property]
 
-    Given a graph $G$ and a cut-set $C$, where $e$ is the lightest-node in $C$; $e$ must be in the MST. Reasoning, suppose $e\notin G$ and $G$ is a MST. Then adding $e$ creates a cycle. By the cycle property, $e$ must replace the heaviest edge in the cycle.
+    Given a graph $G$ and a cut-set $C$, where $e$ is the lightest-edge in $C$; $e$ must be in the MST. As if $e\notin G$ and $G$ is an MST, adding $e$ creates a cycle. By the cycle property, $e$ must replace the heaviest edge in that cycle.
 \end{theo}
 
 
 \newpage
 \noindent
-\textbf{Example:} Given the graph in Figure (\ref{fig:cut_property}), point $e$ must be in the MST to connect all nodes (cut property). Say edge $f$ is the largest in its cycle, then $f$ is not in the MST (cycle property).
+\textbf{Example:} Given the below Figure (\ref{fig:cut_property}), point $e$ must be in the MST to connect all nodes (cut property). Say dash-edge $f$ is the largest in its cycle, then $f$ is not in the MST (cycle property).
 \begin{figure}[h]
     \centering
     
@@ -286,129 +286,61 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
 
     Given a connected graph $G$ with $n$ nodes and $m$ edges,
     \begin{enumerate}
-        \item [(i.)] Initialize an MST $T$, and a priority queue $Q$, to track next shortest path.
-        \item [(ii.)] Start at an arbitrary node $s$, adding its children to the queue.
-        \item [(iii.)] extract the next item in $Q$ to $T$. Continue to add $e\in Q:e\notin T$. 
+        \item [(i.)] Initialize an MST table $T$, and a priority queue $Q$ with each $n$ of weight $\infty$.
+        \item [(ii.)] Start a round with an arbitrary node $s$, adding children nodes $v$ to the queue.
+        \item [(iii.)] Update each $T[v]=s$, if $w(s,v)$ is lighter than $T[v]$.
+        \item [(iv.)] End this round, take the top node in $Q$ as the new $s$, repeat (ii.)-(iv.) until all $n\in T$.
     \end{enumerate}
     \noindent
-    Every new node visited, increases the scope of what is reachable each iteration. We add the smallest reachable edge that isn't visited until all nodes are visited.
+
 \end{theo}
 
-\vspace{-1.6em}
+\vspace{-2em}
 \begin{figure}[h]
     \centering
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
 
-    \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+        \vspace{2em}
+      
+        \includegraphics[height=2in]{./Sections/spanning/prims_order.png}
+        
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
 
-    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-    %uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
-    
-    %Shape: Polygon Curved [id:ds6563304745370669] 
-    \draw  [color={rgb, 255:red, 205; green, 205; blue, 205 }  ,draw opacity=1 ][fill={rgb, 255:red, 168; green, 168; blue, 255 }  ,fill opacity=1 ] (137.13,69.53) .. controls (150.85,42.48) and (180.42,22.58) .. (218.42,25.58) .. controls (256.42,28.58) and (295.42,45.58) .. (283.42,82.58) .. controls (271.42,119.58) and (282.42,153.58) .. (267.42,172.58) .. controls (252.42,191.58) and (170.95,194.75) .. (150.95,164.75) .. controls (130.95,134.75) and (123.42,96.58) .. (137.13,69.53) -- cycle ;
-    %Shape: Polygon Curved [id:ds406083365791448] 
-    \draw  [color={rgb, 255:red, 209; green, 209; blue, 209 }  ,draw opacity=1 ][fill={rgb, 255:red, 254; green, 182; blue, 183 }  ,fill opacity=1 ] (252.91,82.57) .. controls (272.91,72.57) and (333.24,72.94) .. (333.91,98.94) .. controls (334.58,124.94) and (286.86,109.8) .. (284.19,117.8) .. controls (281.52,125.8) and (289.67,143.62) .. (280.74,152.4) .. controls (271.81,161.18) and (260.07,159.47) .. (250.58,154.28) .. controls (241.08,149.08) and (232.91,92.57) .. (252.91,82.57) -- cycle ;
-    %Shape: Polygon Curved [id:ds08498875492980329] 
-    \draw  [color={rgb, 255:red, 205; green, 205; blue, 205 }  ,draw opacity=1 ][fill={rgb, 255:red, 246; green, 255; blue, 168 }  ,fill opacity=1 ] (146.95,72.75) .. controls (166.95,62.75) and (235.67,103.21) .. (263.67,109.21) .. controls (291.67,115.21) and (285.08,136.77) .. (284.67,150.71) .. controls (284.25,164.65) and (280.81,176.28) .. (263.17,182.71) .. controls (245.52,189.13) and (165.95,193.75) .. (145.95,163.75) .. controls (125.95,133.75) and (126.95,82.75) .. (146.95,72.75) -- cycle ;
-    %Shape: Circle [id:dp568780076724116] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (153.33,133.21) .. controls (153.33,125.36) and (159.69,119) .. (167.54,119) .. controls (175.39,119) and (181.75,125.36) .. (181.75,133.21) .. controls (181.75,141.06) and (175.39,147.42) .. (167.54,147.42) .. controls (159.69,147.42) and (153.33,141.06) .. (153.33,133.21) -- cycle ;
-    %Shape: Circle [id:dp7914553664260531] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (153.33,95.21) .. controls (153.33,87.36) and (159.69,81) .. (167.54,81) .. controls (175.39,81) and (181.75,87.36) .. (181.75,95.21) .. controls (181.75,103.06) and (175.39,109.42) .. (167.54,109.42) .. controls (159.69,109.42) and (153.33,103.06) .. (153.33,95.21) -- cycle ;
-    %Shape: Circle [id:dp7953974720286947] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (207.33,165.21) .. controls (207.33,157.36) and (213.69,151) .. (221.54,151) .. controls (229.39,151) and (235.75,157.36) .. (235.75,165.21) .. controls (235.75,173.06) and (229.39,179.42) .. (221.54,179.42) .. controls (213.69,179.42) and (207.33,173.06) .. (207.33,165.21) -- cycle ;
-    %Shape: Circle [id:dp40057174866892964] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (207.33,47.21) .. controls (207.33,39.36) and (213.69,33) .. (221.54,33) .. controls (229.39,33) and (235.75,39.36) .. (235.75,47.21) .. controls (235.75,55.06) and (229.39,61.42) .. (221.54,61.42) .. controls (213.69,61.42) and (207.33,55.06) .. (207.33,47.21) -- cycle ;
-    %Shape: Circle [id:dp5134764269788589] 
-    \draw   (300.33,135.21) .. controls (300.33,127.36) and (306.69,121) .. (314.54,121) .. controls (322.39,121) and (328.75,127.36) .. (328.75,135.21) .. controls (328.75,143.06) and (322.39,149.42) .. (314.54,149.42) .. controls (306.69,149.42) and (300.33,143.06) .. (300.33,135.21) -- cycle ;
-    %Straight Lines [id:da9424240830752081] 
-    \draw    (167.54,119) -- (167.54,109.42) ;
-    %Straight Lines [id:da7046996930730605] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (207.33,47.21) -- (167.54,81) ;
-    %Straight Lines [id:da04733277324993379] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (207.33,165.21) -- (167.54,147.42) ;
-    %Straight Lines [id:da9967352806980369] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (181.75,95.21) -- (253.33,95.21) ;
-    %Straight Lines [id:da6358728333633994] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (177.75,104.82) -- (221.54,151) ;
-    %Straight Lines [id:da015123223754591963] 
-    \draw    (235.75,165.21) -- (268.54,149.42) ;
-    %Straight Lines [id:da4293979691898747] 
-    \draw    (267.54,81) -- (235.75,47.21) ;
-    %Shape: Circle [id:dp3603164813006102] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (253.33,135.21) .. controls (253.33,127.36) and (259.69,121) .. (267.54,121) .. controls (275.39,121) and (281.75,127.36) .. (281.75,135.21) .. controls (281.75,143.06) and (275.39,149.42) .. (267.54,149.42) .. controls (259.69,149.42) and (253.33,143.06) .. (253.33,135.21) -- cycle ;
-    %Shape: Circle [id:dp3675590603809442] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (300.33,97.21) .. controls (300.33,89.36) and (306.69,83) .. (314.54,83) .. controls (322.39,83) and (328.75,89.36) .. (328.75,97.21) .. controls (328.75,105.06) and (322.39,111.42) .. (314.54,111.42) .. controls (306.69,111.42) and (300.33,105.06) .. (300.33,97.21) -- cycle ;
-    %Shape: Circle [id:dp9952073709751413] 
-    \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (253.33,95.21) .. controls (253.33,87.36) and (259.69,81) .. (267.54,81) .. controls (275.39,81) and (281.75,87.36) .. (281.75,95.21) .. controls (281.75,103.06) and (275.39,109.42) .. (267.54,109.42) .. controls (259.69,109.42) and (253.33,103.06) .. (253.33,95.21) -- cycle ;
-    %Straight Lines [id:da6292578981537825] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (300.33,135.21) -- (281.75,135.21) ;
-    %Straight Lines [id:da9722146506379686] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (267.54,121) -- (267.54,109.42) ;
-    %Straight Lines [id:da6203827344525027] 
-    \draw [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][line width=1.5]    (300.33,97.21) -- (281.75,97.21) ;
-    
-    % Text Node
-    \draw (180.33,46) node [anchor=north west][inner sep=0.75pt]   [align=left] {6};
-    % Text Node
-    \draw (214.33,79) node [anchor=north west][inner sep=0.75pt]   [align=left] {5};
-    % Text Node
-    \draw (204.33,117) node [anchor=north west][inner sep=0.75pt]   [align=left] {8};
-    % Text Node
-    \draw (142.33,106) node [anchor=north west][inner sep=0.75pt]   [align=left] {14};
-    % Text Node
-    \draw (178.33,161) node [anchor=north west][inner sep=0.75pt]   [align=left] {3};
-    % Text Node
-    \draw (254.15,160.31) node [anchor=north west][inner sep=0.75pt]   [align=left] {10};
-    % Text Node
-    \draw (281.15,117.31) node [anchor=north west][inner sep=0.75pt]   [align=left] {15};
-    % Text Node
-    \draw (288.15,79.31) node [anchor=north west][inner sep=0.75pt]   [align=left] {9};
-    % Text Node
-    \draw (258.15,51.31) node [anchor=north west][inner sep=0.75pt]   [align=left] {12};
-    % Text Node
-    \draw (217.33,157) node [anchor=north west][inner sep=0.75pt]   [align=left] {a};
-    % Text Node
-    \draw (164.33,124) node [anchor=north west][inner sep=0.75pt]   [align=left] {b};
-    % Text Node
-    \draw (163.33,86) node [anchor=north west][inner sep=0.75pt]   [align=left] {c};
-    % Text Node
-    \draw (217.33,37) node [anchor=north west][inner sep=0.75pt]   [align=left] {d};
-    % Text Node
-    \draw (262.33,86) node [anchor=north west][inner sep=0.75pt]   [align=left] {e};
-    % Text Node
-    \draw (310.33,89) node [anchor=north west][inner sep=0.75pt]   [align=left] {f};
-    % Text Node
-    \draw (264.33,126) node [anchor=north west][inner sep=0.75pt]   [align=left] {g};
-    % Text Node
-    \draw (311.33,127) node [anchor=north west][inner sep=0.75pt]   [align=left] {h};
-    % Text Node
-    \draw (248.6,107) node [anchor=north west][inner sep=0.75pt]   [align=left] {7};
-    
-    
-    \end{tikzpicture}
-    \vspace{-1em}
-$$
-\begin{matrix}
-&\text{Round 1}&\text{Round 2}&\text{Round 3}&\text{Round 4}&\text{Round 5}&\text{Round 6}&\text{Round 7}&\text{Round 8}\\
-  Q&[b,c,g]&[c,g,c']&[e,d,g,c']   &[d,g',f,d',g,c'] &[g',f,d',g,c']&[f,d',g,c',h] &[d',g,c',h]&[d',g,c']\\
-\end{matrix}
-$$
-    
-        \caption{Prim's Algorithm traveling in the order $a\to b \to c \to e \to d \to g \to f \to h$.}
-        \label{fig:prim_example}
-    \end{figure}
-\noindent
-The rounds depict a min-heap $Q$, when the smallest edge is processed, it adds any new reachable edges. Where $c',g'$, and $d'$, are other found paths to $c,g,d$. We start with 
-$a$ already processed, showing $b,c,g$. Despite $h$ being at the end of the queue, it is the only edge left not visited.
+        \vspace{2em}
+        $$ \begin{matrix} 
+        \text{NODE} & \text{PARENT}\\
+        a: & \text{NULL}\\ 
+        b: & a\\ 
+        c: & a\\ 
+        d: & c\\ 
+        e: & c\\ 
+        g: & e\\ 
+        f: & e\\ 
+        h: & g 
+        \end{matrix} $$
+    \end{minipage}
+    \hfill 
+    \caption{Prim's Alg. in the order $a\to b \to c \to e \to d \to g \to f \to h$, and a parent table.}
+    \label{fig:prim_example}
+\end{figure}
 
+\noindent 
+The above example shows how our parent table will result with the following table. Next we will discuss in detail how one could approach implementation.
 
 \newpage
 \begin{Tip}
-    Live Demo of Prim's Algorithm \url{https://www.youtube.com/watch?v=cplfcGZmX7I}. Note this version uses a visited list to check whether to process a node.
+    Live Demo of Prim's Algorithm \url{https://www.youtube.com/watch?v=cplfcGZmX7I}.
 \end{Tip}
 
+\vspace{-1em}
 \begin{Func}[Prim's Algorithm - \texttt{PALG()}]
     \textbf{Input:} A connected, undirected graph \( G\) of $V$ nodes. With weights \( w(u, v) \), and $u,v\in V$.\\
-    \textbf{Output:} Minimum Spanning Tree (MST) formed by edges \( \{(v, \texttt{parent}[v])\} \)\\
+    \textbf{Output:} Minimum Spanning Tree (MST) formed by edges \( T<(v, \texttt{parent}[v])> \)\\
 
     \vspace{-.5em}
     \begin{algorithm}[H]
@@ -424,14 +356,13 @@ $a$ already processed, showing $b,c,g$. Despite $h$ being at the end of the queu
 
             \vspace{.5em}
             \ForEach{\(v \in G[u] \)}{
-                $inQ\gets Q.Search(v)$; \tcp{return node if found in $Q$}
-                \tcp{If $v\in Q$ and our its weight is lighter}
-                
+                    
                 \vspace{.5em}
-                \If{inQ $\&\&$ $(w(u,v)<Q[v])$}
+                \If{$v\in Q$ $\&\&$ $(w(u,v)<Q[v])$}
                 {
+                    \tcp{Edit the node's weight in $Q$ then re-balance.}
                     $Q[v]\gets w(u,v)$\;
-                    $Q.Update()$\;
+                    $Q.DecreaseKey(v)$\;
                     $T[v]\gets u$\;
                 }
 
@@ -447,5 +378,43 @@ $a$ already processed, showing $b,c,g$. Despite $h$ being at the end of the queu
         }
         \KwRet{$T$}
     \end{algorithm}
+    \noindent\rule{\textwidth}{0.4pt}
+
+    \noindent
+    \textbf{Correctness:} We run a form of BFS on the graph, which touches every node. BFS creates levels each iteration, resulting in a cut-set with an end-point $G[u]$.
+    By the cut property, any new lightest edge $w(u,v)$ is added or replaces a heavier edge in $T$. Thus forming an MST as all nodes are considered.\\
+    \textbf{Time Complexity:} Line 7 we at worse check every adjacency list, $O(n+m)$ where $m$ is the number of edges of $n$ nodes. 
+    Say lines 8-9 takes $O(1)$ time to find $v\in Q$ via hash-table. Line 10 takes $O(\log n)$ time to re-balance the heap.
+    Thus, the time complexity is $O((n+m)\log n)$.\\
+    \textbf{Space Complexity:} $O(n+m)$, as we at most store the data items a hash-table representation of our graph.
 \end{Func}
+
+\noindent
+Line, 8 to 10 may require additional implementation. Since min-heaps only store weights, one 
+might need a direct reference to each member in the heap. Say a reference hash-table $R$, where $R[v]$ 
+points to $v$ node in $Q$. Once we update $R[v]$, we tell the $Q$ to sort the new $v$ weight. We say
+``$DecreaseKey$'' as our new weight should be lighter, bubbling up the heap.\\
+
+\noindent
+To check if a node has been visited before, doesn't matter in our case, as we update our solution $T$ with 
+a better solution once it is found. If one wanted to, they could use $T$'s entries as a visited list. If entries are
+undefined upon access, then they have not been visited.\\
+
+\begin{figure}[h]
+\centering
+
+        
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+
+
+\includegraphics[height=5in]{./Sections/spanning/prims_alg.png}
+
+        \caption{A diagram illustrating the pattern of Prim's Algorithm through each iteration.}
+        \label{fig:prim_example}
+    \end{figure}
+
+\noindent
+    
 

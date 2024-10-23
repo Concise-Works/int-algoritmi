@@ -1,8 +1,5 @@
-\newpage
+\vspace{-1.5em}
 \section{Dijkstra's Algorithm - Shortest Path}
-\noindent
-In this section we will discuss finding the shortest path among a weighted system of relationship.
-
 \begin{theo}[Dijkstra's Algorithm]
     
     \textbf{Proposition:} Suppose that there is a shortest path from nodes $u\to v$. Then any
@@ -19,19 +16,12 @@ In this section we will discuss finding the shortest path among a weighted syste
     Preform steps (ii) to (iv) until the queue is empty, having visited all possible nodes.
 \end{theo}
 
-\vspace{-.5em}
-\begin{Tip}
-    The `ij' in Dijkstra's pronounced as the `i' in ``kite''.\\
-    \textbf{Video Demo:} \url{https://youtu.be/_lHSawdgXpI?si=buBOEWs5jJ4RgdfD}
-\end{Tip}
 
+\vspace{-1em}
 \begin{Proof}[Proof of Correctness for Dijkstra's Algorithm]
 
-    \textbf{Invariant:} For each node $u \in S$, $d(u)$ is the length of a shortest $s \leadsto u$ path.\\
-    \textbf{Proof} [by induction on $|S|$]:
-    
-    \textbf{Base case:} $|S| = 1$ is true since $S = \{s\}$ and $d(s) = 0$.
-    
+    \textbf{Invariant:} For each node $u \in S$, $d(u)$ is length of shortest path $s \leadsto u$. By induction on $|S|$:\\
+    \textbf{Base case:} $|S| = 1$ is true since $S = \{s\}$ and $d(s) = 0$.\\
     \textbf{Inductive hypothesis:} Assume true for $|S| = k \geq 1$.
     \begin{itemize}
         \item Let $v$ be the next node added to $S$, and let $(u, v)$ be the final edge.
@@ -43,8 +33,6 @@ In this section we will discuss finding the shortest path among a weighted syste
     \[
     \ell(P) \geq \ell(P') + \ell(x, y) \geq d(x) + \ell(x, y) \geq \pi(y) \geq \pi(v)
     \]
-    \noindent
-    Thus, the algorithm is correct.
     \end{Proof}
     
 \newpage
@@ -143,6 +131,7 @@ Finally visiting 4 to see 3 and 5 have already been visited, ending the algorith
 
 \newpage
 
+\noindent
 \textbf{Dijkstra Example (ii):}\\
 
 \begin{figure}[h!]
@@ -156,7 +145,7 @@ Finally visiting 4 to see 3 and 5 have already been visited, ending the algorith
 
 
 \noindent
-In figure (\ref{fig:subfig1}), the first row is $0$ as $s\to s$, other nodes are assumed $\infty$,i.e., undefined. Each subsequent row finds the next shortest path, while 
+In figure (\ref{fig:combined_figure}), the first row is $0$ as $s\to s$, other nodes are assumed $\infty$,i.e., undefined. Each subsequent row finds the next shortest path, while 
 updating the table about information it gathers.\\
 \noindent
 However we have one problem with Dijkstra's algorithm, it does not work with negative weights.
