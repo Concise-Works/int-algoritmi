@@ -12,7 +12,6 @@ Asymptotic analysis is a method for describing the limiting behavior of function
     We call the point where \(f(n)\) starts behaving similarly to \(g(n)\) the \underline{\textbf{threshold} \(n_0\).} After this point $n_0$, \(f(n)\) follows the same general path as \(g(n)\).
 \end{Def}
 
-
 \begin{Def}[Big-O: (Upper Bound)]
 
     Let $f$ and $g$ be functions. $f(n)$ our function of interest, and $g(n)$
@@ -91,14 +90,57 @@ Our limit approaches 0, as we have a constant factor in the numerator, and a gro
     \noindent
     Meaning, as we chase infinity, our numerator grows at the same rate as the denominator.
 \end{Def}
+\noindent
 \textbf{Examples:} $n^2=\Theta(n^2)$; $2n^3+2n=\Theta(n^3)$; $\log n+\sqrt{n}=\Theta(\sqrt{n})$.
+\begin{Def}[Little $o$: (Strict Upper Bound)]
+
+    The symbol $o$ reads ``little-o.'' Let $f$ and $g$ be functions. Then $f(n)=o(g(n))$ if $f(n)$ grows strictly slower than $g(n)$, meaning $f(n)$ becomes insignificant compared to $g(n)$ as $n$ grows large. Let $n_0$ be our asymptotic threshold. Then, for all $n\geq n_0$,
+    \large
+    \[0\leq f(n) < c \cdot g(n)\]
+    \[\lim_{n\to\infty}\dfrac{f(n)}{g(n)}=0\]
+    \normalsize
+    \noindent
+    Meaning, as we chase infinity, the ratio of $f(n)$ to $g(n)$ shrinks to zero.
+\end{Def}
+\noindent
+\textbf{Examples:} $n=\!o(n^2)$; $\log n=\!o(n)$; $n^{0.5}=\!o(n)$.
+\begin{Def}[Little $\omega$: (Strict Lower Bound)]
+
+    The symbol $\omega$ reads ``little-omega.'' Let $f$ and $g$ be functions. Then $f(n)=\omega(g(n))$ if $f(n)$ grows strictly faster than $g(n)$, meaning $g(n)$ becomes insignificant compared to $f(n)$ as $n$ grows large. Let $n_0$ be our asymptotic threshold. Then, for all $n\geq n_0$,
+    \large
+    \[0\leq c \cdot g(n) < f(n)\]
+    \[\lim_{n\to\infty}\dfrac{g(n)}{f(n)}=0\]
+    \normalsize
+    \noindent
+    Meaning, as we chase infinity, the ratio of $g(n)$ to $f(n)$ shrinks to zero.
+\end{Def}
+\noindent
+\textbf{Examples:} $n^2=\omega(n)$; $n=\omega(\log n)$.
+
+\newpage 
+
+\begin{Def}[Asymptotic Equality (\( \sim \))]
+
+    The symbol \( \sim \) reads ``asymptotic equality.'' Let $f$ and $g$ be functions. Then $f(n) \sim g(n)$ if, as $n \to \infty$, the ratio of $f(n)$ to $g(n)$ approaches 1. I.e., the two functions grow at the same rate asymptotically. Formally,
+    \large
+    \[\lim_{n\to\infty}\dfrac{f(n)}{g(n)}=1\]
+    \normalsize
+    \noindent
+    Meaning, as $n$ grows large, the two functions become approximately equal.
+\end{Def}
+\noindent
+\textbf{Examples:} $n + 100 \sim n, \quad \log(n^2) \sim 2\log n.$
+
 
 \begin{Tip}
     To review:
     \begin{itemize}
-        \item \textbf{Big-O:} $f(n)$ < $g(n)$ (Upper Bound); $f(n)$ grows no faster than $g(n)$.
+        \item \textbf{Big-$O$:} $f(n)$ < $g(n)$ (Upper Bound); $f(n)$ grows no faster than $g(n)$.
         \item \textbf{Big-$\Omega$:} $f(n)$ > $g(n)$ (Lower Bound); $f(n)$ grows no slower than $g(n)$.
         \item \textbf{Big-$\Theta$:} $f(n)$ = $g(n)$ (Tight Bound); $f(n)$ grows at the same rate as $g(n)$.
+        \item \textbf{Little-$o$:} $f(n)$ < $g(n)$ (Strict Upper Bound); $f(n)$ grows strictly slower than $g(n)$.
+        \item \textbf{Little-$\omega$:} $f(n)$ > $g(n)$ (Strict Lower Bound); $f(n)$ grows strictly faster than $g(n)$.
+        \item \textbf{Asymptotic Equality:} $f(n)$ $\sim$ $g(n)$; $f(n)$ grows at the same rate as $g(n)$.
     \end{itemize}
 \end{Tip}
 

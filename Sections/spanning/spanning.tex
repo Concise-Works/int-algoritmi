@@ -358,7 +358,7 @@ The above example shows how our parent table will result with the following tabl
             \ForEach{\(v \in G[u] \)}{
                     
                 \vspace{.5em}
-                \If{$v\in Q$ $\&\&$ $(w(u,v)<Q[v])$}
+                \If{$(v\in Q)$ and $(w(u,v)<Q[v])$}
                 {
                     \tcp{Edit the node's weight in $Q$ then re-balance.}
                     $Q[v]\gets w(u,v)$\;
@@ -383,9 +383,9 @@ The above example shows how our parent table will result with the following tabl
     \noindent
     \textbf{Correctness:} We run a form of BFS on the graph, which touches every node. BFS creates levels each iteration, resulting in a cut-set with an end-point $G[u]$.
     By the cut property, any new lightest edge $w(u,v)$ is added or replaces a heavier edge in $T$. Thus forming an MST as all nodes are considered.\\
-    \textbf{Time Complexity:} Line 7 we at worse check every adjacency list, $O(n+m)$ where $m$ is the number of edges of $n$ nodes. 
+    \textbf{Time Complexity:} $O((n+m)\log n)$. Line 7 at worse checks every adjacency, $O(n+m)$, for $m$ edges of $n$ nodes. 
     Say lines 8-9 takes $O(1)$ time to find $v\in Q$ via hash-table. Line 10 takes $O(\log n)$ time to re-balance the heap.
-    Thus, the time complexity is $O((n+m)\log n)$.\\
+    Thus, $O((n+m)\log n)$.\\
     \textbf{Space Complexity:} $O(n+m)$, as we at most store the data items a hash-table representation of our graph.
 \end{Func}
 
@@ -422,7 +422,7 @@ The above diagram shows Prim's algorithm each round, pick the lightest edge at t
 update weights, re-balance the heap, and repeat. The algorithm will terminate when all nodes have been picked from the heap.\\ 
 
 \newpage
-\subsection{Union-Find Data Structure}
+\subsection{Union-Find Data Structures}
 \begin{Def}[Union-Find Data Structure]
 
     A \textbf{Union-Find} data structure is a data structure that keeps track of a set of elements partitioned into multiple disjoint subsets. 
@@ -523,11 +523,7 @@ We compare all of our techniques in the following table:
     Return the resulting forest $T$ as the MST.
 \end{theo}
 
-\begin{Note}
-    \textbf{Note:} If $u$ and $v$ were in the same set, Union-joining them would create a cycle, which is not a tree, and violates the cycle property of MSTs.
-\end{Note}
-
-\begin{Func}[Prim's Algorithm - \texttt{PALG()}]
+\begin{Func}[Kruskal's Algorithm - \texttt{KALG()}]
     \textbf{Input:} a connected graph $G$ of $V$ nodes and $E$ edges.\\
     \textbf{Output:} Minimum Spanning Tree (MST) formed by forest Union-find data structure.\\
 
@@ -535,9 +531,13 @@ We compare all of our techniques in the following table:
     \begin{algorithm}[H]
         \label{algo:prim}
         $W[\ ]\gets Sort(E)$; \tcp {Sort all edges by weight}
-        $T\gets new \ UnionFind(G)$; \tcp{Initialize forest with all $G$'s nodes by themselves}
-        \ForEach{$e\in W$ and $T.size() < V-1$}{
-            $u,v\gets e$; \tcp{Get the endpoints of $e$}
+        $T\gets new \ UnionFind(G)$; \tcp{new forest with all $G$'s nodes as singletons}
+
+        \vspace{.5em}
+        \For {$i=1$ to $W.size()$}{
+            $(u,v)\gets e$; \tcp{Get the endpoints of $e$}
+
+            \vspace{.5em}
             \If{$T.Find(u)\neq T.Find(v)$}{
                 $T.Union(u,v)$; \tcp{Union-join $u$ and $v$}
             }
@@ -547,10 +547,13 @@ We compare all of our techniques in the following table:
     \noindent\rule{\textwidth}{0.4pt}
 
     \noindent
-    \textbf{Correctness:} By sorting all edges by 
-    \textbf{Time Complexity:} Line 7 we at worse check every adjacency list, $O(n+m)$ where $m$ is the number of edges of $n$ nodes. 
-    Say lines 8-9 takes $O(1)$ time to find $v\in Q$ via hash-table. Line 10 takes $O(\log n)$ time to re-balance the heap.
-    Thus, the time complexity is $O((n+m)\log n)$.\\
-    \textbf{Space Complexity:} $O(n+m)$, as we at most store the data items a hash-table representation of our graph.
+    \textbf{Correctness:} Sorting edges in ascending order, ensures lightest possible edge is picked first before redundancy checks with Union-find, which avoids cycles (Line 5).
+    Any new unique edge $e$ is added to the MST. This yields a connected graph as all edges are considered no matter their weight.\\
+    \textbf{Time Complexity:} $O(E \log E)$ or $O(E \log V)$. Line 1 sorts all edges, which takes $O(E \log E)$ time, where $E$ is at most $V^2$ (all nodes connect to each other).
+    Thus, $\Theta(E \log_2 V)$ is $O(E \log_2 E)$ as the exponent to reach $V$ and $E$ are the same. Then iterating through all $E$ edges; 
+    actions are one-to-one for each \textit{find-merge} operation $E_i$. This results in one operation per edge, rather than a compounded combination of operations, like a nested for-loops.\\
+    \textbf{Space Complexity:} $O(V+E)$, as we at most store the data items a hash-table representation of our graph.
 \end{Func}
 
+\noindent
+\textbf{Note:} Lines 1 and 4, might require additional implementation such as a reference hash-table $R$ to keep track of edges and their end-points after sorting.
