@@ -483,7 +483,7 @@ we ask $g,f,$ or $d$ who their leader is, they report to $a$ directly without th
 \begin{Def}[Path Compression]
 
     \textbf{Path Compression} is a technique used in Union-Find data structures to flatten the structure of the tree. 
-    When we find the leader of a node, we set the node's parent to the leader directly. This reduces the time complexity of find operations for subsequent queries.
+    After finding the leader of a node in a whole component, we set the node's parent directly to that leader. This reduces the time complexity of find operations for subsequent queries.
 \end{Def}
 
 We compare all of our techniques in the following table:
@@ -494,7 +494,7 @@ We compare all of our techniques in the following table:
 \begin{tabular}{|>{\columncolor{OliveGreen!10}}p{5.5cm}|p{1.5cm}|c|p{3cm}|}
     \hline
     \rowcolor{OliveGreen!20}
-    \textbf{Operation\textbackslash Implementation} & \textbf{Simple Array} & \textbf{Forest} & \textbf{Forest with Path \enspace Compression} \\
+    \textbf{Operation\textbackslash Implementation} & \textbf{Simple Hash-table} & \textbf{Forest} & \textbf{Forest with Path \enspace Compression} \\
     \hline
     \textbf{Find (worst-case)} & $\Theta(1)$ & $\Theta(\log n)$ & $\Theta(\log n)$ \\
     \hline
