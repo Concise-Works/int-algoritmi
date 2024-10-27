@@ -1,14 +1,8 @@
 \vspace{-2em}
 \section{Inductive Analysis}
 
-In recursion the problem is reduced into smaller pieces eventually
-hitting a base-case, often bubbling back up constructing a solution.
-This approach falls under the \textbf{divide-and-conquer} paradigm. Often 
-found in sorting problems, processing trees, and
+Recursion employs techniques of repeatedly shrinking the problem to solve its smaller halves. Often found in sorting problems, processing trees, and
 geometric problems.
-
-We will first show the \textbf{MergeSort} and \textbf{QuickSort} algorithms on the following pages. Then we will dive into 
-into detail on how we deduce such time complexities.
 
 \begin{theo}[MergeSort]
     
@@ -23,17 +17,21 @@ into detail on how we deduce such time complexities.
 
 \begin{theo}[QuickSort]
 
-    Given an array $A$ of size $n$, we sort in-place via the following:
+    Given an array $A$ of size $n$, we sort via the following:
     \begin{enumerate}
-        \item [(i.)] Choose a pivot element and partition the array around it.
-        \item [(ii.)] Recursively: Sort the two partitions.
-        \item [(iii.)] Base-case: If the array has one element, return it.
+        \item [(i.)] Choose a pivot, set $i$ to the start and $j$ at the end of the array.
+        \item [(ii.)] Increase $i$ until $A[i]>pivot$ and decrease $j$ until $A[j]<pivot$.
+        \begin{itemize}
+            \item If $A[i]<A[j]$, swap $A[i]$ and $A[j]$.
+            \item Repeat until $i>j$, return $j$ as the new pivot.
+        \end{itemize}
+        \item [(iii.)] The new pivot creates two sub-arrays, repeat the process on each sub-array.
     \end{enumerate}
-    The final result is a sorted array.
+    The final result is $A$ sorted in-place (on the original array without a temporary helper array).
 \end{theo}
 
-\begin{Tip}
-Demos for \textbf{MergeSort}: \url{https://www.youtube.com/watch?v=4VqmGXwpLqc} and\\
+\begin{Tip} Demos for 
+ \textbf{MergeSort}: \url{https://www.youtube.com/watch?v=4VqmGXwpLqc} and\\
  \textbf{QuickSort}: \url{https://www.youtube.com/watch?v=Hoixgm4-P4M}.
 \end{Tip}
 
