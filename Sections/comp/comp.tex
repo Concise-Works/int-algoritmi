@@ -52,7 +52,7 @@ In this case, the coefficients $a_1 = 4$ and $a_0 = 5$ correspond to the decimal
 
 \begin{Def}[Hexadecimal]
     
-        \textbf{Hexadecimal} base $B=16$, using digits $0-9$ and the letters $A-F$, where $A=10$, $B=11$, $C=12$, $D=13$, $E=14$, and $F=15$. Hexadecimal is commonly used in computing due to its compact representation of binary data. For example, a \textbf{byte} (8 bits) can be represented as two hexadecimal digits, simplifying the display of binary data.
+        \textbf{Hexadecimal} base $B=16$, using digits 0-9 and the letters A-F, where $A=10$, $B=11$, $C=12$, $D=13$, $E=14$, and $F=15$. Hexadecimal is commonly used in computing due to its compact representation of binary data. For example, a \textbf{byte} (8 bits) can be represented as two hexadecimal digits, simplifying the display of binary data.
 \end{Def}
 
 
@@ -78,8 +78,6 @@ In this case, the coefficients $a_1 = 4$ and $a_0 = 5$ correspond to the decimal
     Additionally we may also trim any leading 0's.
 \end{theo}
 
-\newpage
-
 \noindent
 \textbf{Example:}
     \begin{itemize}
@@ -94,6 +92,9 @@ In this case, the coefficients $a_1 = 4$ and $a_0 = 5$ correspond to the decimal
         \noindent
     \end{itemize}
     \noindent
+
+\newpage 
+
 The following definition is for completeness: applications of such a base are currently uncommon.
 \begin{Def}[Unary]
     
@@ -105,6 +106,7 @@ The following definition is for completeness: applications of such a base are cu
     
     In a binary number, the \textbf{most significant bit (MSB)} is the leftmost bit. The \textbf{least significant bit (LSB)} is the rightmost bit.
 \end{Def}
+\textbf{Example:} Consider this byte (8 bits), $[1111 \ 1110]_2$, the MSB = 1 and the LSB = 0.  
 
 \begin{theo}[Adding Binary]
 
@@ -119,20 +121,20 @@ The following definition is for completeness: applications of such a base are cu
     \noindent
     We call the last step, \textbf{carry}, as we carry our overflow to the next digit.
 \end{theo}
-    \newpage
 
     \noindent
     \textbf{Example:} Adding $0010\ 0011\ 0100_2$ and $0100_2$:
-    \[
-    \begin{array}{r}
-    0010\ 0011\ 0100 \\
-    + \quad\quad\ \ \ 0100 \\
-    \hline
-    0010\ 0011\ 1000
-    \end{array}
-    \]
+    \begin{equation*}
+        \begin{array}{B3}
+             1       &                             1000 &  \carry 0\textcolor{red}{1}00 \\
+              {} + 0 &                             0001 &  0\textcolor{red}{1}00 \\ \hline
+                   1 &                             1001 &  1000 \\
+        \end{array}
+        \end{equation*}
 \noindent
-Where the $0100+0100=1000$ as we carry the an overflow of 1. 
+Where $[1\ 1000\ 0100]_2 + [0\ 0001\ 0100]_2 = [1\ 1001\ 1000]_2$.
+
+\newpage
 
 \begin{theo}[Signed Binary Numbers - Two's Complement]
     

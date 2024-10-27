@@ -12,6 +12,10 @@ algorithmically, addition, subtraction, multiplication, division, and modula.
 \end{Def}
 \noindent
 The game we play in the following algorithms is to compute large integers without exceeding wordsize. Moving forward, we assume our machine is a typical 64-bit system.
+\begin{Func}[Length of digits - $\|a\|$]
+
+    We will use the notation $\|a\|$ to denote the number of digits in the integer $a$. For example, $\|123\| = 3$ and $\|0\| = 1$.
+\end{Func}
 
 \newpage
 \begin{Def}[Computer Integer Division]
@@ -22,148 +26,58 @@ The game we play in the following algorithms is to compute large integers withou
 \noindent
 Our first hurdle is long division as , which will set up long addition and subtraction for success.
 
-\begin{Func}[Division with Remainder (Outline) - \textit{QuoRem()}]
-
-    \label{func:QuoRem_out}
-
-    For base $B$ integers, let dividend $a = (a_{k-1} \cdots a_0)_B$ and divisor $b = (b_{\ell-1} \cdots b_0)_B$ be unsigned, with $k \geq 1$,
-    $\ell \geq 1$, ensuring $0\leq b\leq a$, and $b_{\ell-1} \neq 0$, ensuring $b>0$.\\ 
-    
-    \noindent
-    We compute $q$ and $r$ such that, $a = bq + r$ and $0 \leq r < b$. 
-    Assume $k \geq \ell$; otherwise, $a < b$. We set $q \gets 0$ and $r \gets a$. 
-    Then quotient $q = (q_{m-1} \cdots q_0)_B$ where $m := k - \ell + 1$.\\
-
-    \noindent
-    \textbf{Note:} Our general strategy below won work as $\floor*{r/B^ib}$ exceeds wordsize quickly. We finalize our strategy in Function (\ref{func:QuoRem}).
-
-    \noindent\rule{\textwidth}{0.4pt}
-
-    \vspace{.5em}
-    \noindent
-    \textbf{Input:} $a, b$\\
-    \noindent
-    \textbf{Output:} $q, r$\\
-    \begin{algorithm}[H]
-        \SetAlgoLined
-        \SetKwProg{Fn}{Function}{:}{\KwRet{}}
-        \Fn{\textit{QuoRem}($a, b$)}{
-            $r \gets a$\;
-            $q \gets \{0_{m-1}\cdots 0\}$\;
-            \vspace{.5em}
-            \For{$i \gets m-1$ $\textbf{\text{down to}}$ $0$}{
-                $q_i \gets \floor*{r/B^ib}$\;
-                $r \gets r - B^i\cdot q_ib$\;
-            }
-            \KwRet{$(q, r)$}\;
-        }
-    \end{algorithm}
-
-    \noindent\rule{\textwidth}{0.4pt}
-
-    \noindent
-    \textbf{Time Complexity:} $O(k-\ell)$, as we iterate $m := k - \ell + 1$ times, ignoring our constant factor.\\
-    \textbf{Space Complexity:} $O(k+\ell)$, as we store inputs $a, b$.
-\end{Func}
 \noindent
-\underline{\textbf{\textit{QuoRem()} Lines 5 and 6 }:} similar to grade-school long division: compute the quotient, subtract the product of the divisor and quotient from the dividend, repeating until the dividend is less than the divisor.
-\textbf{Examples:} let $a=\{12,5,17,40,89\}$, $b=\{4,2,3,9,10\}$ respectively, and $B=10$,
+\textbf{Scenerio - Grade School Long Division:} Goes as follows, take $\frac{a}{b}$. Find how times $b$ fits into $a$ evenly, $q$ times. Then $a-bq$ is our remainder $r$.\\
+\textbf{Examples:} let $a=\{12,5,17,40,89\}$, $b=\{4,2,3,9,10\}$ respectively, and base $B=10$,
 \begin{center}
-    \intlongdivision{12}{4} \intlongdivision{5}{2}\intlongdivision{17}{3} \intlongdivision{40}{9} \intlongdivision{89}{10} 
+    (1.)\intlongdivision{12}{4} (2.)\intlongdivision{5}{2} (3.)\intlongdivision{17}{3} (4.)\intlongdivision{40}{9} (5.)\intlongdivision{89}{10} 
 \end{center}
 \noindent
-Take $a=17$ and $b=3$: 3 fits into 17 five times, which is 15. 17 take away 15 is 2, our remainder.
+Take (3.), $a=17$, $b=3$: 3 fits into 17 five times, which is 15. 17 take away 15 is 2, our remainder. We 
+create an algorithm to compute this process.\\
 
-\newpage
-
-\begin{Proof}[($q_i\gets \left\lfloor \frac{r}{B^i b} \right\rfloor$) and ($r\gets r-B^i\cdot q_ib$)]
-    
-    Let $r$ be the current remainder in the division process. We aim to compute $q_i$, the digit of the quotient corresponding to the power $B^i$ in the base-$B$ representation. The divisor is $b$, and the base is $B$.\\
-
-    \noindent
-    \textbf{For Example:} $a = 5$ and $b = 2$ in base $B = 10$.
-
-    \noindent
-    Dividend 5, represented by each $B^i$.\\
-
-    \noindent
-    1. \textbf{Estimate Quotient Digit (line 5)}\\
-    We estimate how many times the scaled divisor $B^i \cdot b$ fits into the remainder $r$ in integer division gives us:
-    \[
-    q_i \gets \left\lfloor \frac{r}{B^i b} \right\rfloor \quad \text{e.g.,} \quad q_i \gets \left\lfloor \frac{5}{2^1 \cdot 2} \right\rfloor = \left\lfloor \frac{5}{4} \right\rfloor = 1
-    \]
-    This operation selects the largest integer $q_i$ such that:
-    \[
-    q_i \cdot B^i \cdot b \leq r \quad \text{e.g.,} \quad 1 \cdot 2^1 \cdot 2 = 4 \leq 5
-    \]
-    \noindent
-    2. \textbf{Update Remainder (line 6)}\\
-    \[
-    r \gets r - B^i \cdot q_ib \quad \text{e.g.,} \quad r \gets 5 - 2^1 \cdot (1)(2) = 5 - 4 = 1.\text{ Recall,} \intlongdivision{5}{2}
-    \]
-
-    \noindent
-    3. \textbf{Correctness}\\
-    Since $q_i$ was chosen as the largest integer such that $0 \leq r < B^i \cdot b$, through each iteration.
-
-\end{Proof}
 \noindent
-We still need a fast way to divide by powers of 2. Consider the following example:
-\textbf{Example:} Consider the following powers of 2 of form $x=2^n+s$:
+\textbf{Key Observation:} Consider the following powers of 2 of form $x=2^n+s$, where $x,n,s\in\Z$:
 \begin{align*}
-    3 = 2 + 1 &= 0000 \ 0011_2 \quad (1) \\
-    6 = 4 + 2 &= 0000 \ 0110_2 \quad (2) \\
-    12 = 8 + 4 &= 0000 \ 1100_2 \quad (3) \\
-    24 = 16 + 8 &= 0001 \ 1000_2 \quad (4) \\
-    48 = 32 + 16 &= 0011 \ 0000_2 \quad (5) \\
-    96 = 64 + 32 &= 0110 \ 0000_2 \quad (6) \\
-    192 = 128 + 64 &= 1100 \ 0000_2 \quad (7)
+    3 = 2 + 1 &= 0000 \ 00\textcolor{red}{11}_2 \quad (1) \\
+    6 = 4 + 2 &= 0000 \ 0\textcolor{red}{11}0_2 \quad (2) \\
+    12 = 8 + 4 &= 0000 \ \textcolor{red}{11}00_2 \quad (3) \\
+    24 = 16 + 8 &= 000\textcolor{red}{1} \ \textcolor{red}{1}000_2 \quad (4) \\
+    48 = 32 + 16 &= 00\textcolor{red}{11} \ 0000_2 \quad (5) \\
+    96 = 64 + 32 &= 0\textcolor{red}{11}0 \ 0000_2 \quad (6) \\
+    192 = 128 + 64 &= \textcolor{red}{11}00 \ 0000_2 \quad (7)
 \end{align*}
 
 \noindent
-Notice that as we increase the power of 2, the number of bits shift left towards a higher-order bit. We apply this theorem directly to 
-shifting bits to yield instant calculations.
-
-\newpage
+Notice that as we increase the power of 2, the number of bits shift left towards a higher-order bit. Now, instead of calculating powers of 
+2, we shift bits left or right, to yield instantaneous results.
 
 \begin{theo}[Binary Bit Shifting (Powers of 2)]
 
-    Let $x_2$ be a base 2 unsigned integer. Then,\\
+    \label{theo:bit_shift}
+
+    Let $x$ be a binary unsigned integer. Where ``$\ll$'' and ``$\gg$'' are left and right bit shifts:\\
     \noindent
-    \textbf{Left Shift by $k$:} $x \ll k:= x \cdot 2^k$\\
+    \textbf{Left Shift by $k$ bits:} $x \ll k:= x \cdot 2^k$\\
     \noindent
-    \textbf{Right Shift by $k$:} $x \gg k = \left\lfloor x/2^k \right\rfloor$\\
-    \textbf{Remainder:} bits pushed out after right shift.
+    \textbf{Right Shift by $k$ bits:} $x \gg k = \left\lfloor x/2^k \right\rfloor$\\
+    \textbf{Remainder:} bits pushed out after right shift(s).
 \end{theo}
+
+\newpage
 \noindent
-\textbf{Example:} Observe, $16=10000$ 4 trailing zeros, $8=1000$ 3 trailing zeros, we shift by 4 and 3 respectively:
+\textbf{Example:} Observe, $16=10000$ (4 zeros), $8=1000$ (3 zeros), we shift by 4 and 3 respectively:
 \begin{itemize}
     \item Instead of $3 \cdot 16$ in base 10, we can $3 \ll 4=48$, as $3 \cdot 2^4 = 48$.
     \item Conversely, Instead of $48/16$ in base 10, $48 \gg 4 = 3$, as $\floor*{48/2^4} = 3$.
     \item Catching the remainder: say we have $37/8$ base 10, then,
-        \[ 37 = 100101_2 \quad \text{and} \quad 8 = 1000_2 \]
-        \[ 37 \gg 3 = 4 \text{ remainder } 5, \]
+        \[ 37 = 100101_2 \quad \text{and} \quad 8 = 1000_2 \text{ then } 37 \gg 3 = 4 \text{ remainder } 5,\]
 
     \noindent    
     as  $[100101]$ $\gg$ 3 = [000100]101, where $101_2$ is our remainder $5_{10}$.
 \end{itemize}
 
-\noindent
-Next we revisit our division algorithm, employing bit shifting to optimize our calculations.
-
-\begin{Tip}
-    The Z3, developed by Konrad Zuse in 1941 in Berlin, Germany, was the first programmable binary computer, using electromechanical relays processing numbers on 22-bit floating-point arithmetic. Unfortunately, the machine was destroyed in a Allied bombing raid during World War II.
-    
-    The first fully electronic binary computers came later, using bits and bytes to represent data. Machines like ENIAC (1945) in the U.S. operated on a decimal system initially but were pivotal in transitioning to binary-based computing, which became the standard.
-    
-    \end{Tip}
-
-\newpage
-
-\noindent
-Optimizing our Outline Function (\ref{func:QuoRem_out}) with bit shifting we have:
-
-\begin{Func}[Division with Remainder (Binary Version) - \textit{QuoRem()}]
+\begin{Func}[Division with Remainder in Binary- \textit{QuoRem()}]
 
     \label{func:QuoRem}
 
@@ -173,115 +87,72 @@ Optimizing our Outline Function (\ref{func:QuoRem_out}) with bit shifting we hav
     \noindent
     We compute $q$ and $r$ such that, $a = bq + r$ and $0 \leq r < b$. 
     Assume $k \geq \ell$; otherwise, $a < b$. We set $q \gets 0$ and $r \gets a$. 
-    Then quotient $q = (q_{m-1} \cdots q_0)_2$ where $m := k - \ell + 1$.
+    Then quotient $q = (q_{m-1} \cdots q_0)_2$ where $m := k - \ell + 1$.\\
 
-    \noindent\rule{\textwidth}{0.4pt}
-
-    \vspace{.5em}
     \noindent
     \textbf{Input:} $a, b$ (binary integers)\\
     \noindent
     \textbf{Output:} $q, r$ (quotient and remainder in binary)\\
     \begin{algorithm}[H]
         \SetAlgoLined
-        \SetKwProg{Fn}{Function}{:}{\KwRet{}}
+        \SetKwProg{Fn}{Function}{:}{\KwRet{$(q, r)$;}}
         \Fn{\textit{QuoRem}($a, b$)}{
             $r \gets a$\;
             $q \gets \{0_{m-1} \cdots 0\}$\;
             \vspace{.5em}
-            \For{$i \gets m-1$ $\textbf{\text{down to}}$ $0$}{
+            \For{$i \gets \|a\|-\|b\|-1$ $\textbf{\text{down to}}$ $0$}{
                 $q_i \gets \left\lfloor \dfrac{r}{b \ll i} \right\rfloor$\; 
                 $r \gets r - (q_i \cdot (b \ll i))$\;  
             }
-            \KwRet{$(q, r)$}\;
+          
         }
     \end{algorithm}
     \noindent\rule{\textwidth}{0.4pt}
     \noindent
 
     \noindent
-    \textbf{Time Complexity:} $O(k-\ell)$, as we iterate $m := k - \ell + 1$ times, ignoring our constant factor.\\
-    \textbf{Space Complexity:} $O(k + \ell)$, as we store inputs $a, b$.
+    \textbf{Time Complexity}: $O(\|a\|(\|a\| - \|b\|))$. In short, line 5 we preform division on $\|a\|$ bits of decreasing size.
+    For more
+    detail visit \url{https://shoup.net/ntb/ntb-v2.pdf} on page 60. \textbf{I would not} stare at this too
+    long, \underline{or \textbf{at all}}. General $n$ cases can be found in Theorem (\ref{theo:basic-arithmetic}).
 \end{Func}
 
 \noindent
-\textbf{Example:} Let $a = 47_10 = 101111_2$ and $b = 5_10 = 101_2$, we run \textit{QuoRem($a,b$)}:
-
-\begin{itemize}
-    \item \textbf{Step 1: Initialization}
-    \begin{itemize}
-        \item Set $r \gets 47 = 101111_2$, $q = 0$, $i = (k-\ell +1) - 1 = (6-3+1) - 1 = 3$. 
-    \end{itemize}
-    
-    \item \textbf{Step 2: Iteration and Bit-Shifting (lines 5 and 6 of the algorithm)}
-    \begin{itemize}
-        \item For $i = 3$, we shift $5 = 101_2$ by $3$ bits to get $101000_2 = 40_{10}$.
-        \item Now compute $q_3 \gets \left\lfloor \frac{r}{b \ll 3} \right\rfloor = \left\lfloor \frac{47}{40} \right\rfloor = 1$.
-        \item Update $r \gets r - (q_3 \cdot (b \ll 3)) = 47 - 40 = 7$.
-        \item End of the iteration $q = 1000_2 = 8_{10}$.
-    \end{itemize}
-    
-    \item \textbf{Step 3: Second Iteration}
-    \begin{itemize}
-        \item For $i = 2$, shift $5 = 101_2$ by $2$ bits to get $10100_2 = 20_{10}$.
-        \item Compute $q_2 \gets \left\lfloor \frac{r}{b \ll 2} \right\rfloor = \left\lfloor \frac{7}{20} \right\rfloor = 0$.
-        \item No update for $r$ or $q$, so $q$ remains $1000_2$.
-    \end{itemize}
-    
-    \item \textbf{Step 4: Third Iteration}
-    \begin{itemize}
-        \item For $i = 1$, shift $5 = 101_2$ by $1$ bit to get $1010_2 = 10_{10}$.
-        \item Compute $q_1 \gets \left\lfloor \frac{r}{b \ll 1} \right\rfloor = \left\lfloor \frac{7}{10} \right\rfloor = 0$.
-        \item No update for $r$ or $q$, so $q$ remains $1000_2$.
-    \end{itemize}
-    
-    \item \textbf{Step 5: Final Iteration}
-    \begin{itemize}
-        \item For $i = 0$, shift $5 = 101_2$ by $0$ bits to get $101_2 = 5_{10}$.
-        \item Compute $q_0 \gets \left\lfloor \frac{r}{b \ll 0} \right\rfloor = \left\lfloor \frac{7}{5} \right\rfloor = 1$.
-        \item Update $r \gets r - (q_0 \cdot (b \ll 0)) = 7 - 5 = 2$.
-        \item Update $q \gets 1001_2 = 9_{10}$.
-    \end{itemize}
-    
-    \item \textbf{Step 6: Final Result}
-    \begin{itemize}
-        \item The quotient $q = 1001_2 = 9_{10}$.
-        \item The remainder $r = 2$.
-    \end{itemize}
-\end{itemize}
-
-\noindent
-Thus, $47 \div 5$ gives quotient $9$ and remainder $2$.\\
-Notice how this exactly matches the long division algorithm for decimal numbers.\\
-\begin{center}
-    \intlongdivision{47}{5}.
-\end{center}
-We summarize the above example as, ``How many times does $101_2$ fit into $101111_2$?''
+\textbf{Example} Let $a = 47_{10} = 101111_2$ and $b = 5_{10} = 101_2$, we run \textit{QuoRem($a,b$)}. We summarize the above example as, ``How many times does $101_2$ fit into $101111_2$?''
 \begin{enumerate}
     \item  Does $5\ll 3$ fit into $101000_2$? It fits! $q=1000_2$, $r = 101111_2 - 101000_2$.
-    \item  Does $5\ll 2$ fit into $10100_2$? no fits! $q=1000_2$, $r = 0111_2$.
-    \item  Does $5\ll 1$ fit into $10100_2$? no fits! $q=1000_2$, $r = 0111_2$.
-    \item  Does $5\ll 0$ fit into $10100_2$? It fits! $q=1001_2$, $r = 0111_2-0101$.
+    \item  Does $5\ll 2$ fit into $0111_2$? no fits! $q=1000_2$, $r = 0111_2$.
+    \item  Does $5\ll 1$ fit into $0111_2$? no fits! $q=1000_2$, $r = 0111_2$.
+    \item  Does $5\ll 0$ fit into $0111_2$? It fits! $q=1001_2$, $r = 0111_2-0101$.
     \item  Return $q=1001_2=9_{10}$, $r = 0010 = 2_{10}$ 
 \end{enumerate}
 
-\begin{Tip}
-    Bit shifting is a low-level operation frequently used in assembly language, C, and other systems programming languages. It enables efficient manipulation of binary data, often used for tasks like multiplying or dividing by powers of 2. In assembly, shifting is closely tied to hardware-level optimizations, while in C, operators like \texttt{<<} (left shift) and \texttt{>>} (right shift) perform shifts directly on integers. Other forms of bit manipulation, like masking and rotating bits, often complement shifts in optimizing algorithms.
-\end{Tip}
+\newpage
 
 
 
-\newpage 
 \noindent
-Long addition, subtraction, and multiplication follow directly.
+Long addition: We craft an algorithm for
+grade school long addition, which goes as follows:
+\begin{equation*}
+    \begin{array}{@{}B2}
+        \carry 2 5 & 3\carry 0  8 \\
+                 {} + 39 &                  406 \\ \hline
+                      64 &                  714 \\
+    \end{array}
+    \end{equation*}
+\noindent
+Where adding, $25,308 + 39,406 = 64,714$. We create an algorithm to compute this in the following function.\\
 
-\begin{Func}[Addition of Base-$B$ Integers - \textit{Add()}]
-    Let $a = (a_{k-1} \cdots a_0)_B$ and $b = (b_{\ell-1} \cdots b_0)_B$ be unsigned integers, where $k \geq \ell \geq 1$. We compute $c := a + b$ where the result $c = (c_{k}c_{k-1} \cdots c_0)_B$ is of length $k+1$, assuming $k \geq \ell$. If $k < \ell$, swap $a$ and $b$. This algorithm computes the base-$B$ representation of $a + b$.
+\noindent
+Here the function $QuoRem$ (\ref{func:QuoRem}) to return (quotient, remainder) preforms in $O(1)$ as bits are small enough for word size.
+\begin{Func}[Addition of Binary Integers - \textit{Add()}]
+    Let $a = (a_{k-1} \cdots a_0)_2$ and $b = (b_{\ell-1} \cdots b_0)_2$ be unsigned binary integers, where $k \geq \ell \geq 1$. We compute $c := a + b$ where the result $c = (c_{k}c_{k-1} \cdots c_0)_2$ is of length $k+1$, assuming $k \geq \ell$. If $k < \ell$, swap $a$ and $b$. This algorithm computes the binary representation of $a + b$.
 
     \vspace{.5em}
     \noindent
-    \textbf{Input:} $a, b$ (base-$B$ integers)\\
-    \textbf{Output:} $c = (c_k \cdots c_0)_B$ (sum of $a + b$)\\
+    \textbf{Input:} $a, b$ (binary integers)\\
+    \textbf{Output:} $c = (c_k \cdots c_0)_2$ (sum of $a + b$)\\
 
     \begin{algorithm}[H]
         \SetAlgoLined
@@ -290,89 +161,103 @@ Long addition, subtraction, and multiplication follow directly.
             $carry \gets 0$\;
             \For{$i \gets 0$ \textbf{to} $\ell - 1$}{
                 $tmp \gets a_i + b_i + carry$\;
-                $(carry, c_i) \gets \texttt{QuoRem}(tmp, B)$\;
+                $(carry, c_i) \gets \texttt{QuoRem}(tmp, 2)$\;
             }
             \For{$i \gets \ell$ \textbf{to} $k - 1$}{
                 $tmp \gets a_i + carry$\;
-                $(carry, c_i) \gets \texttt{QuoRem}(tmp, B)$\;
+                $(carry, c_i) \gets \texttt{QuoRem}(tmp, 2)$\;
             }
             $c_k \gets carry$\;
-            \KwRet{$c = (c_k \cdots c_0)_B$}\;
+            \KwRet{$c = (c_k \cdots c_0)_2$}\;
         }
     \end{algorithm}
     \noindent\rule{\textwidth}{0.4pt}
 
     \noindent
-    \textbf{Note:} $0\leq \textit{carry} \leq 1$ and $0\leq \textit{temp}\leq(2B-1)$.\\
-    \textbf{Time Complexity:} $O(k)$, since we iterate over the digits of the integers, with $k \geq \ell$.\\
-    \textbf{Space Complexity:} $O(k+l)$, even though $c=k+1$, constants are negligible approaching infinity.
+    \textbf{Note:} $0 \leq \textit{carry} \leq 1$ and $0 \leq \textit{tmp} \leq 3$.\\
+    \textbf{Time Complexity:} $O(\max(\|a\|,\|b\|))$, as we iterate at most the length of the largest input.\\
+    \textbf{Space Complexity:} $O(\|a\|+\|b\|)$, though $c = k+1$, constants are negligible as $k, \ell \to \infty$.
 \end{Func}
+
+\newpage
 
 \noindent
-For page-space on the subtraction algorithm, we interject with the following observation:
+For subtracting, $5,308 - 3,406 = 1,904$, where we borrow 10 from the 5 to make 13:
+\begin{equation*}
+    \begin{array}{@{}B2}
+         \not{\carry[4]5} & \carry[10] 3 0  8 \\
+                 {} - 3 &                  406 \\ \hline
+                      1 &                  904 \\
+    \end{array}
+\end{equation*}
 
-\begin{Func}[Binary Length of a Number - $||a||$]
+\vspace{-1em}
+\begin{Func}[Subtraction of Binary Integers - \textit{Subtract()}]
+    Let \( a = (a_{k-1} \cdots a_0)_2 \) and \( b = (b_{\ell-1} \cdots b_0)_2 \) be unsigned binary integers, where \( k \geq \ell \geq 1 \) and \( a \geq b \). We compute \( c := a - b \) where the result \( c = (c_{k-1} \cdots c_0)_2 \) is of length \( k \), assuming \( a \geq b \). If \( a < b \), swap \( a \) and \( b \) and set a negative flag to indicate the result is negative. This algorithm computes the binary representation of \( a - b \).
     
-    The binary length of an integer $a_{10}$ in binary representation, is given by:
-    
-    \[
-    ||a|| := 
-    \begin{cases} 
-    \lfloor \log_2 |a| \rfloor + 1 & \text{if } a \neq 0, \\
-    1 & \text{if } a = 0,
-    \end{cases}
-    \]
-    
-    \noindent
-    as $\lfloor \log_2 |a| \rfloor + 1$ correlates to the highest power of 2 required to represent $a$.
-\end{Func}
-\newpage
-\begin{Func}[Subtraction of Base-$B$ Integers - \textit{Sub()}]
-    Let $a = (a_{k-1} \cdots a_0)_B$ and $b = (b_{\ell-1} \cdots b_0)_B$ be unsigned integers, where $k \geq \ell \geq 1$. We compute $c := a - b$ where the result $c = (c_{k-1} \cdots c_0)_B$ is of length $k$, assuming $k \geq \ell$. If $k < \ell$, swap $a$ and $b$. This algorithm computes the base-$B$ representation of $a - b$.
-
     \vspace{.5em}
     \noindent
-    \textbf{Input:} $a, b$ (base-$B$ integers)\\
-    \textbf{Output:} $c = (c_{k-1} \cdots c_0)_B$ (difference of $a - b$)\\
-
+    \textbf{Input:} \( a, b \) (binary integers)\\
+    \textbf{Output:} \( c = (c_{k-1} \cdots c_0)_2 \) (difference of \( a - b \))
+    
     \begin{algorithm}[H]
         \SetAlgoLined
         \SetKwProg{Fn}{Function}{:}{\KwRet{}}
-        \Fn{\textit{Sub}($a, b$)}{
-            $carry \gets 0$\;
+        \Fn{\textit{Subtract}($a, b$)}{
+            $borrow \gets 0$\;
             \For{$i \gets 0$ \textbf{to} $\ell - 1$}{
-                $tmp \gets a_i - b_i + carry$\;
-                $(carry, c_i) \gets \texttt{QuoRem}(tmp, B)$\;
+                $tmp \gets a_i - b_i - borrow$\;
+                \eIf{$tmp < 0$}{
+                    $borrow \gets 1$\;
+                    $c_i \gets tmp + 2$\;
+                }{
+                    $borrow \gets 0$\;
+                    $c_i \gets tmp$\;
+                }
             }
             \For{$i \gets \ell$ \textbf{to} $k - 1$}{
-                $tmp \gets a_i + carry$\;
-                $(carry, c_i) \gets \texttt{QuoRem}(tmp, B)$\;
+                $tmp \gets a_i - borrow$\;
+                \eIf{$tmp < 0$}{
+                    $borrow \gets 1$\;
+                    $c_i \gets tmp + 2$\;
+                }{
+                    $borrow \gets 0$\;
+                    $c_i \gets tmp$\;
+                }
             }
-            \If{$carry = -1$}{
-                Handle negative case using another subtraction routine for $b - a$\;
-            }
-            $c_k \gets carry$\;
-            \KwRet{$c = (c_{k-1} \cdots c_0)_B$}\;
+            \KwRet{$c = (c_{k-1} \cdots c_0)_2$}\;
         }
     \end{algorithm}
-    \noindent\rule{\textwidth}{0.4pt}
-
-    \noindent
-    \textbf{Note:} In every loop iteration, the carry is either $0$ or $-1$, and $tmp$ lies between $-B$ and $B-1$. If $a \geq b$, then there is no carry out of the last loop, and $c_k = 0$. Otherwise, the carry $c_k = -1$, and the subtraction may need to be computed again.\\
-    \textbf{Time Complexity:} $O(k)$, as we iterate over the digits of the integers, with $k \geq \ell$.\\
-    \textbf{Space Complexity:} $O(k)$, as we store the digits of $a$, $b$, and $c$.
-\end{Func}
-
-\begin{Def}[Most \& Least Significant Bit (MSB \& LSB)]
-
-    The left most bit in a binary number $a$ is the \textbf{most significant bit} and the first bit, the \textbf{least significant bit.}
-\end{Def}
+\noindent\rule{\textwidth}{0.4pt}
 
 \noindent
-\textbf{Example:} Consider this byte (8 bits), $[1111 \ 1110]_2$, the MSB = 1 and the LSB = 0.  
+\textbf{Note:} $0\leq borrow\leq 1$. Subtraction may produce a borrow when $a_i < b_i$.\\
+\textbf{Time Complexity:} \( O(\max(\|a\|, \|b\|)) \), iterating at most the length of the largest input.\\
+\textbf{Space Complexity:} \( O(\|a\| + \|b\|) \), as the length of \( c \) is at most \( k \), with constants negligible as \( k, \ell \to \infty \).
+\end{Func}
+    
+
 
 \newpage
+
+\noindent
+For multiplication, $24\cdot 16= 384$:
+\begin{equation*}
+    \begin{array}{@{}B2}
+                                            &  \carry[2]24 \\
+                 {} \times  &                  16 \\ \hline
+                 {}   &                  144 \\ 
+                 {} +  &                  240 \\ \hline
+                       &                  384 \\
+    \end{array}
+\end{equation*}
+\noindent
+Where $6\cdot 4 = 24$, we write the 4 and carry the 2. Then $6\cdot 2 = 12$ plus the carried 2 is 14. Then we multiply the next digit, 1, we add a 0 below our 144, and repeat the process. Every new 10s place we add a 0. Then we add our two products to get 384.\\
+
+\noindent
+We create an algorithm to compute this process in the following function:
 \begin{Func}[Multiplication of Base-$B$ Integers - \textit{Mul()}]
+    \label{func:mul}
     Let $a = (a_{k-1} \cdots a_0)_B$ and $b = (b_{\ell-1} \cdots b_0)_B$ be unsigned integers, where $k \geq 1$ and $\ell \geq 1$. The product $c := a \cdot b$ is of the form $(c_{k+\ell-1} \cdots c_0)_B$, and may be computed in time $O(k\ell)$ as follows:
 
     \vspace{.5em}
@@ -403,17 +288,10 @@ For page-space on the subtraction algorithm, we interject with the following obs
     
     \noindent
     \textbf{Note:} At every step, the value of \textit{carry} lies between $0$ and $B-1$, and the value of \textit{tmp} lies between $0$ and $B^2 - 1$.\\
-    \textbf{Time Complexity:} $O(k\ell)$, since the algorithm involves $k \cdot \ell$ multiplications.\\
-    \textbf{Space Complexity:} $O(k + \ell)$, since we store the digits of $a$, $b$, and $c$.
+    \textbf{Time Complexity:} $O(\|a\|\cdot\|b\|)$, since the algorithm involves $k \cdot \ell$ multiplications.\\
+    \textbf{Space Complexity:} $O(\|a\| + \|b\|)$, since we store the digits of $a$, $b$, and $c$.
 \end{Func}
 
-\begin{Tip}
-
-    In low-level languages like Assembly and C, memory management is not abstracted away as it is in higher-level languages. Programmers need to directly manage memory, ensuring efficient use of resources. Bitwise operations, such as shifting bits left or right, allow precise control over data manipulation, providing speedups in calculations like multiplication or division by powers of two. These operations are crucial in writing efficient code for systems with limited resources, such as embedded systems.
-
-    However, poor memory management, such as neglecting bounds checking or failing to free unused memory, can introduce security risks. Buffer overflows, where more data is written than a buffer can hold, allow attackers to overwrite memory and potentially inject malicious code. Techniques such as stack canaries and address space layout randomization (ASLR) are modern defenses against such attacks, but understanding binary operations remains essential for both writing optimized code and protecting against security vulnerabilities in lower-level programming.
-
-\end{Tip}
 
 
 \newpage
@@ -458,16 +336,14 @@ For page-space on the subtraction algorithm, we interject with the following obs
 \end{align*}
 Thus, $89_{10} = 1011001_2$.
 
-\begin{theo}[Computational Complexity of Basic Arithmetic Operations]
+\begin{theo}[Time Complexity of Basic Arithmetic Operations]
     
     \label{theo:basic-arithmetic}
 
-    Let $a$ and $b$ be arbitrary integers.
+    We generalize the time complexity to $a$ and $b$ as $n$-bit integers. 
     \begin{enumerate}[(i)]
-        \item We can compute $a \pm b$ in time $O(\text{len}(a) + \text{len}(b))$.
-        \item We can compute $a \cdot b$ in time $O(\text{len}(a) \cdot \text{len}(b))$.
-        \item If $b \neq 0$, we can compute the quotient $q := \left\lfloor \frac{a}{b} \right\rfloor$ and the remainder $r := a \mod b$ in time $O(\text{len}(b) \cdot \text{len}(q))$.
+        \item \textbf{Addition \& Subtraction:} $a \pm b$ in time $O(n)$.
+        \item \textbf{Multiplication:} $a \cdot b$ in time $O(n^2)$.
+        \item \textbf{Quotient Remainder} quotient $q := \left\lfloor \frac{a}{b} \right\rfloor: b \neq 0, a>b;$ and remainder $r := a \mod b$ has time $O(n^2)$.
     \end{enumerate}
 \end{theo}
-
-

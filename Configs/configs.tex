@@ -37,6 +37,7 @@
 \usepackage{makecell} % for line break in table cell
 
 \usepackage{longdivision}% Package for long division algorithm
+
 % commands
 
 % Tikz
@@ -128,3 +129,6 @@
 
 \algnewcommand\algorithmicforeach{\textbf{for each}}
 \algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+\newcommand*{\carry}[1][1]{\overset{#1}}
+\newcolumntype{B}[1]{r*{#1}{@{\,}r}}

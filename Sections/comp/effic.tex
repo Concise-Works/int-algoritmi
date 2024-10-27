@@ -1,0 +1,155 @@
+\section{Computational Efficiency}
+
+\begin{theo}[Binary Length of a Number - $\|a\|$]
+    
+    The binary length of an integer $a_{10}$ in binary representation, is given by:
+    
+    \[
+    \|a\| := 
+    \begin{cases} 
+    \lfloor \log_2 |a| \rfloor + 1 & \text{if } a \neq 0, \\
+    1 & \text{if } a = 0,
+    \end{cases}
+    \]
+    
+    \noindent
+    as $\lfloor \log_2 |a| \rfloor + 1$ correlates to the highest power of 2 required to represent $a$.
+\end{theo}
+
+\noindent
+\textbf{Example:} Think about base 10 first. Let there be a 9 digit number $d=684,301,739$.
+To reach 9 digits takes $10^8$; The exponent plus 1 yields $\|d\|$. Hence, $\lfloor \log_{10} d\rfloor+1$ is $\|d\|$.\\
+
+\noindent
+Now, let there be a 7 digit binary number $b=1001000$, which expanded is:
+$$ (1\cdot 2^6) + (0\cdot 2^5) + (0\cdot 2^4) + (1\cdot 2^3) + (0\cdot 2^2) + (0\cdot 2^1) + (0\cdot 2^0) = 72,$$
+\noindent
+Taking $6$ powers of 2 to reach $72$, we add 1 to get $\|b\| = 7$. Hence, $\|b\| = \lfloor \log_2 b \rfloor + 1$.
+
+\noindent
+Additionally, if $a=0_2$ then $\|a\|=1$. as $a^0=1$.\\
+
+\noindent
+
+\begin{theo}[Splitting Higher and Lower Bits]
+
+    Let $a$ be a binary number with $n$ bits. We can split $a$ into two numbers $A_1$ and $A_0$ with $n/2$ bits each,
+    representing the first and second halves respectively. Where:
+    
+        $$A_1:=\frac{a}{2^{\ceil{n/2}}} \quad \text{ and } \quad A_0:=a \text{ mod } 2^{\ceil{n/2}}$$
+
+\end{theo}
+
+\noindent
+\textbf{Example:} Let's start with base 10. To achieve $A_1=7455$ and $A_0=62,010$, for $a=745,562,010$.
+we take the length $\|a\|:=\floor{\log_{10}(745,562,010)}+1=9$, as $10^8\leq 745,562,010<10^9$. Then:
+\[ A_1=\frac{745,562,010}{10^{\ceil{9/2}}}=7455, \quad \text{ and } \quad A_0=745,562,010 \text{ mod } 10^{\ceil{9/2}}=62,010 \]
+\noindent
+as $10^5\leq 62,010<10^6$. Likewise to finding the remainder in base 2, we can use the same bit shifting technique for base 10 (\ref{theo:bit_shift}).
+We see,
+$$[745,562,010]_{10} \text{ right shift by 5, } [000,007,455]_{10}\ 62,010.$$ 
+
+\noindent
+Hence, $62,010$ is pushed out, and our remainder. Then, we can apply the same technique to base 2.
+Let $a=1111\ 1111\ 1001\ 1001_2$. We have $\|a\|:=16$, then:
+\[ A_1=\frac{1111\ 1111\ 1001\ 1001_2}{2^{\ceil{16/2}}}=1111\ 1111_2 \text{, and } A_0=1111\ 1111\ 1001\ 1001_2 \text{ mod } 2^{\ceil{16/2}}=1001\ 1001_2 \]
+
+\newpage
+\noindent
+\textbf{Scenario - \textit{Divide and Conquer Multiplication}:} We are compute, 
+\[A_1 2^{\ceil{n/2}}+A_0=:a \quad \times \quad b:= B_1 2^{\ceil{n/2}}+B_0.\]
+\noindent
+Then we have,
+\begin{align*}
+    a\cdot b &=(A_1 2^{\ceil{n/2}}+A_0)(B_1 2^{\ceil{n/2}}+B_0)\\
+    &=(A_1 2^{\ceil{n/2}})(B_1 2^{\ceil{n/2}})+(A_1 2^{\ceil{n/2}})B_0+(B_1 2^{\ceil{n/2}})A_0+A_0B_0\\
+    &=(A_1B_1)2^{n}+(A_1B_0+B_1A_0)2^{\ceil{n/2}}+A_0B_0.
+\end{align*}
+\noindent
+We need to compute 4 products, $(A_1B_1)$, $(A_1B_0), (B_1A_0)$, and $(A_0B_0)$. We now attempt to solve them independently:
+
+\begin{Func}[Multiplication of $n$-bit Integers - \textit{Multiply()}]
+    Let $a$ and $b$ be $n$-bit integers of base 2. This algorithm recursively computes the product of $a$ and $b$ using a straightforward divide-and-conquer approach, without using Karatsuba's optimization.
+
+    \vspace{.5em}
+    \noindent
+    \textbf{Input:} $n, a, b$ (where $a$ and $b$ are $n$-bit integers)\\
+    \textbf{Output:} The product $a \times b$\\
+
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{\KwRet{}}
+        \Fn{\textit{Multiply}($n, a, b$)}{
+            \If{$n < 2$}{
+                \textbf{return} the result of grade-school multiplication for $a \times b$\;
+            }
+            \Else{
+                $A_1 \gets a \div 2^{n/2};\ A_0 \gets a \bmod 2^{n/2}$\;
+                $B_1 \gets b \div 2^{n/2};\ B_0 \gets b \bmod 2^{n/2}$\;
+
+                \vspace{.5em}
+                $p_1 \gets \textit{Multiply}(n/2, A_1, B_1)$\;
+                $p_2 \gets \textit{Multiply}(n/2, A_1, B_0)$\;
+                $p_3 \gets \textit{Multiply}(n/2, A_0, B_1)$\;
+                $p_4 \gets \textit{Multiply}(n/2, A_0, B_0)$\;
+
+                \textbf{return} $p_1 \cdot 2^n + (p_2 + p_3) \cdot 2^{n/2} + p_4$\;
+            }
+        }
+    \end{algorithm}
+    \noindent\rule{\textwidth}{0.4pt}
+
+    \noindent
+    \textbf{Time Complexity:} $O(n^2)$, as in our master method $T(n)=4T(n/2)+O(n)$, Theorem (\ref{theo:master}).\\
+    \textbf{Space Complexity:} $O(n)$, storing $n+n$ bits for $a$ and $b$, while we track $O(\log_2 n)$ depth in the recursion stack.
+\end{Func}
+\noindent
+We appear to make no improvement, however there's a small trick to reduce the number of multiplications. We continue on the next page.
+
+\newpage
+
+\noindent
+Observe our full term, $c:=(\textcolor{red}{A_1B_1})2^{n}+(\textcolor{blue}{A_1B_0+B_1A_0})2^{\ceil{n/2}}+\textcolor{red}{A_0B_0}.$ Say we computed another term,
+\[z:=(A_1+A_0)(B_1+B_0)=(\textcolor{red}{A_1B_1})+\textcolor{blue}{(A_1B_0)+(B_1A_0)}+(\textcolor{red}{A_0B_0}).\]
+\noindent
+Notice how $z$ also contains $(A_1B_1)$ and $(A_0B_0)$, which are also in $c$. Say
+$m=(A_1B_0)+(B_1A_0)$, then $z-c$ yields $m$. This reduces the number of multiplications to 3, as we only compute\\
+ $(A_1B_1)$, $(A_0B_0)$ once, and then $m$.\\
+
+\noindent
+We employ the above strategy, which is \textbf{Karatsuba's multiplication algorithm}:
+
+\begin{Func}[Karatsuba's Multiplication Algorithm - \textit{KMul()}]
+    Let $a$ and $b$ be $n$-bit integers of base 2. This algorithm recursively computes the product of $a$ and $b$ using a divide-and-conquer approach.
+
+    \vspace{.5em}
+    \noindent
+    \textbf{Input:} $n, a, b$ (where $a$ and $b$ are $n$-bit integers)\\
+    \textbf{Output:} The product $a \times b$\\
+
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{\KwRet{}}
+        \Fn{\textit{Multiply}($n, a, b$)}{
+            \If{$n < 2$}{
+                \textbf{return} the result of grade-school multiplication for $a \times b$\;
+            }
+            \Else{
+                $A_1 \gets a \div 2^{n/2};\ A_0 \gets a \bmod 2^{n/2}$\;
+                $B_1 \gets b \div 2^{n/2};\ B_0 \gets b \bmod 2^{n/2}$\;
+
+                \vspace{.5em}
+                $x \gets \textit{Multiply}(n/2, A_1, B_1)$\;
+                $y \gets \textit{Multiply}(n/2, A_0, B_0)$\;
+                $z \gets \textit{Multiply}(n/2, A_1 + A_0, B_1 + B_0)$\;
+
+                \textbf{return} $x \cdot 2^n + (z - x - y) \cdot 2^{n/2} + y$\;
+            }
+        }
+    \end{algorithm}
+    \noindent\rule{\textwidth}{0.4pt}
+
+    \noindent
+    \textbf{Time Complexity:} $O(n^{\log_2 3}) \approx O(n^{1.585})$, as in our master method $T(n)=3T(n/2)+O(n)$, Theorem (\ref{theo:master}).\\
+    \textbf{Space Complexity:} $O(n)$.
+\end{Func}

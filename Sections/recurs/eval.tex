@@ -205,7 +205,7 @@ We define a general form for our traversals as function $T(n)$:\\
 \noindent
 For merge sort, we have $T(n) = 2\cdot T(n/2) + \Theta(n)$. This means we i with input $T(n)$ and then 
 our first recursive call is $T(n/2)$, the calls from there are $T(n/4)$, $T(n/8)$, and so on. Therefore,
-at any given layer $k$, we have $2^k$ calls, with each input $T(n/2^k)$. We stop when $n/2^k = 1$, which is $k = \log n$. Since $2^{\log_2 n} = n$, then $\left(\dfrac{n}{2^{\log_n n}}\right) = 1$.
+at any given layer $k$, we have $2^k$ calls, with each input $T(n/2^k)$. We stop when $n/2^k = 1$, which is $k = \log n$. Since $2^{\log_2 n} = n$, then $\left(\dfrac{n}{2^{\log_2 n}}\right) = 1$.
 Thus, the depth of our recursion is $\log n$, and $n$ work is done when unraveling the stack, hence $O(n \log n)$.
 
 \end{Proof}
@@ -259,13 +259,16 @@ To illustrate the above proof, we can draw a recursion tree for merge sort:\\
     To prove correctness of a recursive function, we need to show:
     \begin{enumerate}
         \item \textbf{Base Case:} The base case is correct.
-        \item \textbf{Inductive Hypothesis:} Assume $k$ input sizes are correct, where $b\leq<k<n$, and $b$ is the base case. 
-        \item \textbf{Inductive Step:} Show that the problem reduces to a smaller problem, which reaches the base case.
+        \item \textbf{Inductive Hypothesis:} Assume $k$ input sizes are correct, where $k<n$, we assume 
+        the recursive calls return the correct result.
+        \item \textbf{Inductive Step:} Show that the problem reduces to the base case, and that intermediate steps other than the recursive calls are correct.
     \end{enumerate}
     If all three conditions are met, then the function is correct for all $n$.
 \end{theo}
 
 \begin{theo}[Master Method for Recursive Time Complexity]
+
+    \label{theo:master}
 
     The master method is a general technique for solving recurrences of the form:
     \begin{equation*}
@@ -346,6 +349,7 @@ To illustrate the above proof, we can draw a recursion tree for merge sort:\\
     \vspace{-4em}
     \noindent
     Then in (ii.), the right bound $mid$ keeps decreasing, and in (iii.), the left bound $mid$ keeps increasing.
-    This shirks both sub-arrays until both bounds meet. Thus, the base case is reached, and the array is correctly sorted by inductive hypothesis.
+    This shirks both sub-arrays until both bounds meet. The merge function sorts after both calls, taking the next 
+    biggest in the sub-arrays, placing it in the temporary array, and copying back to the original array. Hence, by induction, the function is correct.
 \end{Proof}
 
