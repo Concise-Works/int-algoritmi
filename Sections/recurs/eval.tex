@@ -353,6 +353,56 @@ To illustrate the above proof, we can draw a recursion tree for merge sort:\\
 
 \newpage
 
-\begin{theo}[Iterative Substitution Method]
+\begin{theo}[Iterative Substitution Method (plug-and-chug)]
 
+    Given a function $T(n)$ which has a recurrence relation---meaning it calls 
+    upon itself in its own definition---we may repeatedly substitute such self-references
+    back into $T(n)$.
+
+    Given that $T(n)$ properly subdivides to a base case $T(x)$, we may derive some
+    pattern which illustrates the state of $T(n)$ at some depth $k$ within the recurrence.
+    Doing so, we identify what makes our $k_{th}$ expression hit $T(x)$.
 \end{theo}
+\begin{Proof}[Iterative Substitution Method (plug-and-chug) - MergeSort]
+
+    Merge sort has the recurrence relation $T(n) = 2T(n/2) + \Theta(n)$, for which the base case is $T(1)$.
+    We substitute $T(n/2)$ into $T(n)$:
+    \begin{align*}
+        T(n) &= 2T(n/2) + \Theta(n);\quad \text{ and }\quad T(n/2) = 2T(n/2^2) + \Theta(n/2);\\
+        T(n) &= 2\left[\hspace{3em} \right] + \Theta(n)\text{; Prepare to substitute the recurrence $T(n/2)$}\\
+         &= 2\left[2T(n/2^2) + \Theta(n/2)\right] + \Theta(n);\text{ we evaluate $\Theta\left(2n/2\right)$, hence $\Theta(n)$}\\
+         &= 2^2T(n/2^2) + \Theta(n) + \Theta(n)\text{; Simplified}\\
+    \end{align*}
+
+    \vspace{-1.5em}
+\noindent
+We won't fully simplify to observe how the recurrence builds. We continue, evaluating $T(n/2^2)$:
+\begin{align*}
+    T(n/2^2) &= 2T(n/2^3) + \Theta(n);\\
+    T(n) &= 2^2\left[2T(n/2^3) + \Theta(n/2^2)\right] + \Theta(n)+\Theta(n);\text{substitute again}\\
+    &= 2^3T(n/2^3) + \Theta(n)+\Theta(n)+\Theta(n)\text{; Simplified}\\
+\end{align*}
+
+\vspace{-1.5em}
+\noindent
+We identify the pattern for the $k_{th}$ substitution:
+\begin{align*}
+    T(n) &= 2^kT(n/2^k) + k(\Theta(n))\text{; General form}\\
+\end{align*}
+
+\vspace{-1.5em}
+\noindent
+Now we identify what makes our recurrence $T(n/2^k) = T(1)$, i.e., where is $n/2^k = 1$, then $n=2^k$, and $\log_2 n = k$. We plug this back into our general form:
+\begin{align*}
+    T(n) &= 2^{\log_2 n}T(n/2^{\log_2 n}) + \log_2 n\cdot \Theta(n)\text{; Substituting $k$}\\
+    &= n\Theta(1) + \log_2 n\cdot\Theta(n);\\
+    &= \Theta(n) + \Theta(n)\log_2 n;\\
+    &= \Theta(n\log n);
+\end{align*}
+Hence, merge sort has a time complexity of $O(n\log n)$.
+
+\end{Proof}
+
+\begin{Tip}
+    Live Demo: \url{https://youtu.be/Ob8SM0fz6p0?si=Z4PZQDWOXa7deEHA}
+\end{Tip}
