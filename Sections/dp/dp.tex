@@ -341,9 +341,9 @@ We derive the following cases, where $T$ is a changing target sum, and $S_i$ the
 \end{align*}
 \noindent
 Moreover, if $S_i$ is compatible with $T$, we check other solutions against our current partial-solution.
-In WIS (\ref{sec:WIS}), there was only ever one solution for each $OPT[j]$, as there was only ever one next job.
-However, in this case, we have multiple jobs to consider at each step. So $OPT[i]$ must contain a list of all possible best combinations.
-Hence we have a 2D array. We continue zero-indexed:
+In WIS (\ref{sec:WIS}), we were only ever changing one state of the recurance, the job we include.
+However, in this case, we change 2 states during each recurrence, meaning we ought to keep track of our choices of jobs in combination with the weight. 
+Hence our array is two-dimensional. We continue zero-indexed:
 
 \begin{table}[h!]
     \centering
