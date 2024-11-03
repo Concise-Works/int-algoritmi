@@ -121,19 +121,19 @@ if our current $OPT()$ solution larger than the next solution. We derive the fol
 \end{align*}
 
 \vspace{-1em}
-\begin{Func}[Weighted Interval Scheduling - \textit{OPT()}]
+\begin{Func}[Weighted Interval Scheduling - \textit{RecOPT()}]
 
     \vspace{-.5em}
     Compute all $OPT(j)$ recursivley, unraveling seeing which $OPT(j)$ is larger; $\mathbf{O(2^n)}$ \textbf{Time}.\\
         \begin{algorithm}[H]
             \SetAlgoLined
             \SetKwProg{Fn}{Function}{:}{}
-            \Fn{\textit{OPT}($j$)}{
+            \Fn{\textit{RecOPT}($j$)}{
                 \If{$j = 0$}{
                     \textbf{return} $0$\;
                 }
                 \Else{
-                    $OPT(j) \gets max\{v_j+OPT(p(j)), OPT(j-1)\}$\;
+                    $OPT(j) \gets max\{v_j+RecOPT(p(j)), RecOPT(j-1)\}$\;
                     \textbf{return} $OPT(j)$\;
                 }
             }
@@ -159,7 +159,7 @@ if our current $OPT()$ solution larger than the next solution. We derive the fol
                 }
                 \Else{
                     \If{$OPT[j]$ is not defined}{
-                        $OPT[j] \gets max\{v_j+OPT(p(j)), OPT(j-1)\}$; \tcp{$O(n)$}
+                        $OPT[j] \gets max\{v_j+OPT[p(j)], OPT[j-1]\}$; \tcp{$O(n)$}
                     }
                     \textbf{return} $OPT[j]$\;
                 }
@@ -208,7 +208,7 @@ if our current $OPT()$ solution larger than the next solution. We derive the fol
             Compute all $p(1),\dots,p(n)$; \tcp{$O(n)$}
             $OPT[0] \gets 0$; \tcp{Base case (array of size $n+1$)}
             \For{$j \gets 1$ \KwTo $n$}{
-                $OPT[j] \gets max\{v_j+OPT(p(j)), OPT[j-1]\}$\;
+                $OPT[j] \gets max\{v_j+OPT[p(j)], OPT[j-1]\}$\;
             }
             \textbf{return} $OPT[n]$\;
         \end{algorithm}
