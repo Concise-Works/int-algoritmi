@@ -389,7 +389,8 @@ Hence our array is two-dimensional. We continue zero-indexed:
     already accounted for all possible combinations.\\
 
     \noindent
-    Hence we have the following algorithm:
+    Hence the algorithm below. We change the next and build step to subtraction to allow us to mimic recursion in a 
+    bottom up approach:
     \begin{Func}[Subset Sum - \textit{OPT()}]
 
         \vspace{-.5em}
@@ -403,10 +404,10 @@ Hence our array is two-dimensional. We continue zero-indexed:
                 \For{$t \gets 0$ \KwTo $T$}{
                     
                     \If{$S[i] > t$}{
-                        $OPT[i][t] \gets OPT[i+1][t]$\;
+                        $OPT[i][t] \gets OPT[i-1][t]$\;
                     }
                     \Else{
-                        $OPT[i][t] \gets max\{\underbracket{OPT[i+1][t]}_{\text{next solution}}, \underbracket{S[i]+OPT[i+1][t-S[i]]}_{\text{build solution}}\}$\;
+                        $OPT[i][t] \gets max\{\underbracket{OPT[i-1][t]}_{\text{next solution}}, \underbracket{S[i]+OPT[i-1][t-S[i]]}_{\text{build solution}}\}$\;
                     }
                 }
             }
