@@ -159,7 +159,7 @@ if our current $OPT()$ solution larger than the next solution. We derive the fol
                 }
                 \Else{
                     \If{$OPT[j]$ is not defined}{
-                        $OPT[j] \gets max\{v_j+OPT[p(j)], OPT[j-1]\}$; \tcp{$O(n)$}
+                        $OPT[j] \gets max\{v_j+OPT(p(j)), OPT(j-1)\}$; \tcp{$O(n)$}
                     }
                     \textbf{return} $OPT[j]$\;
                 }
