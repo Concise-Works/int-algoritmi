@@ -505,7 +505,8 @@ We reduce again hitting $0$, hence, $P=\{7,2\}$.
         To the right is an example of a knapsack instance. 
         Say we want to solve this by repeatedly taking some combination of weights and their totals.
         Each time we take an item, we can no longer choose it, and our knapsack weight and value increase.
-        Our base case must be when we run out of items. We also know to step back when we exceed our weight limit.\\
+        Our base case must be when we run out of items. We also know to step back when we exceed our weight limit.
+        
         We want our build step to track the value in some way, decrement our choices, and decrease our weight limit. Then 
         if we don't pick the item, we move to the next item with no change in weight or value.
         This becomes strikingly similar to the previous subset sum problem with minor adjustments:

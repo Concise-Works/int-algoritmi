@@ -17,7 +17,7 @@ as it assumes paths can only get larger beyond each point. We look to correct th
 \noindent
 Say we start with $s$, and examine all out-degrees $u$. We update their distances $d(s)+w(s,u)$. Now all $u$ nodes 
 have a distance to contribute to their out-degrees. As hash-tables are unordered it is possible we reach a node $d(v)=\infty$, 
-before an in-degree of $v$ to updates it. If such happens we skip the node, as it is not reachable from $s$.
+before an in-degree of $v$ updates it. If such happens we skip the node, as it is not reachable from $s$.
 
 \newpage
 \noindent
@@ -52,7 +52,7 @@ Our first iteration goes as follows, $d(S)=0$. We check \underline{$min\{\text{e
     \item \textbf{C:}
     \vspace{-2em}
     \begin{itemize}
-        \item [] $d(C)+w(C,B)=12+-2; d(B)\gets min\{10,\infty\}$
+        \item [] $d(C)+w(C,B)=12+(-2); d(B)\gets min\{10,\infty\}$
     \end{itemize}
     \item \textbf{D:} \hspace{.5em} $d(D)=\infty$, currently unreachable from $S$; skip.
     \item \textbf{E:}
