@@ -308,7 +308,8 @@ to find the jobs that gave us our optimal solution.
 \underline{Notice that our backtracking closely mimics our orginal recursive formula.}
 
 \newpage
-\section{Subset Sum (Weighted Ceiling)}
+\section{Subset Sum}
+\subsection{Weighted Ceiling}
 
 
 \begin{Def}[Problem - Subset Sum (Weighted Ceiling)]
@@ -331,8 +332,9 @@ isn't our goal. If we decide $3\in P$, then $S'$ may also contain an optimal con
 building our solution, if $S_i>T$ we know not to consider it.\\
 
 \noindent
-We derive the following cases, where $T$ is a changing target sum, and $S_i$ the value of index $i$:
+We derive the following cases, where $T$ is a changing target sum, and $S_i$ the value of index $i$  (Alternitevely we could use subtraction, instead popping tail elements rather than head elements):
 
+\vspace{-1em}
 \begin{align*}
     OPT(i, T) =
     \begin{cases}
@@ -342,11 +344,12 @@ We derive the following cases, where $T$ is a changing target sum, and $S_i$ the
     \end{cases}
 \end{align*}
 \noindent
-Moreover, if $S_i$ is compatible with $T$, we check other solutions against our current partial-solution.
-In WIS (\ref{sec:WIS}), we were only ever changing one state of the recurance, the job we include.
-However, in this case, we change 2 states during each recurrence, meaning we ought to keep track of our choices of jobs in combination with the weight. 
-Hence our array is two-dimensional. We continue zero-indexed:
+Moreover, if $S_i$ is compatible with $T$, we check other solutions.
+In WIS (\ref{sec:WIS}), we only kept track of one changing variable.
+However, in this case, we change 2 states during each recurrence; 
+Hence our array is two-dimensional:
 
+\vspace{0em}
 \begin{table}[h!]
     \centering
     \resizebox{\textwidth}{!}{%
@@ -392,9 +395,9 @@ Hence our array is two-dimensional. We continue zero-indexed:
 
     \noindent
     Hence the algorithm below. We change the next and build step to subtraction to allow us to mimic recursion in a 
-    bottom up approach:
+    bottom up approach. Here we start at the top left progressing forward, rather than the bottom right:
     \begin{Func}[Subset Sum - \textit{OPT()}]
-
+        \label{func:subset}
         \vspace{-.5em}
         \begin{algorithm}[H]
             \SetAlgoLined
@@ -402,8 +405,8 @@ Hence our array is two-dimensional. We continue zero-indexed:
             $S$; $T$; $OPT[\ ][\ ]$; \tcp{Set $S$, Weight cieling $T$, DP table $OPT(i, T)$}
             $OPT[0][*] \gets 0$; \tcp{Base case (array of size $0$)}
             $OPT[*][0] \gets 0$; \tcp{Base case (array of size $T=0$)}
-            \For{$i \gets 0$ \KwTo $S.length$}{
-                \For{$t \gets 0$ \KwTo $T$}{
+            \For{$i \gets 1$ \KwTo $S.length$}{
+                \For{$t \gets 1$ \KwTo $T$}{
                     
                     \If{$S[i] > t$}{
                         $OPT[i][t] \gets OPT[i-1][t]$\;
@@ -448,7 +451,7 @@ Hence our array is two-dimensional. We continue zero-indexed:
                 \tcp{Where $OTP.length$ is the number of rows}
                 \While{$i < OPT.length$}{
                     \If{$OPT[i][t] > OPT[i+1][t]$}{
-                        $S \gets S \cup S[i]$\;
+                        $S \gets S \cup \{S[i]\}$\;
                         $t \gets t-S[i]$\;
                     }
                     $i \gets i+1$\;
@@ -487,6 +490,197 @@ Hence our array is two-dimensional. We continue zero-indexed:
 Here we know 3 combinations did not start our solution, neither did 6 or 1. However, 7 combinations did.
 We know that $7\in P$. We reduce $T$ to $2$, and our first element to contribute to the optimal solution was 2. 
 We reduce again hitting $0$, hence, $P=\{7,2\}$.
+
+\newpage
+\subsection{Knapsack}
+
+\begin{Def}[Problem - Subset Sum (Knapsack)]
+
+    Given a set $S$ of $n$ items, each with a weight $w_i$ and value $v_i$, and a knapsack of capacity $W$, find a subset
+    $P$ of $S$, s.t., $\sum_{i\in P}w_i\leq W$ and $\sum_{i\in P}v_i$ is the highest value achievable.
+\end{Def}   
+
+    \begin{minipage}{0.45\textwidth}
+
+        To the right is an example of a knapsack instance. 
+        Say we want to solve this by repeatedly taking some combination of weights and their totals.
+        Each time we take an item, we can no longer choose it, and our knapsack weight and value increase.
+        Our base case must be when we run out of items. We also know to step back when we exceed our weight limit.\\
+        We want our build step to track the value in some way, decrement our choices, and decrease our weight limit. Then 
+        if we don't pick the item, we move to the next item with no change in weight or value.
+        This becomes strikingly similar to the previous subset sum problem with minor adjustments:
+
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \begin{center}
+            \begin{tabular}{|c|c|c|}
+            \hline
+            $i$ & $v_i$ & $w_i$ \\
+            \hline
+            1 & 1 & 1 \\
+            2 & 6 & 2 \\
+            3 & 18 & 5 \\
+            4 & 22 & 6 \\
+            5 & 28 & 7 \\
+            \hline
+            \end{tabular}
+            
+            \vspace{0.3cm}
+            \textbf{knapsack instance} \\
+            (weight limit $W = 11$)
+        \end{center}
+    \end{minipage}
+    \begin{align*}
+        OPT(i, w) =
+        \begin{cases}
+            0 & \text{if $i==0$}\\
+            OPT(i-1, w) & \text{if $w_i > w$}\\
+            max\{\underbracket{OPT(i-1, w)}_{\text{next solution}}, \underbracket{v_i+OPT(i-1, w-w_i)}_{\text{build solution}}\} & \text{else}
+        \end{cases}
+    \end{align*}
+    \vspace{-1em}
+    \begin{figure}[h]
+       
+        \includegraphics[width=.95\textwidth]{Sections/dp/knapsack.png}
+    \end{figure}
+
+    \noindent
+    We achieve the a similar table as we saw before in the subset sum problem.
+
+    \newpage
+
+    \noindent
+    We skip the implementation as the function is the same as Function (\ref{func:subset}), with the only difference being that we add $v_i$ instead of $S_i$ at build step.
+    Again the runtime is the dimension of our DP table, $O(nW)$.
+    \begin{Func}[Backtracking Knapsack- \textit{Backtrack()}]
+        \label{func:knapsack}
+
+        \vspace{-.5em}
+        \begin{algorithm}[H]
+            \SetKwProg{Fn}{Function}{:}{}
+            $i \gets OPT.length$; $w \gets W$; $S \gets \{\}$; \tcp{$S$ is our set of jobs}
+            \While{$i > 0$ AND $w > 0$}{
+                \If{$OPT[i][w] > OPT[i-1][w]$}{
+                    $S \gets S \cup \{i\}$\;
+                    $w \gets w-w_i$\;
+                }
+                $i \gets i-1$; \tcp{In both cases we $i-1$}
+            }
+            \Return $S$\;
+            
+        \end{algorithm}
+        \noindent
+        \rule{\textwidth}{0.4pt}
+        \textbf{Time Complexity:} $O(n)$.
+    \end{Func}
+
+\subsection{Bounded Knapsack}
+\begin{Def}[Problem - Bounded Knapsack]
+
+    Given a set $S$ of $n$ items, each with a weight $w_i$ and value $v_i$, and a knapsack of capacity $W$, find a subset
+    $P$ of $S$, s.t., $\sum_{i\in P}w_i\leq W$ and $\sum_{i\in P}v_i$ is the highest value achievable. There are 
+    an infinite copies of each item.
+\end{Def}
+\noindent
+The same logic applies from the above knapsack problem. However, we can now take an item multiple times, meaning 
+we may have to iterate over all possible choices between each item. We proceed as follows:
+
+\begin{align*}
+    OPT(i, w) =
+    \begin{cases}
+        0 & \text{if $i==0$}\\
+        OPT(i-1, w) & \text{if $w_i > w$}\\
+        {\displaystyle \max_{j = 0, \dots, \infty}}\{\underbracket{OPT(i-1, w)}_{\text{next solution}}, \underbracket{j\cdot v_i+OPT(i-1, w-j\cdot w_i)}_{\text{build solution}}\} & \text{else}
+    \end{cases}
+\end{align*}
+At each build step we iterate $j\to\infty$, until $w_i\cdot j > w$. This third step may seem 3-dimensional, as in 
+our $n\times W$ table, each entry has another $W$ entries. However, there's no need to store all $W$ entries, as we only 
+need to store $j$.
+
+Moreover, we don't want to directly store $j$ in our table $OPT$ as it would overwrite the $v_i$ value. 
+Instead, we keep two tables both $n\times W$, so that we can read both values $v_i$ and its $j$.
+
+\newpage
+
+\noindent
+Let us call our choices $j$ table $C$ and our value table $M$. We illustrate this relationship
+by imagining the two tables sandwiched on top of each other. Then for every $i$ and $w$ we can reference both values at the same time:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{Sections/dp/sandwich.png}
+    \caption{Illustrating the relationship between $C$ and $M$, where $v_i$ relates to its respective $j$} 
+    
+\end{figure}
+
+\noindent
+We implement the following algorithm:
+
+\begin{Func}[Unbounded Knapsack - \textit{UnBoundedKnapsack()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $M \gets (n+1) \times (W+1)$ table \tcp{DP table}
+        $C \gets (n+1) \times (W+1)$ table \tcp{Number of copies}
+        $M[0][*] \gets 0$ and $M[*][0] \gets 0$\;
+        
+        \For{$i \gets 1$ \KwTo $n$}{
+            \For{$w \gets 1$ \KwTo $W$}{
+                $M[i][w] \gets M[i-1][w]$; \tcp{Start with previous solution}
+                $m \gets 1$\;
+                
+                \While{$m \cdot w_i \leq w$}{
+                    $val \gets m \cdot v_i + M[i-1][w - m \cdot w_i]$\;
+                    \If{$val > M[i][w]$}{
+                        $M[i][w] \gets val$\;
+                        $C[i][w] \gets m$\;
+                    }
+                    $m \gets m + 1$\;
+                }
+            }
+        }
+        \Return $M, C$\;
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n \times W^2)$ Though we said our tables won't need to be $W$ deep, we still iterate at most $W$ times for each $w$.\\
+    \textbf{Space Complexity:} $O(n \times W)$, as $M$ and $C$ are both $n \times W$, hence $nW+nW=O(nW)$.
+\end{Func}
+
+\newpage
+\noindent
+Our backtracking algorithm is almost identical to the previous knapsack problem (\ref{func:knapsack}), however, we now have to consider the number of copies $C[i][w]$.
+\begin{Func}[Backtracking Bounded Knapsack - \textit{BKBacktrack()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $sol \gets \emptyset$\;
+        $i \gets n$ and $w \gets W$\;
+        
+        \While{$i > 0$ \textbf{and} $w > 0$}{
+            \If{$M[i][w] > M[i-1][w]$}{
+                $sol \gets sol \cup \{(i, C[i][w])\}$; \tcp{Add item $i$ with its count $C[i][w]$}
+                $w \gets w - C[i][w] \cdot w_i$\;
+            }
+            $i \gets i - 1$\;
+        }
+        
+        \Return $sol$\;
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n)$, just like before, as we traverse vertically up our $n\times W$ table, finding at what point $M[i][w]$ change. 
+    This indicates $i$ was used in the solution.
+\end{Func}
+
+
+
+
+
 
 
 
