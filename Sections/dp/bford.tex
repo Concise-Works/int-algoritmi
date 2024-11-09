@@ -90,12 +90,12 @@ Below find the shortest path from $a\to c$:
 \end{figure}
 
 \noindent
-Examining 3. in Figure (\ref{fig:ncycle}), if we run Bellman-Ford on this graph, we will continuously find a new shortest path to $c$,
-for which we update the shortest path for $a\to c$. Then we could update a new shortest path to $a\to b$, and so on.
+Examining 3. in Figure (\ref{fig:ncycle}), if we run Bellman-Ford on this graph, we will continuously find a new shortest path to $c$.
+We then update the shortest path for $a\to c$, subsequently updating a new shortest path $a\to b$, and so on.
 \begin{theo}[Bellman-Ford Alg. - Negative Cycle Detection]
 
     To detect a negative cycle, run Bellman-Ford for $n-1$ iterations. If a new shortest path is found in the last iteration, a negative cycle exists. As by then,
-    we should have found our shortest path.
+    we should have solidified a solution.
 \end{theo}
 \noindent
 We identify the choices we make in Figure (\ref{fig:bford})'s routine into a recursive formula:
