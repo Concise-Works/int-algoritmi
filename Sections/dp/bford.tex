@@ -125,12 +125,12 @@ In figure (\ref{fig:bford}) we see on our second iteration, $A$ and $C$ are upda
 For reference we provide Figure (\ref{fig:bford}) once more:
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{Sections/dp/bford.png}
+    \includegraphics[width=0.7\textwidth]{Sections/dp/bford.png}
     \caption{Bellman-Ford Algorithm, where $i$ depicts iterations and $P[v]$ parents of $v$.}
 \end{figure}
 
 \noindent
-Below is our pseudo-code for the Bellman-Ford algorithm. We return a DP table $M$ and a parent list $parents$.
+Below is pseudo-code for the Bellman-Ford algorithm, returning a DP table $M$ and a parent list $parents$.
 \begin{Func}[Bellman-Ford - \textit{BellmanFord()}]
 
     \vspace{-.5em}
@@ -161,7 +161,9 @@ Below is our pseudo-code for the Bellman-Ford algorithm. We return a DP table $M
     
     \noindent
     \rule{\textwidth}{0.4pt}
-    \textbf{Time Complexity:} $O(n^2 + nm)$. We iterate $n-1$ times for $n+m$ edges. Hence $O(n(n+m))$.
+    \textbf{Time Complexity:} $O(nm)$. We iterate $n-1$ times for $n+m$ edges. Then $O(n(n+m))=(n^2 + nm)$; however,
+    even in tree structures $m=n-1$. So here $m$ could be much larger, s.t, $m\geq n$. Therefore, $nm$ dominates $n^2$
+    in the expression. Hence, $O(nm)$.
 \end{Func}
 \noindent
 Let's again examine the above Figure at $i=1$. Say we reach line 7, with $v=D$. We then copy it's previous iteration,
