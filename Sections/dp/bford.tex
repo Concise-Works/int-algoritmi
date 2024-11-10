@@ -102,16 +102,17 @@ We identify the choices we make in Figure (\ref{fig:bford})'s routine into a rec
 \[
 OPT(i, v) = 
 \begin{cases} 
-0 & \text{if } i = 0 \text{ and } v = s \\ 
-+\infty & \text{if } i = 0 \text{ and } v \neq s \\
+0 & \text{if } i = 0 \text{ and } v = s, \\ 
++\infty & \text{if } i = 0 \text{ and } v \neq s, \\
 \min \left\{ 
 \begin{array}{l}
 OPT(i - 1, v), \\
-{\displaystyle \min_{\text{for } u\in v}} {\left( OPT(i - 1, u) + w(u, v) \right)}
+\min\limits_{u \in G(v)} \left( OPT(i - 1, u) + w(u, v) \right)
 \end{array} 
-\right\} & \text{otherwise}
+\right\} & \text{if } i > 0.
 \end{cases}
 \]
+
 \noindent
 Say we are evaluating node $v$. We first take the last iteration's shortest path $d(v)$ and compare it to possible paths $d'$. To 
 find such $d'$ we iterate over all in-degrees $u\to v$ and see if $d(u)+w(u,v)<d(v)$. If so, we update $d(v)=d(u)+w(u,v)$.\\
