@@ -575,8 +575,8 @@ We reduce again hitting $0$, hence, $P=\{7,2\}$.
         \textbf{Time Complexity:} $O(n)$.
     \end{Func}
 
-\subsection{Bounded Knapsack}
-\begin{Def}[Problem - Bounded Knapsack]
+\subsection{Unbounded Knapsack}
+\begin{Def}[Problem - Unbounded Knapsack]
 
     Given a set $S$ of $n$ items, each with a weight $w_i$ and value $v_i$, and a knapsack of capacity $W$, find a subset
     $P$ of $S$, s.t., $\sum_{i\in P}w_i\leq W$ and $\sum_{i\in P}v_i$ is the highest value achievable. There are 
@@ -617,7 +617,7 @@ by imagining the two tables sandwiched on top of each other. Then for every $i$ 
 \noindent
 We implement the following algorithm:
 
-\begin{Func}[Unbounded Knapsack - \textit{UnBoundedKnapsack()}]
+\begin{Func}[Unbounded Knapsack - \textit{UnboundedKnapsack()}]
 
     \vspace{-.5em}
     \begin{algorithm}[H]
@@ -653,7 +653,7 @@ We implement the following algorithm:
 \newpage
 \noindent
 Our backtracking algorithm is almost identical to the previous knapsack problem (\ref{func:knapsack}), however, we now have to consider the number of copies $C[i][w]$.
-\begin{Func}[Backtracking Bounded Knapsack - \textit{BKBacktrack()}]
+\begin{Func}[Backtracking Unbounded Knapsack - \textit{BKBacktrack()}]
 
     \vspace{-.5em}
     \begin{algorithm}[H]
