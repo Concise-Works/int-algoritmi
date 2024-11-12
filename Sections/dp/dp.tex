@@ -544,6 +544,7 @@ We reduce again hitting $0$, hence, $P=\{7,2\}$.
        
         \includegraphics[width=.95\textwidth]{Sections/dp/knapsack.png}
     \end{figure}
+    \label{fig:knapsack}
 
     \noindent
     We achieve the a similar table as we saw before in the subset sum problem.
@@ -677,6 +678,65 @@ Our backtracking algorithm is almost identical to the previous knapsack problem 
     \textbf{Time Complexity:} $O(n)$, just like before, as we traverse vertically up our $n\times W$ table, finding at what point $M[i][w]$ change. 
     This indicates $i$ was used in the solution.
 \end{Func}
+
+\subsection*{Unbounded knapsack (Bottom-Up Approach)}
+\noindent
+Alternatively we can use a bottom-up approach with a slight modification to our recursive formula. Instead of iterating over $j$, we iterate over $w$, 
+continuously taking $v_j$ until we exceed $w$ or move onto the next item. This is shown by:
+\[
+\text{OPT}(i, w) = 
+\begin{cases} 
+    0 & \text{if } i = 0, \\
+    \text{OPT}(i-1, w) & \text{if } w_i > w, \\
+    \max\left(\text{OPT}(i-1, w), v_i + \text{OPT}(i, w - w_i)\right) & \text{otherwise.}
+\end{cases}
+\]
+
+\noindent
+Same scenerio, though now we build our solution $n\times W$ starting from the top left, rather than the bottom right. 
+Meaning we start with one item, then two, then three, and so on.\\
+
+\noindent
+Each iteration we find the largest weight we can take as we grow our constraint $w$. While growing $w$ if the solution at 
+at iteration $i$ is greater than the last, we take the item. This will consider all possible combinations.\\
+
+\noindent
+For an exercise, consider the previous table (\ref{fig:knapsack}), and follow the table left to right, top to bottom.
+
+\newpage
+\begin{Func}[Unbounded Knapsack - \textit{UnboundedKnapsack2()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $M \gets (n+1) \times (W+1)$ table$^*$ \tcp{DP table}
+        $M[0][*] \gets 0$ and $M[*][0] \gets 0$ \tcp{Set first row and column to 0}
+        
+        \For{$i \gets 1$ \KwTo $n$}{
+            \For{$w \gets 1$ \KwTo $W$}{
+                \If{$w_i > w$}{
+                    $M[i][w] \gets M[i-1][w]$;
+                }
+                \Else{
+                    $val \gets v_i + M[i][w - w_i]$ \tcp{Take one more copy of $i$}
+                    \If{$val > M[i-1][w]$}{
+                        $M[i][w] \gets val$;
+                    }
+                    \Else{
+                        $M[i][w] \gets M[i-1][w]$;
+                    }
+                }
+            }
+        }
+        \Return $M$\;
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n \times W)$, as we iterate over each item and weight once.
+\end{Func}
+
+
 
 
 
