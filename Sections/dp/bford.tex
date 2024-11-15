@@ -1,3 +1,5 @@
+\newpage 
+
 \section{Shortest Paths - Bellman-Ford Algorithm}
 Revisiting the shortest path problem (\ref{sec:dstra}), Dijkstra's failed to 
 account for negative edge weights. This was a result of fixing nodes too early in the algorithm,
@@ -17,9 +19,8 @@ as it assumes paths can only get larger beyond each point. We look to correct th
 \noindent
 Say we start with $s$, and examine all out-degrees $u$. We update their distances $d(s)+w(s,u)$. Now all $u$ nodes 
 have a distance to contribute to their out-degrees. As hash-tables are unordered it is possible we reach a node $d(v)=\infty$, 
-before an in-degree of $v$ updates it. If such happens we skip the node, as it is not reachable from $s$.
+before an in-degree of $v$ updates it. If such happens we skip the node, as it is not reachable from $s$.\\
 
-\newpage
 \noindent
 Thus using the idea that the sub-paths of the shortest path are also shortest paths, we gather that
 each iteration a new shortest path is found. This allows us to find newer shortest paths.
@@ -34,6 +35,8 @@ each iteration a new shortest path is found. This allows us to find newer shorte
 \begin{Tip}
     Bellman-Ford Alg. Live Demo: \url{https://www.youtube.com/watch?v=obWXjtg0L64}.
 \end{Tip}
+\newpage 
+
 \noindent
 Our first iteration goes as follows, $d(S)=0$. We check \underline{$min\{\text{evaluation weight},\text{current weight}\}$.}
 \begin{itemize}
@@ -73,8 +76,6 @@ able to evaluate paths leaving $D$. This insight gives us the following theorem:
 Though just like Dijkstra's algorithm, Bellman-Ford also has an Achilles' heel. If a negative cycle exists, the algorithm will 
 loop indefinitely, as there will always be a new shortest path. Moreover on the next page.
 
-\newpage
-
 \begin{Def}[Negative Cycle]
 
     A negative cycle is a cycle whose total weight is negative.
@@ -112,6 +113,13 @@ OPT(i - 1, v), \\
 \right\} & \text{if } i > 0.
 \end{cases}
 \]
+% \noindent
+% For reference we provide Figure (\ref{fig:bford}) once more:
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=0.7\textwidth]{Sections/dp/bford.png}
+%     \caption{Bellman-Ford Algorithm, where $i$ depicts iterations and $P[v]$ parents of $v$.}
+% \end{figure}
 
 \noindent
 Say we are evaluating node $v$. We first take the last iteration's shortest path $d(v)$ and compare it to possible paths $d'$. To 
@@ -119,17 +127,6 @@ find such $d'$ we iterate over all in-degrees $u\to v$ and see if $d(u)+w(u,v)<d
 
 \noindent
 In figure (\ref{fig:bford}) we see on our second iteration, $A$ and $C$ are updated upon evaluating their new in-degree $D$.
-\newpage
-
-\noindent
-For reference we provide Figure (\ref{fig:bford}) once more:
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{Sections/dp/bford.png}
-    \caption{Bellman-Ford Algorithm, where $i$ depicts iterations and $P[v]$ parents of $v$.}
-\end{figure}
-
-\noindent
 Below is pseudo-code for the Bellman-Ford algorithm, returning a DP table $M$ and a parent list $parents$.
 \begin{Func}[Bellman-Ford - \textit{BellmanFord()}]
 

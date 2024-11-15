@@ -663,10 +663,9 @@ Our backtracking algorithm is almost identical to the previous knapsack problem 
         $i \gets n$ and $w \gets W$\;
         
         \While{$i > 0$ \textbf{and} $w > 0$}{
-            \If{$M[i][w] > M[i-1][w]$}{
-                $sol \gets sol \cup \{(i, C[i][w])\}$; \tcp{Add item $i$ with its count $C[i][w]$}
-                $w \gets w - C[i][w] \cdot w_i$\;
-            }
+            $sol \gets sol \cup \{i \cdot C[i][w]\}$; \tcp{Add item $i$ with its count $C[i][w]$}
+            $w \gets w - C[i][w] \cdot w_i$\;
+            
             $i \gets i - 1$\;
         }
         
@@ -678,6 +677,31 @@ Our backtracking algorithm is almost identical to the previous knapsack problem 
     \textbf{Time Complexity:} $O(n)$, just like before, as we traverse vertically up our $n\times W$ table, finding at what point $M[i][w]$ change. 
     This indicates $i$ was used in the solution.
 \end{Func}
+% \begin{Func}[Backtracking Unbounded Knapsack - \textit{BKBacktrack()}]
+
+%     \vspace{-.5em}
+%     \begin{algorithm}[H]
+%         \SetKwProg{Fn}{Function}{:}{}
+%         $sol \gets \emptyset$\;
+%         $i \gets n$ and $w \gets W$\;
+        
+%         \While{$i > 0$ \textbf{and} $w > 0$}{
+%             \If{$M[i][w] > M[i-1][w]$}{
+%                 $sol \gets sol \cup \{(i, C[i][w])\}$; \tcp{Add item $i$ with its count $C[i][w]$}
+%                 $w \gets w - C[i][w] \cdot w_i$\;
+%             }
+%             $i \gets i - 1$\;
+%         }
+        
+%         \Return $sol$\;
+%     \end{algorithm}
+    
+%     \noindent
+%     \rule{\textwidth}{0.4pt}
+%     \textbf{Time Complexity:} $O(n)$, just like before, as we traverse vertically up our $n\times W$ table, finding at what point $M[i][w]$ change. 
+%     This indicates $i$ was used in the solution.
+% \end{Func}
+
 
 \subsection*{Unbounded knapsack (Bottom-Up Approach)}
 \noindent
@@ -735,6 +759,33 @@ For an exercise, consider the previous table (\ref{fig:knapsack}), and follow th
     \rule{\textwidth}{0.4pt}
     \textbf{Time Complexity:} $O(n \times W)$, as we iterate over each item and weight once.
 \end{Func}
+
+\begin{Func}[Traceback Solution for Unbounded Knapsack - \textit{Traceback()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $i \gets n$ \tcp{Start from the last item}
+        $w \gets W$ \tcp{Start from the maximum weight}
+        $sol \gets \emptyset$ \tcp{Initialize the solution set}
+        
+        \While{$i > 0$ \textbf{and} $w > 0$}{
+            \If{$w \geq w_i$ \textbf{and} $(v_i + M[i][w - w_i] > M[i-1][w])$}{
+                $sol.\textit{add}(i)$ \tcp{Add item $i$ to the solution}
+                $w \gets w - w_i$ \tcp{Reduce the weight}
+            }
+            \Else{
+                $i \gets i - 1$ \tcp{Move to the previous item}
+            }
+        }
+        \Return $sol$\;
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n + W)$, as we traverse the DP table in reverse order.
+\end{Func}
+
 
 
 

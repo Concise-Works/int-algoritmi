@@ -1,0 +1,269 @@
+
+Network flow techniques are versatile tools with applications spanning various fields. They solve problems like optimizing airline schedules, matching tasks in distributed systems, and detecting network intrusions.
+From image segmentation to project selection, these methods reduce complex systems into manageable frameworks, showcasing their broad real-world impact.
+\section{Residual Graphs}
+
+\begin{Def}[Flow Network]
+
+    A graph $G=(V,E)$ of $V$ vertices and $E$ edges, carrying a flow of data such that:
+    \begin{enumerate}
+        \item There is a source node $s$ where data enters the stream.
+        \item There is a sink node $t$ where data exits the stream.
+        \item Each edge $(u,v)$ has a capacity $c(u,v)$, which is the maximum flow that can pass through it.
+    \end{enumerate}
+\end{Def}
+
+\begin{Def}[Source-Sink Cut (s-t cut)]
+
+    A partition of a flow graph into two sets $A$ and $B$ such that $s \in A$ and $t \in B$. Namely, $B:= \overline{A}$.
+
+\end{Def}
+
+\begin{Def}[Capacity]
+
+    The capacity of a cut $C(A,B)$ is the sum of the edge capacities leaving $A$ to $B$, i.e.,
+    \begin{equation}
+        C(A,B) := \sum_{u \in A, v \in B} c(u,v)
+    \end{equation}
+\end{Def}
+
+\newpage
+\noindent
+Below shows a flow network with source $s$ and sink $t$ nodes, with a capacity cut drawn around nodes $s$ and $b$.
+
+\begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{Sections/net/cap.png}
+        \caption{Flow Network with Capacity Cut $A$}
+    \end{figure}
+
+\noindent
+Here the sum of the edge weights leaving $A$ is $c(s,a) + c(b,t) = 20 + 20 = 40$.
+
+\begin{Def}[Minimum Cut (Min Cut)]
+
+    A cut $C(A,B)$ such that the capacity obtained is the minimum possible value for all cuts in the graph.
+\end{Def}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Sections/net/min.png}
+    \caption{Flow Network with Minimum Cut}
+\end{figure}
+
+\noindent
+Where the minimum cut is $C(A,B) = 20$, as $c(s,a) + c(s,b) = 10 + 20 = 30$. Note, despite
+this cut being around the source node, not all minimum cuts result in this manner.
+
+\newpage
+
+\begin{Def}[Graph Flow]
+
+    For edges $(u,v)$ in a graph $G=(V,E)$, the flow $f(u,v)$ denotes the amount of data flowing from $u$ to $v$.
+    For a valid \textbf{s-t flow}, $f$ in $G$ follows the following constraints:
+    \begin{enumerate}
+        \item [(i)] Capacity constraint: for all $(u,v)\in G$, $0 \leq f(u,v) \leq c(u,v)$ 
+        \item  [(ii)] Flow conservation: for all $v \in V \setminus \{s,t\}$, ${\displaystyle \sum_{u\to v \in V} f(u,v) = \sum_{v\to w \in V} f(v,w)}$
+    \end{enumerate}
+
+    \noindent
+    I.e., (i) data flows within capacity limits, and (ii) data isn't created or destroyed in the network.
+\end{Def}
+
+\vspace{-1em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\textwidth]{Sections/net/flow.png}
+    \caption{Flow Network with Flow a valid flow $f$, as what comes in, is what comes out.}
+\end{figure}
+\begin{Def}[Maximum Flow (Max Flow)]
+
+    The maximum flow in a network is the maximum amount of data that can be sent from the source to the sink.
+    \textbf{Integral Flow,} is a flow where all edge flows are whole integers.
+\end{Def}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\textwidth]{Sections/net/max.png}
+    \caption{Flow Network with Maximum Flow}
+\end{figure}
+
+\newpage
+\begin{Def}[Flow Value Lemma]
+
+    For any flow $f$ the value $V(f)$ and any s-t cut $C(A,B)$, the net-flow sent across the cut, is equal to the flow leaving $s$, i.e.,
+    for $u \in A$ and $v \in B$:
+    \begin{equation}
+        V(f) = \sum_{\{u\to v\}} f(u,v) - \hspace{-1em} \sum_{\{u\leftarrow v\}} f(v,u)
+    \end{equation}
+    Subtracting flows entering preserves conservation, as what comes in, is sent out.
+\end{Def}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\textwidth]{Sections/net/flowval.png}
+    \caption{An s-t cut with net-flow equaling $V(f)$: $(20+20)-(10) = 30 = V(f)$.}
+\end{figure}
+
+\begin{Def}[Weak Duality]
+
+    For any flow $f$ and any s-t cut $C(A,B)$, the value of the flow is at most the capacity of the cut, i.e.,
+    \begin{equation}
+        V(f) \leq C(A,B)
+    \end{equation}
+\end{Def}
+
+\begin{Def}[Max Flow-Min Cut Theorem]
+
+    For any arbitrary flow $f$, if $C(A,B)$ is the min cut, and $V(f)=C(A,B)$, then $f$ is the max flow.
+\end{Def}
+
+\noindent
+One could approach this problem iteratively by \textbf{augmenting} the graph by picking the largest path and 
+bottle-necking the flow via the lowest capacity edge.\\
+
+\noindent
+Though the biggest problem with this approach is that, how do we consider all possible paths? We
+could use recursion finding. However, this could lead to $O(mn^2)$ time complexity, 
+
+\newpage
+\noindent
+When filling out our graph, we may want to keep track of what choices we made, and how much flow we have left to give.
+For this we introduce the following data structure:
+\begin{Def}[Residual Graph]
+
+    Given a graph $G=(V,E)$ with flow $f$, we denote its residual graph $G_f = (V,E_f)$, where $E_f$ are a new set of edges generated from augmentations.
+    Between two nodes $u$ and $v$ in $G_f$, we have the following edges:
+    \begin{itemize}
+        \item Flow spent from $u$ to $v$, $f(u,v)$, is shown as a \textbf{backward edge} $c_b$ of that capacity, $$c_b(u,v):= f(u,v)$$.
+        
+        \vspace{-2em}
+        \item Flow left to spend is shown as a \textbf{forward edge} $c_f$ with capacity of what's left, $$c_f(u,v) := c(u,v) - f(u,v)$$
+    \end{itemize}
+
+    \vspace{-1em}
+\end{Def}
+
+\vspace{-1em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\textwidth]{Sections/net/res.png}
+    \caption{A graph $G$ and its residual graph $G_f$.}
+\end{figure}
+
+\noindent
+Our residual graph tells us, going from $s$ to $t$, what paths we can take, and how much flow we have left to spend.
+We harness this into the following algorithm:
+\begin{theo}[Ford-Fulkerson Algorithm]
+
+    Given a flow network $G=(V,E)$, with source $s$ and sink $t$, the Ford-Fulkerson algorithm finds the max flow by iteratively augmenting the graph.
+    \begin{enumerate}
+        \item Initialize flow $f(u,v) = 0$ for all $(u,v) \in E$.
+        \item While there exists a path $p$ from $s$ to $t$ in $G_f$, augment the flow along $p$.
+        \item Return the flow $f$.
+    \end{enumerate}
+
+    \noindent
+    Notably, if a backward edge $c_b(u,v)$ is taken from $s\to t$, then $f(u,v)\in G$ is decreased by $c_b(u,v)$.
+    Additionally, each output is an integral flow.
+\end{theo}
+\newpage 
+
+\noindent
+In essence, each round we find a path from $s\to t$ in $G_f$, take that path and update both tables $G$ and $G_f$ with the new flow. Do 
+so until we no longer can reach $t$ from $s$ in $G_f$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\textwidth]{Sections/net/ff.png}
+    \caption{Ford-Fulkerson Algorithm in action, terminating at 3 where $s\to t$ is blocked.}
+\end{figure}
+
+\begin{theo}[Ford-Fulkerson Max flow-Min Cut Consequence]
+
+    At termination, max flow is obtained. Moreover, nodes from $s$ to blocked nodes $b$ form a cut $C(A,B)$, which is the min cut.
+\end{theo}
+
+\vfill
+
+\begin{center}
+    \textit{Algorithm on next page.}
+\end{center}
+
+\vfill
+
+\newpage
+
+\begin{Func}[Ford-Fulkerson - \textit{Ford-Fulkerson($G, s, t, c$)}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        \KwIn{$G$: graph, $s$: source, $t$: sink, $c$: capacities}
+        \KwOut{$f$: maximum flow}
+
+        \vspace{.5em}
+        \Fn{\textit{Ford-Fulkerson($G, s, t, c$)}}{
+
+            \vspace{.5em}
+            \ForEach{$e \in E$}{
+            $f(e) \gets 0$ \tcp{Initialize flow on each edge to zero}
+            }
+
+            \vspace{.5em}
+            $G_f \gets \textit{residual}(G, c, f)$ \tcp{Construct the residual graph}
+
+            \vspace{.5em}
+            \While{there exists path $P:= s\to t$ in $G_f$}{
+            $f \gets \textit{Augment}(f, c, P)$ \tcp{Augment the flow along path $P$}
+            Update $G_f$ along $P$\;
+            }
+
+            \vspace{.5em}
+            \Return $f$\;
+        }
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(mnC)$, where $m$ is the number of edges, $n$ is the number of nodes, 
+    and $C$ is the value of the maximum flow. Line 5 takes $O(m)$ time to find an augmenting path in the residual graph. Lines 6-7 take $O(n)$ time to update the flow along the path. Since the flow increases by at least 1 unit in each iteration, and each iteration takes $O(m + n) = O(m)$ time, the while loop runs at most $C$ times. Therefore, the total time complexity is $O(mnC)$.
+
+\end{Func}
+
+\begin{Func}[Augmentation for Ford-Fulkerson - \textit{Augment($f, c, P$)}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        \KwIn{$f$: current flow, $c$: capacities, $P$: augmenting path}
+        \KwOut{$f$: updated flow}
+
+        \vspace{.5em}
+        \Fn{\textit{Augment($f, c, P$)}}{
+            $b \gets \textit{bottleneck}(P)$ \tcp{Minimum residual capacity of an edge in $P$}
+                
+            \ForEach{$e \in P$}{
+                \uIf{$e \in E$}{
+                    $f(e) \gets f(e) + b$ \tcp{Update flow on forward edge}
+                }
+                \Else{
+                    $f(e) \gets f(e) - b$ \tcp{Update flow on reverse edge}
+                }
+            }
+            \Return $f$\;
+        }
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n)$, where $n$ is the number of nodes in $G$. At worst our path $P$ contains all nodes.
+\end{Func}
+
+
+
+
+
+
+
+
