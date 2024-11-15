@@ -9,7 +9,7 @@ From image segmentation to project selection, these methods reduce complex syste
     \begin{enumerate}
         \item There is a source node $s$ where data enters the stream.
         \item There is a sink node $t$ where data exits the stream.
-        \item Each edge $(u,v)$ has a capacity $c(u,v)$, which is the maximum flow that can pass through it.
+        \item Each edge $(u,v)$ has capacity $c(u,v)$, the maximum flow that can pass through it.
     \end{enumerate}
 \end{Def}
 
@@ -91,7 +91,7 @@ this cut being around the source node, not all minimum cuts result in this manne
 \newpage
 \begin{Def}[Flow Value Lemma]
 
-    For any flow $f$ the value $V(f)$ and any s-t cut $C(A,B)$, the net-flow sent across the cut, is equal to the flow leaving $s$, i.e.,
+    For any flow $f$ the value $V(f)$ and any s-t cut $C(A,B)$, the net-flow sent across the cut is equal to the flow leaving $s$, i.e.,
     for $u \in A$ and $v \in B$:
     \begin{equation}
         V(f) = \sum_{\{u\to v\}} f(u,v) - \hspace{-1em} \sum_{\{u\leftarrow v\}} f(v,u)
@@ -124,7 +124,7 @@ bottle-necking the flow via the lowest capacity edge.\\
 
 \noindent
 Though the biggest problem with this approach is that, how do we consider all possible paths? We
-could use recursion finding. However, this could lead to $O(mn^2)$ time complexity, 
+could use recursion finding. However, this could lead to an inefficiencies or even infinite loops.
 
 \newpage
 \noindent
