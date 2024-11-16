@@ -53,6 +53,15 @@ def gale_shapely(P: List[int], A: List[int]):
                         matches[next_pref] = i
     return matches
 
+"""
+Time Complexity: O(n^2). Outer for-loop is O(n), if at least one
+p in P isn't engaged we have to run the for-loop again. Hence, in 
+worst case every p conflicts with each other. but a in A must prefer
+one of them. So we are forced to run n^2 times to resolve n conflicts.
+
+Space Complexity : O(nxn). Size of the pref lists (counting input).
+"""
+
 # set[i] is name, set[i][...] least to most preferred
 hospitals: List[int] = [[1,2,0],[1,2,0],[0,2,1]] 
 residents: List[int] = [[2,1,0],[0,2,1],[0,1,2],]
