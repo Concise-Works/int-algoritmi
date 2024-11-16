@@ -1,5 +1,6 @@
 
-from typing import List, Dict
+from typing import List, Dict # Types for List
+from collections import deque # deque allows us to treat an array as a queue
 
 """
 Gale Shapely:
@@ -15,7 +16,6 @@ Note:
 - Proposers get their best choice, if there is no conflict
 - If Proposers a,b both pick c, c chooses their preferred
 """
-
 
 #P proposers and A acceptors both nxn in length
 def gale_shapely(P: List[int], A: List[int]):
@@ -67,9 +67,94 @@ hospitals: List[int] = [[1,2,0],[1,2,0],[0,2,1]]
 residents: List[int] = [[2,1,0],[0,2,1],[0,1,2],]
 
 # residents 0,1,2 get their first choices
-print(gale_shapely(residents, hospitals)) # [0,1,2]
+# print(gale_shapely(residents, hospitals)) # [0,1,2]
 # hospitals get their first choice, however
 # h0, h1 conflict both wanting r0, but r0 prefers h0
-print(gale_shapely(hospitals, residents)) # [0,2,1]
+# print(gale_shapely(hospitals, residents)) # [0,2,1]
         
+"""
+Trees:
+a graph G is a tree if any two statements are true:
+- G is connected
+- G has n-1 edges
+- G has no cycles
+"""
 
+"""
+Breadth-First Search (BFS)
+
+Starting from a node 's', queue 's's children 'c' to visit. Once
+a 'c' is visited queue their children. It's important to keep 
+nodes visited to avoid adding back nodes we've already evaluated
+
+Properties of graph 'T' produced by BFS:
+- 'T' is a tree with a root node 's'
+- 's' to any node 'n' in 'T' is the shortest path between them
+- Any sub-paths between 's' and 'n' are also shortest paths
+  eg. s-e-b-n, s-n is the shortest path from s-n, likewise with e-b
+"""
+
+# Dictionary of int keys containing a list of integers
+def bfs(G: Dict[int, List[int]],s: int):
+    q = deque() # queue object to dequeue with 'popleft()'
+    q.append(s)
+    T = {}
+    visited = [False] * len(G) 
+    visited[s] = True
+
+    # Loop the queue until empty
+    while(len(q) > 0):
+        p = q.popleft()
+        T[p] = []
+        # loop all connections
+        for c in G[p]:
+            # if already visited do not add to the queue or tree
+            if visited[c]:
+                continue
+            visited[c] = True
+            T[p].append(c)
+            q.append(c)
+    return T
+
+"""
+Time complexity: O(n+m), for 'n' nodes and 'm' edges. Each node 'n'
+has 'd' connections m:= number of all 'd' connections in the table.
+
+Space complexity: O(n+m) the input and output graph are same length.
+"""
+
+"""
+Example G:
+     2   4
+    / \ /
+   0   3
+    \ / \ 
+     1   5
+"""
+
+G = {0: [2,1], 1:[0,3],2:[0,3],3:[1,2,4,5],4:[3],5:[3]}
+
+# print(bfs(G,0))
+"""
+     2   4
+    / \ /
+   0   3
+    \   \ 
+     1   5
+"""
+# print(bfs(G,1))
+"""
+     2   4
+    /   /
+   0   3
+    \ / \ 
+     1   5
+"""
+# print(bfs(G,3))
+"""
+     2   4
+      \ /
+   0   3
+    \ / \ 
+     1   5
+"""
