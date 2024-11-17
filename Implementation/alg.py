@@ -271,10 +271,80 @@ print(dfs(H,0)) # 0-1-3-4-2-5
 [0v]
 """
 
+r"""
+Topological Sort:
 
+A topological sort can be given to DAGs, meaning there's an 
+order to nodes. Like putting on clothes
 
+underwear->pants--\
+shirt->hoodie------> school
+socks->shoes------/
 
+possible orderings:
+underwear->pants->shirt...
+shirt->socks->hoodie...
+underwear->shirt->socks...
+
+using our DFS stack method we can obtain the topological sort 
+tracing our backtracking. This tells us, what comes before what,
+we should finish processing the final node at the end of our algorithm.
+"""
+
+# assuming connected graph and s is a valid starting node with no deps.
+def dfs_top(G: Dict[int,List[int]],s: int):
+    n = len(G)
+    stack = []
+    proc = [] # processed stack
+    visited = [False] * n
+    processed = [False] * n
+    stack.append(s)
+    while stack:
+        # print(stack)
+        p = stack[-1]
+        if visited[p]:
+            if not processed[p]:
+                proc.append(p)
+                processed[p] = True
+            stack.pop()
+        else:
+            visited[p] = True
+            for c in G[p]:
+                if not visited[c]:
+                    stack.append(c)
+    return proc
+"""
+time complexity: O(n+m). Still the same dfs, just that we are evaluating it
+differently
+space complexity: O(n+m)
+"""
+
+J = {
+    0: [2,1],
+    1: [3],
+    2: [1,4],
+    3: [],
+    4: []
+}
+K = {
+    0: [1,2],
+    1: [3],
+    2: [1,4],
+    3: [],
+    4: []
+}
 
         
+"""
+left to right directed graph
+  /-1-3
+ / /
+0-2--4
+
+possible valid orderings 0-2-1-3-4 or 0-2-4-1-3
+"""
+# The reversed array is the answer
+# print(dfs_top(J,0)) # 0-2-4-1-3
+# print(dfs_top(K,0)) # 0-2-1-3-4
 
 
