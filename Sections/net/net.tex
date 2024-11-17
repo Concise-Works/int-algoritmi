@@ -115,7 +115,9 @@ this cut being around the source node, not all minimum cuts result in this manne
 
 \begin{Def}[Max Flow-Min Cut Theorem]
 
-    For any arbitrary flow $f$, if $C(A,B)$ is the min cut, and $V(f)=C(A,B)$, then $f$ is the max flow.
+    By weak duality, \underline{if $V(f)=C(A,B)$ then $f$ is the max-flow and $C(A,B)$ the min-cut.} As by 
+    conservation, $V(f)$ cannot get any larger. If $C(A,B)$ weren't the min cut,
+    $V(f)<C(A,B)$ bottle-necked by some other smaller capacity.
 \end{Def}
 
 \noindent

@@ -392,12 +392,12 @@ Heap Structure:
     /  \
   17   25
 
+Array Representation: [10, 15, 20, 17, 25]
 for index i
 '//':= integer division (floor division)
 - Left Child:  (2*i)+1
 - Right Child: (2*i)+2
 - Parent:      (index-1) // 2
-Array Representation: [10, 15, 20, 17, 25]
 
 Pseudo Code min-heap:
 H <- is our array
@@ -683,11 +683,16 @@ def interval_schedule(L):
 """
 (For this Algorithm)
 Time complexity: O(n^2). Bottle necked by choosing insertion sort for 
-sorting. Would be O(n log n) if merge sort were used. The actual program
-takes O(n), if we assumed the array is already sorted by earliest finish time
+sorting. Would be O(n log n) if merge sort were used. The routine takes 
+O(n), if we assumed the array is already sorted by earliest finish time
 
 Space complexity: O(n). We store n tuples and return at most n of them.
 """
 
-print(interval_schedule(times))
+# print(interval_schedule(times)) #[(1, 4), (4, 7), (8, 11)]
+
+"""
+Interval Partitioning:
+
+"""
         
