@@ -612,3 +612,82 @@ class MaxHeap:
         return str(self.heap)
 
 
+"""
+Interval scheduling:
+When we have a list of jobs, with start and finish times. Our job 
+is to find the largest subset of jobs without conflict
+
+Our strategy (Earliest Finish Time):
+    - Sort schedules in ascending order  
+    - Keep taking the next earliest finish time
+"""
+
+def insertion_sort(A):
+    for i in range(1, len(A)):
+        j = i
+        while j >= 1:
+            if A[j] < A[j-1]:
+                A[j],A[j-1] = A[j-1],A[j]
+            else:
+                break
+            j-=1
+
+# arr = [2,4,1,10,5,3]
+# print(arr)
+# insertion_sort(arr)
+# print(arr)
+
+def interval_est_sort(A):
+    """Sorting by earliest start time using insertion sort"""
+    for i in range(1, len(A)):
+        j=i
+        while j >=1:
+            # tuples (start, finish)
+            if A[j][0] < A[j-1][0]:
+                A[j], A[j-1] = A[j-1], A[j]
+            elif A[j][0] == A[j-1][0] and A[j][1] < A[j-1][1]:
+                A[j], A[j-1] = A[j-1], A[j]
+            j-=1
+def interval_eft_sort(A):
+    """Sorting by earliest finish using insertion sort"""
+    for i in range(1, len(A)):
+        j=i
+        while j >=1:
+            # tuples (start, finish)
+            if A[j][1] < A[j-1][1]:
+                A[j], A[j-1] = A[j-1], A[j]
+            elif A[j][1] == A[j-1][1] and A[j][0] < A[j-1][0]:
+                A[j], A[j-1] = A[j-1], A[j]
+            j-=1
+
+# (start, finish)     
+times = [(4,7),(3,8),(0,6),(8,11),(1,4),(6,10),(5,9),(3,5)]
+# interval_est_sort(times)
+# print(times)
+# interval_eft_sort(times)
+# print(times)
+
+def interval_schedule(L):
+    interval_eft_sort(L)
+    def isCompatible(i,j):
+        comes_first, comes_second = (i, j) if i[0] < j[0] else (j, i)
+        return comes_first[1] <= comes_second[0]
+    sol = []
+    sol.append(L[0])
+    last_compatible = 0
+    for i in range (1,len(L)):
+        if isCompatible(L[last_compatible],L[i]):
+            sol.append(L[i])
+            last_compatible = i 
+    return sol
+"""
+(For this Algorithm)
+Time complexity: O(n^2). Bottle necked by choosing insertion sort for 
+sorting. Would be O(n log n) if merge sort were used. The actual program
+takes O(n), if we assumed the array is already sorted by earliest finish time
+
+Space complexity: O(n). We store n tuples and return at most n of them.
+"""
+
+print(interval_schedule(times))
+        
