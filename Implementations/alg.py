@@ -617,9 +617,25 @@ Interval scheduling:
 When we have a list of jobs, with start and finish times. Our job 
 is to find the largest subset of jobs without conflict
 
-Our strategy (Earliest Finish Time):
+Our strategy (Earliest Finish Time [EFT]):
     - Sort schedules in ascending order  
     - Keep taking the next earliest finish time
+EFT works as each interval there is some deadline. We want to start 
+collecting as many jobs as possible, so we start with the one that 
+finishes first. This will give us more opportunity to collect.
+
+This is within the optimal solution. Say we have till 10am to clean our room
+and we can either clean our bed or our desk first. They both take 
+'b' and 'd' time respectively. It doesn't matter which one we choose first
+it will take the same amount of time 'b+d'.
+
+Using that analogy as intuition,
+
+If job 'i' is what we pick and job 'j' is optimal 
+and both are interchangeable within an interval-deadline. Then 'i' 
+is also an optimal solution, as it doesn't matter.
+
+Recursively do this for each interval and we achieve an optimal like solution.
 """
 
 def insertion_sort(A):
@@ -666,12 +682,12 @@ times = [(4,7),(3,8),(0,6),(8,11),(1,4),(6,10),(5,9),(3,5)]
 # print(times)
 # interval_eft_sort(times)
 # print(times)
+def isCompatible(i,j):
+        comes_first, comes_second = (i, j) if i[0] < j[0] else (j, i)
+        return comes_first[1] <= comes_second[0]
 
 def interval_schedule(L):
     interval_eft_sort(L)
-    def isCompatible(i,j):
-        comes_first, comes_second = (i, j) if i[0] < j[0] else (j, i)
-        return comes_first[1] <= comes_second[0]
     sol = []
     sol.append(L[0])
     last_compatible = 0
@@ -693,6 +709,44 @@ Space complexity: O(n). We store n tuples and return at most n of them.
 
 """
 Interval Partitioning:
+Say you have n classes and k classrooms. You want to find the the best
+set such that we utilize the least amount of k classrooms to hold n classes.
 
+Formally, given j jobs and k resources, run j jobs without conflict
+allocating the minimum resources needed.
+
+Strategy: Earliest Start Time First [EST]
+- sort in EST
+- if there's a conflict allocate a new resource
 """
         
+def interval_partition_schedule(L):
+    interval_est_sort(L)
+    resources = [[]]
+    resources[0].append(L[0])
+    # Go through each class
+    for i in range(1,len(L)):
+        found_space = False
+        # Compatible with any of the present resources?
+        for r in resources:
+            if isCompatible(r[-1], L[i]):
+                r.append(L[i])
+                found_space = True
+        if not found_space:
+            resources.append([L[i]])
+
+"""
+Time Complexity: O(n^2). Ignoring our sorting algorithm it's still O(n^2).
+As in the worst case no job is compatible with each other, creating a new
+resource. We iterate n jobs, then we follow the arithmetic sum, as we 
+iterate over each r resource, which will increase by 1 each iteration.
+
+Space Complexity: O(n). Input of n items and despite creating some 2D
+structure, we never have to allocate any more space than n in either 
+direction.
+"""
+
+
+
+            
+
