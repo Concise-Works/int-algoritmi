@@ -255,7 +255,7 @@ r"""
    / \   \
   3   4   5
 """        
-print(dfs(H,0)) # 0-1-3-4-2-5
+# print(dfs(H,0)) # 0-1-3-4-2-5
 """
 [0]
 [0v, 2, 1]
@@ -312,7 +312,10 @@ def dfs_top(G: Dict[int,List[int]],s: int):
             for c in G[p]:
                 if not visited[c]:
                     stack.append(c)
-    return proc
+    reverse_stack = []
+    for _ in range(n):
+        reverse_stack.append(proc.pop())
+    return reverse_stack
 """
 time complexity: O(n+m). Still the same dfs, just that we are evaluating it
 differently
@@ -343,8 +346,269 @@ left to right directed graph
 
 possible valid orderings 0-2-1-3-4 or 0-2-4-1-3
 """
-# The reversed array is the answer
+
 # print(dfs_top(J,0)) # 0-2-4-1-3
 # print(dfs_top(K,0)) # 0-2-1-3-4
+
+"""
+classes in python
+__init__: is the constructor function, each function needs 
+self as the first parameter to refer to the class itself. Similar to 
+'this' is java and other languages.
+__str__: is the toString for the class
+"""
+
+class Dog:
+    # optional typing
+    name: str
+    age: int
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def bark(self):
+        print(f"{self.name}, says a-woof-a-doodle-doo!")
+    def __str__(self):
+        return f"This dog's ol' name is {self.name}, {self.age}yrs of age~"
+
+# cool_dog = Dog("Reinhardt", 5)
+# cool_dog.bark()
+# print(cool_dog)
+
+r"""
+Min-Max Heaps:
+- complete binary tree (binary and balanced)
+- Min heaps: nodes with lesser values live at the top
+- Max heaps: nodes with higher values live at the top
+Functions:
+- PEEK: Return root       O(1)
+- INSERT: Add new element O(log n)
+- EXTRACT: Remove root    O(log n)
+- UPDATE: Update a node   O(log n)
+
+Heap Structure:
+        10
+       /  \
+     15    20
+    /  \
+  17   25
+
+for index i
+'//':= integer division (floor division)
+- Left Child:  (2*i)+1
+- Right Child: (2*i)+2
+- Parent:      (index-1) // 2
+Array Representation: [10, 15, 20, 17, 25]
+
+Pseudo Code min-heap:
+H <- is our array
+PEEK: return H[0]
+INSERT: 
+    - add to the end of the array
+    - keep swapping with parent if parent it's smaller
+DELETE: 
+    - add to the end of the array
+    - swap with H[0]
+    - keep swapping with children who are smaller
+EXTRACT:
+    - return H[0] and DELETE it in H
+UPDATE:
+    - update element at index i
+    - if the new value is smaller than the old value
+      preform swaps with parents who might be larger
+      else, preform swaps with children who might be smaller
+
+This is all log n because the height of a balance tree is log n where
+n is the number of nodes.
+"""
+
+
+class MinHeap:
+    def __init__(self):
+        """Initialize an empty heap."""
+        self.heap = []
+
+    def _parent(self, index):
+        """Get the parent index."""
+        return (index - 1) // 2
+
+    def _left_child(self, index):
+        """Get the left child index."""
+        return 2 * index + 1
+
+    def _right_child(self, index):
+        """Get the right child index."""
+        return 2 * index + 2
+
+    def _swap(self, i,j):
+        # This syntax avoids having to make a temp variable
+        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+    def _heapify_up(self, index):
+        """Maintain heap property after insertion."""
+        while index > 0: # Stop if at root
+            parent = self._parent(index)
+            if self.heap[index] < self.heap[parent]:
+                # Swap if current node is smaller than the parent
+                self._swap(index, parent)
+                index = parent
+            else:
+                break
+      
+    def _heapify_down(self, index):
+        """Maintain heap property after deletion."""
+        size = len(self.heap)
+        while True:
+            left = self._left_child(index)
+            right = self._right_child(index)
+            smallest = index # Assume the current node is the smallest
+
+            if left < size and self.heap[left] < self.heap[smallest]: # Compare with left child
+                smallest = left
+            if right < size and self.heap[right] < self.heap[smallest]: # Compare with right child
+                smallest = right
+
+            if smallest != index:
+                # Swap with the smaller child
+                self._swap(index, smallest)
+                index = smallest # repeat with the newly swapped position
+            else:
+                break
+
+    def insert(self, value):
+        """Insert a value into the heap."""
+        self.heap.append(value)  # Add the value to the end
+        self._heapify_up(len(self.heap) - 1)  # Restore heap property
+
+    def update(self, index, new_value):
+        """Update a value at a given index."""
+        if 0 <= index < len(self.heap):
+            old_value = self.heap[index]
+            self.heap[index] = new_value
+            # If the new value is smaller, heapify up
+            if new_value < old_value:
+                self._heapify_up(index)
+            # If the new value is larger, heapify down
+            else:
+                self._heapify_down(index)
+        else:
+            raise IndexError("Index out of range.")
+
+    def delete(self, index):
+        """Delete a value at a given index."""
+        if 0 <= index < len(self.heap):
+            # Swap with the last element and remove it
+            self._swap(index,-1)
+            self.heap.pop()
+            # Restore heap property
+            if index < len(self.heap):
+                self._heapify_down(index)
+        else:
+            raise IndexError("Index out of range.")
+
+    def extract_min(self):
+        """Extract the minimum value (root) from the heap."""
+        if len(self.heap) == 0:
+            raise IndexError("Heap is empty.")
+        min_value = self.heap[0]
+        self.delete(0)
+        return min_value
+
+    def __str__(self):
+        """String representation of the heap."""
+        return str(self.heap)
+
+class MaxHeap:
+    def __init__(self):
+        """Initialize an empty heap."""
+        self.heap = []
+
+    def _parent(self, index):
+        """Get the parent index."""
+        return (index - 1) // 2
+
+    def _left_child(self, index):
+        """Get the left child index."""
+        return 2 * index + 1
+
+    def _right_child(self, index):
+        """Get the right child index."""
+        return 2 * index + 2
+
+    def _swap(self, i,j):
+        # This syntax avoids having to make a temp variable
+        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+    def _heapify_up(self, index):
+        """Maintain heap property after insertion."""
+        while index > 0: # Stop if at root
+            parent = self._parent(index)
+            if self.heap[index] > self.heap[parent]:
+                # Swap if current node is greater than the parent
+                self._swap(index, parent)
+                index = parent
+            else:
+                break
+      
+    def _heapify_down(self, index):
+        """Maintain heap property after deletion."""
+        size = len(self.heap)
+        while True:
+            left = self._left_child(index)
+            right = self._right_child(index)
+            largest = index # Assume the current node is the greatest
+
+            if left < size and self.heap[left] > self.heap[largest]: # Compare with left child
+                largest = left
+            if right < size and self.heap[right] > self.heap[largest]: # Compare with right child
+                largest = right
+
+            if largest != index:
+                # Swap with the smaller child
+                self._swap(index, largest)
+                index = largest # repeat with the newly swapped position
+            else:
+                break
+
+    def insert(self, value):
+        """Insert a value into the heap."""
+        self.heap.append(value)  # Add the value to the end
+        self._heapify_up(len(self.heap) - 1)  # Restore heap property
+
+    def update(self, index, new_value):
+        """Update a value at a given index."""
+        if 0 <= index < len(self.heap):
+            old_value = self.heap[index]
+            self.heap[index] = new_value
+            # If the new value is greater, heapify up
+            if new_value > old_value:
+                self._heapify_up(index)
+            # If the new value is smaller, heapify down
+            else:
+                self._heapify_down(index)
+        else:
+            raise IndexError("Index out of range.")
+
+    def delete(self, index):
+        """Delete a value at a given index."""
+        if 0 <= index < len(self.heap):
+            # Swap with the last element and remove it
+            self._swap(index,-1)
+            self.heap.pop()
+            # Restore heap property
+            if index < len(self.heap):
+                self._heapify_down(index)
+        else:
+            raise IndexError("Index out of range.")
+
+    def extract_min(self):
+        """Extract the minimum value (root) from the heap."""
+        if len(self.heap) == 0:
+            raise IndexError("Heap is empty.")
+        min_value = self.heap[0]
+        self.delete(0)
+        return min_value
+
+    def __str__(self):
+        return str(self.heap)
 
 
