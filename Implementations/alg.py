@@ -970,6 +970,7 @@ def prims(G,s):
     q = TupleMinHeap()       # minHeap to track next shortest path
     q.insert((0,s))
     distances[s] = 0
+    # (weight, node)
     while q.get():
         dist,node = q.extract_min()
         visited[node] = True
@@ -988,6 +989,7 @@ the same as Dijkstra's
 Space complexity: O(n+m), the incoming graph
 """
 
+# Figure 5.8
 K = {
 
     0: [(3,1),(10,5),(8,2)],
@@ -1000,7 +1002,8 @@ K = {
     7: [(15,5)]
 }
 # print(dijkstra(K,0))
-print(prims(K,0))
+# print(prims(K,0))
+
 r"""
         (3)
        /  \
@@ -1023,5 +1026,169 @@ r"""
 6:4,
 7:5
 """       
+
+#Page 54
+class UnionFind():
+    """
+    Forest Data structure: 
+    What do you call a group of pair-wise disjoint trees? A forest!
+    (to me this wasn't obvious at first, and I found it very funny)
+    """
+
+    def __init__(self, elements=None, is_compressed=True):
+        """
+        Initializes Dictionary (Hash-table) and optionally 
+        takes an array of elements.
+        """
+        self.is_compressed=is_compressed
+        self.forest = {}
+        if elements:
+            for e in elements:
+                self.forest[e] = {"rep": e, "len": 1, "data": None}
+
+    def get(self):
+        """Get forest"""
+        return self.forest
+
+    def append(self, e): 
+        """Add a tree to the forest"""
+        self.forest[e] = {"rep": e, "len": 1, "data": None}
+    
+    def union(self, a,b):
+        """Union two trees in the forest O(log n)"""
+
+        al, bl = self.forest[a]["len"], self.forest[b]["len"]
+        if al > bl:
+            self.forest[b]["rep"] = a
+            self.forest[a]["len"] = bl + al
+        else:
+            self.forest[a]["rep"] = b
+            self.forest[b]["len"] = bl + al
+    
+    def find(self, e):
+        """
+        Find an element's leader, compress graph after the find.
+        This means settings e's rep directly to its leader
+        O(log n)
+        """
+        traversed = False
+        old = self.forest[e]["rep"]
+        who = self.forest[e]["rep"]
+        while(self.forest[who]["rep"] != who):
+            traversed = True
+            who = self.forest[who]["rep"]
+        # Compress
+        
+        if traversed and self.is_compressed:
+            # Update the old leader's new party length
+            self.forest[old]["len"] = self.forest[old]["len"] - self.forest[e]["len"]
+            self.forest[e]["rep"] = who
+        return who
+    def give(self, e, d):
+        """Give element a data to hold onto"""
+        self.forest[e]["data"] = d
+
+    def parents(self):
+        """Returns a (index:child, value: parent) array"""
+        p = {}
+        for i in self.forest:
+            p[i] = self.forest[i]["rep"]
+        return p
+    def data(self):
+        """Returns a (index:node, value: data) array"""
+        p = {}
+        for i in self.forest:
+            p[i] = self.forest[i]["data"]
+        return p
+
+    def __str__(self):
+        """String representation of forest"""
+        return str(self.forest)
+
+# Figure 5.10
+# E = ['a','b','c','d','e']
+# T = UnionFind(E, False) # with no compression
+# print(T.parents()) #1.
+# T.union('b','a') 
+# T.union('d','c')
+# print(T.parents()) #2. 
+# T.union('c','a')
+# print(T.parents()) #3.
+# T.union('e','d')
+# print(T.parents()) #4.
+
+# R = UnionFind(E, True) # with compression
+# R.union('b','a') 
+# R.union('d','c')
+# R.union('c','a')
+# R.union('e','d')
+# print(R.parents())
+# R.find('e')
+# print(R.parents()) # e is now compressed to a
+
+
+# (weight, node)
+def insertion_sort_weight(A):
+    for i in range(1, len(A)):
+        j = i
+        while j >= 1:
+            if A[j][0] < A[j-1][0]:
+                A[j],A[j-1] = A[j-1],A[j]
+            else:
+                break
+            j-=1
+
+
+def kruskals(G):
+    """Find MST by sorting edges, adding them to a forest for n-1 iterations"""
+    
+    edges = TupleMinHeap()
+    keys = list(G.keys())
+    T = UnionFind(keys,False)
+    n = len(G)
+    print(T)
+    for v in G:
+        for u in G[v]:
+            # (weight, parent, child)
+            edges.insert((u[0],v,u[1]))
+    W = len(edges.get())
+    
+    for _ in range (W):
+        w,v,u = edges.extract_min()
+        print((w,v,u))
+        if T.find(v) != T.find(u):
+            T.union(v,u)
+    return T
+
+
+# Figure 5.8
+# parent: (weight, child)
+K = {
+
+    0: [(3,1),(10,5),(8,2)],
+    1: [(3,0),(14,2)],
+    2: [(14,1),(8,0),(6,3),(5,4)],
+    3: [(6,2),(12,4)],
+    4: [(12,3),(5,2),(9,6),(7,5)],
+    5: [(7,4),(15,7),(10,0)],
+    6: [(9,4)],
+    7: [(15,5)]
+}
+r"""
+        (3)
+       /  \
+      6   12
+     /      \
+    (2)--5--(4)-9-(6)
+    | \      |
+    14 \     7
+    |   8   (5)-15-(7)
+    (1)  \   |
+     \-3-(0)-10
+"""
+
+# MST = kruskals(K)
+# print(MST.parents())
+# print(MST.data())
 
 
