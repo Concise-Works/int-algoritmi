@@ -732,8 +732,10 @@ def interval_partition_schedule(L):
             if isCompatible(r[-1], L[i]):
                 r.append(L[i])
                 found_space = True
+                break
         if not found_space:
             resources.append([L[i]])
+    return resources
 
 """
 Time Complexity: O(n^2). Ignoring our sorting algorithm it's still O(n^2).
@@ -745,6 +747,13 @@ Space Complexity: O(n). Input of n items and despite creating some 2D
 structure, we never have to allocate any more space than n in either 
 direction.
 """
+
+# classes = [(4,10),(8,11),(10,15),(12,15),(0,7),(4,7),(12,15),(0,3),(8,11),(0,3)]
+# schedule = interval_partition_schedule(classes)
+
+# for i in range(len(schedule)):
+#     print(f"{i}: {schedule[i]}")
+
 
 
 
