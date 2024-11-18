@@ -1,6 +1,6 @@
-
 from typing import List, Dict # Types for List
 from collections import deque # deque allows us to treat an array as a queue
+import numpy as np
 
 """
 Gale Shapely:
@@ -765,12 +765,157 @@ clean your bed first or your desk. The desk takes 'd' time and the bed takes 'b'
 you choose to clean your bed or your desk first, does not make a difference, as 'd + b' will always
 be the same.
 """
+"""
+Time complexity: O(n^2), because we chose insertion sort. best is O(n log n)
+with merge-sort.
 
+Space complexity: O(n), the incoming list.
+"""
 # tasks = [(3,14),(2,8),(2,15),(1,9),(4,9),(3,6)]
 # interval_eft_sort(tasks)
 # print(tasks)
+class TupleMinHeap:
+    def __init__(self):
+        """Initialize an empty heap."""
+        self.heap = []
 
+    def get(self):
+        return self.heap
+    def _parent(self, index):
+        """Get the parent index."""
+        return (index - 1) // 2
 
+    def _left_child(self, index):
+        """Get the left child index."""
+        return 2 * index + 1
+
+    def _right_child(self, index):
+        """Get the right child index."""
+        return 2 * index + 2
+
+    def _swap(self, i,j):
+        # This syntax avoids having to make a temp variable
+        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+    def _heapify_up(self, index):
+        """Maintain heap property after insertion."""
+        while index > 0: # Stop if at root
+            parent = self._parent(index)
+            if self.heap[index][0] < self.heap[parent][0]:
+                # Swap if current node is smaller than the parent
+                self._swap(index, parent)
+                index = parent
+            else:
+                break
+      
+    def _heapify_down(self, index):
+        """Maintain heap property after deletion."""
+        size = len(self.heap)
+        while True:
+            left = self._left_child(index)
+            right = self._right_child(index)
+            smallest = index # Assume the current node is the smallest
+
+            if left < size and self.heap[left][0] < self.heap[smallest][0]: # Compare with left child
+                smallest = left
+            if right < size and self.heap[right][0] < self.heap[smallest][0]: # Compare with right child
+                smallest = right
+
+            if smallest != index:
+                # Swap with the smaller child
+                self._swap(index, smallest)
+                index = smallest # repeat with the newly swapped position
+            else:
+                break
+
+    def insert(self, value):
+        """Insert a value into the heap."""
+        self.heap.append(value)  # Add the value to the end
+        self._heapify_up(len(self.heap) - 1)  # Restore heap property
+
+    def update(self, index, new_value):
+        """Update a value at a given index."""
+        if 0 <= index < len(self.heap):
+            old_value = self.heap[index]
+            self.heap[index] = new_value
+            # If the new value is smaller, heapify up
+            if new_value[0] < old_value[0]:
+                self._heapify_up(index)
+            # If the new value is larger, heapify down
+            else:
+                self._heapify_down(index)
+        else:
+            raise IndexError("Index out of range.")
+
+    def delete(self, index):
+        """Delete a value at a given index."""
+        if 0 <= index < len(self.heap):
+            # Swap with the last element and remove it
+            self._swap(index,-1)
+            self.heap.pop()
+            # Restore heap property
+            if index < len(self.heap):
+                self._heapify_down(index)
+        else:
+            raise IndexError("Index out of range.")
+
+    def extract_min(self):
+        """Extract the minimum value (root) from the heap."""
+        if len(self.heap) == 0:
+            raise IndexError("Heap is empty.")
+        min_value = self.heap[0]
+        self.delete(0)
+        return min_value
+
+    def __str__(self):
+        """String representation of the heap."""
+        return str(self.heap)
+
+def dijkstra(G,s):
+    """
+    Dijkstra's Algorithm:
+    find shortest path from node 's' to all other nodes in a graph
+    """
+    n = len(G)
+    distances = [np.inf] * n # list of shortest paths for each node
+    parents = [None] * n     # parent child table
+    visited = [False] * n    # check if we've already evaluated a node
+    q = TupleMinHeap()       # minHeap to track next shortest path
+    q.insert((0,s))
+    distances[s] = 0
+    while q.get():
+        # pop off heap
+        dist,node = q.extract_min()
+        visited[node] = True
+        # add neighbors which have not been visited
+        for c in G[node]:
+            # adding total path length to next path
+            next = (dist+c[0],c[1])
+            if not visited[c[1]]:
+                q.insert(next)
+            if next[0] < distances[next[1]]:
+                distances[next[1]] = next[0]
+                parents[next[1]] = node
+    return distances, parents
+
+"""
+Time complexity: O(mlog(n)). For 'm' edges and 'n' nodes. Since in our BFS
+approach we visit all edges. For every new edge, we insert into our queue
+which takes log(n) time.
+
+Space complexity: (n+m)
+"""
+
+# G[node][(weight,node)]
+G = {
+    0: [(10,1),(3,2)],
+    1: [(1,0),(2,3)],
+    2: [(4,1),(2,4),(8,3)],
+    3: [(7,4)],
+    4: [(9,3)]
+}
+
+print(dijkstra(G,0))
 
 
 
