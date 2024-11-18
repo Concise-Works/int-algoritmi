@@ -1,3 +1,9 @@
+"""
+Algorithms 330 Implementations
+Christian J. Rudder
+November 2024
+"""
+
 from typing import List, Dict # Types for List
 from collections import deque # deque allows us to treat an array as a queue
 import numpy as np
@@ -291,7 +297,7 @@ tracing our backtracking. This tells us, what comes before what,
 we should finish processing the final node at the end of our algorithm.
 """
 
-# assuming connected graph and s is a valid starting node with no deps.
+# assuming connected graph and s is the only node with no incoming degrees
 def dfs_top(G: Dict[int,List[int]],s: int):
     n = len(G)
     stack = []
@@ -336,7 +342,17 @@ K = {
     3: [],
     4: []
 }
-
+# Figure 3.15 does not with the current implementation, 
+# as 1,3,5 are disjoint starting points
+# L = {
+#     1: [2,4],
+#     2: [],
+#     3: [4,7],
+#     4: [],
+#     5: [7,6],
+#     6: [7],
+#     7: []
+# }
         
 """
 left to right directed graph
@@ -349,6 +365,8 @@ possible valid orderings 0-2-1-3-4 or 0-2-4-1-3
 
 # print(dfs_top(J,0)) # 0-2-4-1-3
 # print(dfs_top(K,0)) # 0-2-1-3-4
+
+
 
 """
 classes in python
@@ -699,6 +717,7 @@ O(n), if we assumed the array is already sorted by earliest finish time
 Space complexity: O(n). We store n tuples and return at most n of them.
 """
 
+# Figure 4.3
 # print(interval_schedule(times)) #[(1, 4), (4, 7), (8, 11)]
 
 """
@@ -742,6 +761,7 @@ structure, we never have to allocate any more space than n in either
 direction.
 """
 
+# Figure 4.4
 # classes = [(4,10),(8,11),(10,15),(12,15),(0,7),(4,7),(12,15),(0,3),(8,11),(0,3)]
 # schedule = interval_partition_schedule(classes)
 
@@ -771,6 +791,7 @@ with merge-sort.
 
 Space complexity: O(n), the incoming list.
 """
+# Figure 4.7
 # tasks = [(3,14),(2,8),(2,15),(1,9),(4,9),(3,6)]
 # interval_eft_sort(tasks)
 # print(tasks)
@@ -893,9 +914,9 @@ def dijkstra(G,s):
             next = (dist+c[0],c[1])
             if not visited[c[1]]:
                 q.insert(next)
-            if next[0] < distances[next[1]]:
-                distances[next[1]] = next[0]
-                parents[next[1]] = node
+                if next[0] < distances[next[1]]:
+                    distances[next[1]] = next[0]
+                    parents[next[1]] = node
     return distances, parents
 
 """
@@ -907,6 +928,8 @@ Space complexity: (n+m)
 """
 
 # G[node][(weight,node)]
+# a=0, b=1, c=2,...
+# Figure 5.3
 G = {
     0: [(10,1),(3,2)],
     1: [(1,0),(2,3)],
@@ -915,9 +938,90 @@ G = {
     4: [(9,3)]
 }
 
-print(dijkstra(G,0))
+# Figure 5.2
+H = {
+    0: [(2,1),(10,5)],
+    1: [(10,2)],
+    5: [(2,4)],
+    2: [(10,3)],
+    3: [(10,2),(2,4)],
+    4: [(2,3)]
+    
+}
 
+# print(dijkstra(G,0))
+# print(dijkstra(H,0))
 
+def prims(G,s):
+    """
+     Prim's algorithm:
+     finds the Minimal Spanning Tree (MST)
+     Strategy:
+         The same as dijkstra, except for the relax function.
+         (Relax meaning, smoothing out the graph, like in spinning
+         pottery, we relax the clay to get a desired shape).
+         here we want to find minimum edges so we don't 
+         care about keeping track of the accumulated weights
+     """
+    n = len(G)
+    distances = [np.inf] * n # list of shortest paths for each node
+    parents = [None] * n     # parent child table
+    visited = [False] * n    # check if we've already evaluated a node
+    q = TupleMinHeap()       # minHeap to track next shortest path
+    q.insert((0,s))
+    distances[s] = 0
+    while q.get():
+        dist,node = q.extract_min()
+        visited[node] = True
+        for c in G[node]:
+            #in dijkstra's we do (dist+c[0],c[1])  
+            if not visited[c[1]]: 
+                q.insert(c)
+                if c[0] < distances[c[1]]:
+                    distances[c[1]] = c[0]
+                    parents[c[1]] = node
+    return parents
+"""
+Time complexity: O(m log n), or O((n+m) log n) if disconnected. Logic applies
+the same as Dijkstra's
 
-            
+Space complexity: O(n+m), the incoming graph
+"""
+
+K = {
+
+    0: [(3,1),(10,5),(8,2)],
+    1: [(3,0),(14,2)],
+    2: [(14,1),(8,0),(6,3),(5,4)],
+    3: [(6,2),(12,4)],
+    4: [(12,3),(5,2),(9,6),(7,5)],
+    5: [(7,4),(15,7),(10,0)],
+    6: [(9,4)],
+    7: [(15,5)]
+}
+# print(dijkstra(K,0))
+print(prims(K,0))
+r"""
+        (3)
+       /  \
+      6   12
+     /      \
+    (2)--5--(4)-9-(6)
+    | \      |
+    14 \     7
+    |   8   (5)-15-(7)
+    (1)  \   |
+     \-3-(0)-10
+"""
+"""
+0:null, 
+1:0,
+2:0,
+3:2,
+4:2,
+5:4,
+6:4,
+7:5
+"""       
+
 
