@@ -624,16 +624,10 @@ EFT works as each interval there is some deadline. We want to start
 collecting as many jobs as possible, so we start with the one that 
 finishes first. This will give us more opportunity to collect.
 
-This is within the optimal solution. Say we have till 10am to clean our room
-and we can either clean our bed or our desk first. They both take 
-'b' and 'd' time respectively. It doesn't matter which one we choose first
-it will take the same amount of time 'b+d'.
-
-Using that analogy as intuition,
 
 If job 'i' is what we pick and job 'j' is optimal 
 and both are interchangeable within an interval-deadline. Then 'i' 
-is also an optimal solution, as it doesn't matter.
+is also an optimal solution.
 
 Recursively do this for each interval and we achieve an optimal like solution.
 """
@@ -753,6 +747,29 @@ direction.
 
 # for i in range(len(schedule)):
 #     print(f"{i}: {schedule[i]}")
+
+"""
+Minimizing Lateness:
+
+When forced to use a single recourse we might still want to run every task,
+but minimize how many deadlines we pass.
+
+Just like in a fast paste kitchen, all dishes must get done. Some will be 
+prepared late, but all will be prepared. We want to minimize this lateness.
+
+Strategy: Earliest Finish Time first (EFT)(Earliest Deadline)
+    that's it.
+
+Why? Say you have to clean your room completely by 'l' time. You are confused whether to
+clean your bed first or your desk. The desk takes 'd' time and the bed takes 'b' time. Whether
+you choose to clean your bed or your desk first, does not make a difference, as 'd + b' will always
+be the same.
+"""
+
+# tasks = [(3,14),(2,8),(2,15),(1,9),(4,9),(3,6)]
+# interval_eft_sort(tasks)
+# print(tasks)
+
 
 
 
