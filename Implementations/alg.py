@@ -694,7 +694,9 @@ times = [(4,7),(3,8),(0,6),(8,11),(1,4),(6,10),(5,9),(3,5)]
 # print(times)
 # interval_eft_sort(times)
 # print(times)
-def isCompatible(i,j):
+def is_compatible(i,j):
+        if i[0] == j[0]:
+            return False
         comes_first, comes_second = (i, j) if i[0] < j[0] else (j, i)
         return comes_first[1] <= comes_second[0]
 
@@ -704,7 +706,7 @@ def interval_schedule(L):
     sol.append(L[0])
     last_compatible = 0
     for i in range (1,len(L)):
-        if isCompatible(L[last_compatible],L[i]):
+        if is_compatible(L[last_compatible],L[i]):
             sol.append(L[i])
             last_compatible = i 
     return sol
@@ -742,7 +744,7 @@ def interval_partition_schedule(L):
         found_space = False
         # Compatible with any of the present resources?
         for r in resources:
-            if isCompatible(r[-1], L[i]):
+            if is_compatible(r[-1], L[i]):
                 r.append(L[i])
                 found_space = True
                 break
@@ -1044,7 +1046,7 @@ class UnionFind():
         self.forest = {}
         if elements:
             for e in elements:
-                self.forest[e] = {"rep": e, "len": 1, "data": None}
+                self.forest[e] = {"rep": e, "len": 1}
 
     def get(self):
         """Get forest"""
@@ -1052,7 +1054,7 @@ class UnionFind():
 
     def append(self, e): 
         """Add a tree to the forest"""
-        self.forest[e] = {"rep": e, "len": 1, "data": None}
+        self.forest[e] = {"rep": e, "len": 1}
     
     def union(self, a,b):
         """Union two trees in the forest O(log n)"""
@@ -1060,10 +1062,12 @@ class UnionFind():
         al, bl = self.forest[a]["len"], self.forest[b]["len"]
         if al > bl:
             self.forest[b]["rep"] = a
-            self.forest[a]["len"] = bl + al
+            
         else:
             self.forest[a]["rep"] = b
-            self.forest[b]["len"] = bl + al
+            
+        self.forest[a]["len"] = bl + al
+        self.forest[b]["len"] = bl + al
     
     def find(self, e):
         """
@@ -1081,7 +1085,6 @@ class UnionFind():
         
         if traversed and self.is_compressed:
             # Update the old leader's new party length
-            self.forest[old]["len"] = self.forest[old]["len"] - self.forest[e]["len"]
             self.forest[e]["rep"] = who
         return who
     def give(self, e, d):
@@ -1116,6 +1119,8 @@ class UnionFind():
 # print(T.parents()) #3.
 # T.union('e','d')
 # print(T.parents()) #4.
+# T.find('e')
+# print(T.parents())
 
 # R = UnionFind(E, True) # with compression
 # R.union('b','a') 
@@ -1126,39 +1131,39 @@ class UnionFind():
 # R.find('e')
 # print(R.parents()) # e is now compressed to a
 
-
-# (weight, node)
-def insertion_sort_weight(A):
-    for i in range(1, len(A)):
-        j = i
-        while j >= 1:
-            if A[j][0] < A[j-1][0]:
-                A[j],A[j-1] = A[j-1],A[j]
-            else:
-                break
-            j-=1
-
-
 def kruskals(G):
-    """Find MST by sorting edges, adding them to a forest for n-1 iterations"""
-    
+    """
+    Kruskal's algorithm:
+    Find MST by sorting edges, adding them to a forest for n-1,
+    we know to break early at n-1 iterations.
+
+    Strategy: 
+    We know the MST contains the lightest nodes. So if we order 
+    the lightest nodes, and add willy-nilly we should get our MST.
+
+    Constraints:
+        - We don't add an edge if it doesn't create a new connection to 
+          a node outside of the MST we are generating
+        We can track this with a UnionFind data structure. This will tell 
+        us if a node is already part of a group
+    """
     edges = TupleMinHeap()
     keys = list(G.keys())
-    T = UnionFind(keys,False)
-    n = len(G)
-    print(T)
+    T = UnionFind(keys)
+    MST = {}
     for v in G:
+        MST[v] = []
         for u in G[v]:
             # (weight, parent, child)
             edges.insert((u[0],v,u[1]))
     W = len(edges.get())
-    
-    for _ in range (W):
+    i = 0
+    while(i < W) and (i < len(G)):
         w,v,u = edges.extract_min()
-        print((w,v,u))
         if T.find(v) != T.find(u):
             T.union(v,u)
-    return T
+            MST[v].append(u)
+    return MST
 
 
 # Figure 5.8
@@ -1187,8 +1192,249 @@ r"""
      \-3-(0)-10
 """
 
-# MST = kruskals(K)
-# print(MST.parents())
-# print(MST.data())
+# print(kruskals(K))
+
+"""
+-----------------DYNAMIC PROGRAMMING-----------------
+The act of utilizing memoization to build a solution
+memoization: storing previous recurvie calls
+"""
+
+def plain_fib(n):
+    """Recursive Fibinocci"""
+    if n <= 1:
+        return n
+    else:
+        return plain_fib(n-1) + plain_fib(n-2)
+"""
+Time complexity: O(2^n). The two calls depend on each other, therefore
+T(n) = T(n-1) + T(n-2) + O(1). We iterate n times to the base case twice,
+hence O(2^n) calls.
+"""
+
+# print(plain_fib(38)) # Super Slow!!!
+
+def memo_fib(n):
+    """Memo Fibinocci"""
+    M = {}
+    def rec(m):
+        # If already in the table reuse the value
+        if m in M:
+            return M[m]
+        if m <= 1:
+            return m
+        M[m] = rec(m-1) + rec(m-2)
+        return M[m]
+    rec(n)
+    return M[n]
+"""
+Time complexity: O(n). We only need to compute each recursive call once.
+We start with n, and keep going to the base case. Every other call is some
+combination of calls we've made before.
+
+Space complexity: O(n). For the levels of recursion on the stack.
+"""
+
+# print(memo_fib(100)) #Way Faster
+
+def fib(n):
+    """
+    Bottom-up Approach Fibinocci:
+    In bottom up we must first state our base cases in our 
+    memo-table. Then preform our recursive steps, building off of 
+    our memo
+    """
+    M = [0] * (n+1) # we know there's only n levels of recursion
+    M[0] = 0
+    M[1] = 1
+    for i in range(2,n+1):
+        M[i] = M[i-1] + M[i-2]
+    return M[n]
+"""
+Time complexity: O(n).
+Space complexity: O(n).
+"""
+# print(fib(100))
+
+"""
+Weighted interval Scheduling:
+
+say we have n paying jobs which overlap each other. We want to find 
+the best set of jobs to maximize our profits.
+
+This differs from interval scheduling of just grabbing the most jobs,
+as any one job could be worth more than a group.
+
+We state our sub-problems (going from n->0):
+    - base case: return 0 if i < 0
+    - choices: 
+        * take this job gain its value 
+        * take the next job, gain its value
+
+    recursive formula:
+    OPT(i)= {
+        if i < 0: return 0
+        max{value+OPT(next_compatible_job),OPT(i-1)}
+    }
+"""
+
+def next_compatible(S,i):
+    for j in range(i,len(S)):
+        if is_compatible(S[i],S[j]):
+            return j 
+    return -1
+def weighted_interval_schedule(S):
+    """
+    Time complexity: O(n); Space complexity: O(n)
+    """
+    n = len(S)
+    M = [None] * n # adding the base case shifts over our array
+    M[0] = 0
+    interval_eft_sort(S)
+    print(S)
+    for i in range(1, n):
+        compatible = next_compatible(S,i)
+        # add the next compatible, if there's none, add 0
+        build = S[compatible][2] if compatible > -1 else 0
+        next = M[i-1]
+        print(f"i:{i} compat: {compatible} i+j: ({S[i][2]} + {S[compatible][2]}) build: {build}, next: {next}")
+        M[i] = max(S[i][2]+build, next)
+    return M
+
+# Decided to spare my time on implementing the compatible find backwards
+# def wis_backtrack(S,M): 
+#     n = len(M)-1
+#     sol = []
+#     while n > 0:
+#         ...
+#     return sol
+#(start, finish, value)
+# Figure 8.2, though zero-indexed
+S = [
+    (1,4,10),  
+    (3,5,4),   
+    (0,6,3),   
+    (4,7,12),  
+    (3,8,3),   
+    (5,9,15),  
+    (6,10,9),  
+    (8,11,8)   
+    ]
+# A = weighted_interval_schedule(S)
+# print(A)
+
+#p84
+def subset_sum(A, W):
+    """
+    Subset Sum (Weighted Ceiling)
+    Given a set of integers, say S = {3, 6, 1, 7, 2}, 
+    and a target sum T = 9, find the max subset P
+    of S, such that P ≤ T .
+
+    2d problems, 2d combinations
+    we track both weight and index
+    """
+    n = len(A)
+    # Don't do this VVVVV it makes all rows reference the same array
+    # M = [[0] * (W+1)] * (n + 1)
+    M = [[0] * (W+1) for _ in range(n + 1)]
+
+    # A-1 because i starts counting too far
+    for i in range(1, n + 1):
+        for w in range(1, W + 1):
+            if A[i-1] > w:
+                M[i][w] = M[i-1][w]
+            else:
+                M[i][w] = max(A[i-1] + M[i-1][w-A[i-1]], M[i-1][w])
+
+    return M
+
+"""
+Time complexity: O(nW). 
+"""
+
+def subset_sum_backtrack(A,M):
+    sol = []
+    i = len(M)-1 
+
+    W = len(M[-1])-1
+    # print(A)
+    while i > 0:
+        # print (f"M[{i}][{W}] > M[{i-1}][{W}]: {M[i][W]} > {M[i-1][W]} ")
+        if(M[i][W] > M[i-1][W]):
+            sol.append(A[i-1])
+            W -= A[i]
+        i -= 1
+    return sol
+
+arr = [2,7,1,6,3]
+
+# S = subset_sum(arr, 9)
+# print(subset_sum_backtrack(arr,S))
+
+
+def unbounded_knapsack(A, W):
+    """
+    Unbounded Knapsack:
+        Subset sum, but each item can be taken infinitely and has 
+        a value to be taken.
+    """
+    n = len(A)
+    M = [[0] * (W + 1) for _ in range(n+1)]
+    
+    for i in range(1,(n+1)):
+        for w in range(1,(W+1)):
+            v = A[i-1][0]  # value
+            wi = A[i-1][1] # weight
+            if wi > w:
+                M[i][w] = M[i-1][w]
+            else:
+                M[i][w] = max(v + M[i][w-wi], M[i-1][w]) 
+    return M
+"""
+Time complexity: O(nW). 
+"""
+
+def unbounded_knapsack_backtrack(A,M):
+    sol = []
+    W = len(M[-1])-1
+
+    i = len(A)-1
+    while i > 0:
+        v = A[i-1][0]
+        wi = A[i-1][1]
+        if W >= wi and (v + M[i-1][W] > M[i-1][W]):
+            sol.append(A[i-1])
+            W -= wi
+        else:
+            i -= 1
+    return sol
+
+#(value, weight)
+arr = [(1,1),(6,2),(18,5),(22,6),(28,7)]
+# U = unbounded_knapsack(arr,11)
+# for u in U:
+#     print(u)
+
+# print(unbounded_knapsack_backtrack(arr,U))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
 
 
