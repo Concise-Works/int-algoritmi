@@ -1391,12 +1391,10 @@ S = [
 #p84
 """
 ------------------------Subset Sum (Weighted Ceiling)------------------------
-Given a set of integers, say S = {3, 6, 1, 7, 2}, 
-and a target sum T = 9, find the max subset P
-of S, such that P ≤ T .
+Given a set of integers, say S = {3, 6, 1, 7, 2}, and a target sum T = 9, 
+find the max subset P of S, such that P ≤ T .
 
-2d problems, 2d combinations
-we track both weight and index
+2d problems, 2d combinations, we track both weight and index
 """
 def subset_sum(A, W):
     n = len(A)
@@ -1487,10 +1485,17 @@ arr = [(1,1),(6,2),(18,5),(22,6),(28,7)]
 
 """
 ------------------------Bellman-Ford Shortest Paths------------------------
+    Solving a similar problem to dijkstra's shortest paths. Given a graph
+    G(V,E) start by setting the start node s to 0, and traverse all neighbors.
+    Set their distances from S. Now continue to check each node who has a 
+    path, if their path to any other node n shortens the distances between n
+    and s, update n's path.
 
+    If there are no new updates there are no new paths to evaluate (terminate).
+    This runs at most n-1 times. However, if there is a negative cycle, it will
+    run indefinitely. If we still have a change at the n-1th iteration, we detect
+    a negative cycle.
 """
-
-
 def bellman_ford(A,s):
     paths = {}
     parents = {}
@@ -1562,6 +1567,8 @@ K = {
 # print(bellman_ford(G,0)) 
 # print(bellman_ford(H,"S"))
 # print(bellman_ford(K, "a")) # returns true for negative cycle
+
+
 
 
 
