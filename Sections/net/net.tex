@@ -156,7 +156,7 @@ For this we introduce the following data structure:
 \noindent
 Our residual graph tells us, going from $s$ to $t$, what paths we can take, and how much flow we have left to spend.
 We harness this into the following algorithm:
-\begin{theo}[Ford-Fulkerson Algorithm]
+\begin{theo}[Ford-Fulkerson Algorithm (FFA)]
 
     Given a flow network $G=(V,E)$, with source $s$ and sink $t$, the Ford-Fulkerson algorithm finds the max flow by iteratively augmenting the graph.
     \begin{enumerate}
@@ -261,6 +261,84 @@ so until we no longer can reach $t$ from $s$ in $G_f$.
     \rule{\textwidth}{0.4pt}
     \textbf{Time Complexity:} $O(n)$, where $n$ is the number of nodes in $G$. At worst our path $P$ contains all nodes.
 \end{Func}
+
+\newpage
+\section{Bipartite Matching}
+In this section we revisit matching problems alike what we saw with Gale-Shapely, Section (\ref{sec:stable-match}). Here we find
+the maximum number of matches between two sets of elements, $L$ and $R$, where each element from both sets may partially match some 
+set of elements from the other.
+\begin{Def}[Bipartite Graph]
+
+    Given a graph $G=(V, E)$, such that $V:=L\cup R$, where $E$ connects nodes $L$ to $R$,
+    a cut which separates $V$ into the two sets $L$ and $R$ is called a \textbf{Bipartition}. 
+\end{Def}
+
+\vspace{-.5em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.35\textwidth]{Sections/net/bip.png}
+    \caption{A Bipartite Graph $G(V,E)$ cut into two sets $L:=\{1,\dots,5\}$ and $R:=\{1',\dots,5'\}$.}
+    \label{fig:bip}
+\end{figure}
+
+\noindent
+Think, if we had water flowing from $L$ to $R$, what maximum-flow would arise, how many networks could we utilize?
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{Sections/net/bipflow.png}
+    \caption{Figure (\ref{fig:bip}) with a source node $s$ added to $L$ and sink $t$ added to $R$.}
+\end{figure}
+
+\noindent
+\begin{theo}[Max-Matching \& Max-Flow]
+
+    Given a bipartite graph $G=(L\cup R,E)$ with a source and sink from $L\to R$, the flow which runs through nodes $L\to R$ is the maximum matching, each edge a capacity of 1.  
+\end{theo}
+
+\newpage 
+\noindent
+
+The below diagram demonstrates a maximum matching achieved through a max-flow algorithm.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.45\textwidth]{Sections/net/bipmax.png}
+    \caption{A maximum matching found through max-flow.}
+\end{figure}
+
+\vspace{-1.5em}
+\section{Edge-disjoint Paths}
+\begin{Def}[Edge-disjoint Paths]
+
+    Given a graph $G=(V,E)$, two paths $p_1$ and $p_2$ are edge-disjoint if they share no edges in common. Though, 
+    they may share nodes.
+\end{Def}
+
+\vspace{-.5em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.4\textwidth]{Sections/net/dis.png}
+    \caption{Two edge-disjoint paths $p_1$(\textcolor{red}{red}) and $p_2$(\textcolor{blue}{blue}) from $s$ to $t$.}
+    \label{fig:dis}
+\end{figure}
+
+\vspace{-.5em}
+\begin{theo}[Max-Edge Disjoint Paths]
+
+    The max-number of edge-disjoint paths from sink to source is the max-flow.
+\end{theo}
+
+\vspace{-1em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.4\textwidth]{Sections/net/resdis.png}
+    \caption{\underline{A \textbf{Residual Graph} of Figure (\ref{fig:dis})} after one round of FFA, where $p_1$(\textcolor{red}{red}) is taken.}
+\end{figure}
+
+\noindent
+By the Ford-Fulkerson algorithm, the residual graph blocks the same path from being taken again.
+
 
 
 

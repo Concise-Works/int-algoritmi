@@ -8,8 +8,170 @@ from typing import List, Dict # Types for List
 from collections import deque # deque allows us to treat an array as a queue
 import numpy as np
 
+
+"""------------------------Basic Sorting Algorithms------------------------"""
+
+def bubble_sort(A):
+    """
+    Given an array A, of {0,...,n} elements. Iterate through the entire list, swapping elements such that
+    if A[0]>A[1] swap (Sorting in ascending order). The sort is done when there's nothing left to swap.
+    """
+    n = len(A)
+    swapped = True
+    while (swapped):
+        swapped = False 
+        for i in range(n-1):
+            if A[i] > A[i+1]:
+                A[i],A[i+1] = A[i+1],A[i] # syntax allows us to skip having a temp var
+                swapped = True
 """
-Gale Shapely:
+Time complexity: O(n^2)
+"""
+# arr = [10,9,8,4,3,5,1]
+# bubble_sort(arr)
+# print(arr)
+
+def insertion_sort(A):
+    """
+    Given an array A, of {0,1,...,n} elements. Have A[0] be the sorted portion,
+    and A[1,...,n] be the unsorted portion. Take an element from the unsorted,
+    and slide it down the sorted portion till it finds its place. 
+    """
+    for i in range(1, len(A)):
+        j = i
+        while j >= 1:
+            if A[j] < A[j-1]:
+                A[j],A[j-1] = A[j-1],A[j]
+            else:
+                break
+            j-=1
+"""
+Time complexity: O(n^2), a nested forloop, which mimics the arithmetic sum, as the inner-forloop j 
+increases by 1 up to n each iteration. Worst case if sorting ascending order on a set which is already descending.
+
+Note: interestingly, on smaller data-sets insertion sort is faster than merge and quick sort, as it has less overhead.
+"""
+# arr = [10,9,8,4,3,5,1]
+# insertion_sort(arr)
+# print(arr)
+
+def selection_sort(A):
+    """
+    Given an array A, of {0,...,n} elements, take A[0] and iterate to A[n], while doing so
+    maintain the largest element found, and swap with A[n]. Now A[n] is sorted, take A[0]
+    and iterate to A[n-1].
+    """
+    n = len(A)
+    for i in range(n):
+        largest = 0
+        for j in range(n-i):
+            if A[j] > A[largest]:
+                largest = j
+        A[largest],A[(n-1)-i] = A[(n-1)-i], A[largest]
+
+# arr = [10,9,8,4,3,5,1]
+# selection_sort(arr)
+# print(arr)
+
+"""
+Merge sort ["merge_sort()"]:
+    Given an array A of {0,...,n} elements, continually break the array into
+    halves until 1 element. Then take two unmerged arrays and take the next least 
+    element from both into a new merged array. The result is a fully sorted array
+"""
+def merge(i,lend,j,rend,arr,temp):
+        start = i
+        finish = rend+1 # as range() is [start, finish)
+        k = i 
+        while i <= lend and j <= rend:
+            if arr[i] < arr[j]:
+                temp[k] = arr[i]; i+=1
+            else: 
+                temp[k] = arr[j]; j+=1
+            k+=1
+        while i <= lend:
+            temp[k] = arr[i]
+            i+=1; k+=1
+        while j <= rend:
+            temp[k] = arr[j]
+            j+=1; k+=1
+        for m in range(start, finish):
+            arr[m] = temp[m]
+def split(i,j,arr,temp):
+    if j <= i:
+        return
+    mid = (i+j)//2 # integer division
+    split(i,mid,arr,temp)
+    split(mid+1,j,arr,temp)
+    merge(i, mid, mid+1, j, arr, temp)
+
+def merge_sort(A):
+    split(0,len(A)-1,A,[0]*len(A))
+
+"""
+Time Complexity: O(nlogn)
+Space Complexity: O(n), maintaining a temp array. This method is not considered sorting in place
+as it makes use of a separate array.
+"""
+
+# arr = [10,9,8,4,3,5,1]
+# merge_sort(arr)
+# print(arr) 
+
+"""
+Quick Sort:
+    Given an array A of {0,...,n} elements, find a suitable partition to split the array in two halves.
+    Take a pointer i on the left half, and a pointer j on the right half. Move both i and j towards the 
+    pivot swapping elements between i and j until they meet.
+
+    Now sub-divide the array and run the sort again on the subdivided halves. Use indexes to mark sub-divisions
+    not new arrays.
+"""
+def partition(arr, first, last):
+    pivot = arr[(first + last) // 2]
+    i = first - 1  # index going left to right
+    j = last + 1   # index going right to left
+    
+    while True:
+        # moving from left to right, find an element >= the pivot
+        while True:
+            i += 1
+            if arr[i] >= pivot:
+                break
+        
+        # moving from right to left, find an element <= the pivot
+        while True:
+            j -= 1
+            if arr[j] <= pivot:
+                break
+        
+        # If the indices have met or crossed, return j
+        if i >= j:
+            return j
+        
+        # Otherwise, swap the elements
+        arr[i], arr[j] = arr[j], arr[i]
+
+def qsort(arr, first, last):
+    if first < last:
+        split = partition(arr, first, last)
+        qsort(arr, first, split)      # left subarray
+        qsort(arr, split + 1, last)   # right subarray
+
+def quick_sort(arr):
+    qsort(arr, 0, len(arr) - 1)
+"""
+Time complexity: O(nlogn).
+Space complexity: O(logn) for stack, despite sorting in place.
+"""
+
+# arr = [10,9,8,4,3,5,1]
+# quick_sort(arr)
+# print(arr) 
+
+
+"""
+------------------------Gale-Shapely------------------------
 Matching problem between two sets A and B. A proposes to 'b' in B
 from their most to least preferred. 'b' will initially accept
 'a' until 'b' gets a better offer. Then 'a' will have to propose again.
@@ -79,7 +241,7 @@ residents: List[int] = [[2,1,0],[0,2,1],[0,1,2],]
 # print(gale_shapely(hospitals, residents)) # [0,2,1]
         
 """
-Trees:
+------------------------Trees------------------------
 a graph G is a tree if any two statements are true:
 - G is connected
 - G has n-1 edges
@@ -94,7 +256,7 @@ Types of Edges in a graph:
 """
 
 """
-Breadth-First Search (BFS)
+------------------------Breath-First-Search (BFS)------------------------
 
 Starting from a node 's', queue 's's children 'c' to visit. Once
 a 'c' is visited queue their children. It's important to keep 
@@ -180,7 +342,7 @@ r"""
 """
 
 """
-Depth-First-Search:
+------------------------Depth-First-Search (DFS)------------------------
 visit each branch fully (does not find longest path)
 method (stack):
 Process a node, then put it's children on a stack. Pop an item
@@ -278,7 +440,7 @@ r"""
 """
 
 r"""
-Topological Sort:
+------------------------Topological Sort------------------------
 
 A topological sort can be given to DAGs, meaning there's an 
 order to nodes. Like putting on clothes
@@ -369,7 +531,7 @@ possible valid orderings 0-2-1-3-4 or 0-2-4-1-3
 
 
 """
-classes in python
+------------------------Classes in python------------------------
 __init__: is the constructor function, each function needs 
 self as the first parameter to refer to the class itself. Similar to 
 'this' is java and other languages.
@@ -393,7 +555,7 @@ class Dog:
 # print(cool_dog)
 
 r"""
-Min-Max Heaps:
+------------------------Min-Max Heap------------------------
 - complete binary tree (binary and balanced)
 - Min heaps: nodes with lesser values live at the top
 - Max heaps: nodes with higher values live at the top
@@ -439,13 +601,14 @@ This is all log n because the height of a balance tree is log n where
 n is the number of nodes.
 """
 
-
 class MinHeap:
     def __init__(self):
         """Initialize an empty heap."""
         self.heap = []
 
-    def _parent(self, index):
+    # an underscore before function is a loose indicator to devs that it's private
+    # but it's not enforced
+    def _parent(self, index): 
         """Get the parent index."""
         return (index - 1) // 2
 
@@ -458,7 +621,7 @@ class MinHeap:
         return 2 * index + 2
 
     def _swap(self, i,j):
-        # This syntax avoids having to make a temp variable
+        # This syntax avoids having to make a temp variables, but still does so under the hood
         self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
 
     def _heapify_up(self, index):
@@ -534,104 +697,15 @@ class MinHeap:
     def __str__(self):
         """String representation of the heap."""
         return str(self.heap)
-
-class MaxHeap:
-    def __init__(self):
-        """Initialize an empty heap."""
-        self.heap = []
-
-    def _parent(self, index):
-        """Get the parent index."""
-        return (index - 1) // 2
-
-    def _left_child(self, index):
-        """Get the left child index."""
-        return 2 * index + 1
-
-    def _right_child(self, index):
-        """Get the right child index."""
-        return 2 * index + 2
-
-    def _swap(self, i,j):
-        # This syntax avoids having to make a temp variable
-        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
-
-    def _heapify_up(self, index):
-        """Maintain heap property after insertion."""
-        while index > 0: # Stop if at root
-            parent = self._parent(index)
-            if self.heap[index] > self.heap[parent]:
-                # Swap if current node is greater than the parent
-                self._swap(index, parent)
-                index = parent
-            else:
-                break
-      
-    def _heapify_down(self, index):
-        """Maintain heap property after deletion."""
-        size = len(self.heap)
-        while True:
-            left = self._left_child(index)
-            right = self._right_child(index)
-            largest = index # Assume the current node is the greatest
-
-            if left < size and self.heap[left] > self.heap[largest]: # Compare with left child
-                largest = left
-            if right < size and self.heap[right] > self.heap[largest]: # Compare with right child
-                largest = right
-
-            if largest != index:
-                # Swap with the smaller child
-                self._swap(index, largest)
-                index = largest # repeat with the newly swapped position
-            else:
-                break
-
-    def insert(self, value):
-        """Insert a value into the heap."""
-        self.heap.append(value)  # Add the value to the end
-        self._heapify_up(len(self.heap) - 1)  # Restore heap property
-
-    def update(self, index, new_value):
-        """Update a value at a given index."""
-        if 0 <= index < len(self.heap):
-            old_value = self.heap[index]
-            self.heap[index] = new_value
-            # If the new value is greater, heapify up
-            if new_value > old_value:
-                self._heapify_up(index)
-            # If the new value is smaller, heapify down
-            else:
-                self._heapify_down(index)
-        else:
-            raise IndexError("Index out of range.")
-
-    def delete(self, index):
-        """Delete a value at a given index."""
-        if 0 <= index < len(self.heap):
-            # Swap with the last element and remove it
-            self._swap(index,-1)
-            self.heap.pop()
-            # Restore heap property
-            if index < len(self.heap):
-                self._heapify_down(index)
-        else:
-            raise IndexError("Index out of range.")
-
-    def extract_min(self):
-        """Extract the minimum value (root) from the heap."""
-        if len(self.heap) == 0:
-            raise IndexError("Heap is empty.")
-        min_value = self.heap[0]
-        self.delete(0)
-        return min_value
-
-    def __str__(self):
-        return str(self.heap)
+"""
+using to sort a list
+Time complexity: O(nlogn)
+Space complexity: O(1) no additional space is needed beyond the prepared array
+"""
 
 
 """
-Interval scheduling:
+------------------------Interval Scheduling------------------------
 When we have a list of jobs, with start and finish times. Our job 
 is to find the largest subset of jobs without conflict
 
@@ -649,16 +723,6 @@ is also an optimal solution.
 
 Recursively do this for each interval and we achieve an optimal like solution.
 """
-
-def insertion_sort(A):
-    for i in range(1, len(A)):
-        j = i
-        while j >= 1:
-            if A[j] < A[j-1]:
-                A[j],A[j-1] = A[j-1],A[j]
-            else:
-                break
-            j-=1
 
 # arr = [2,4,1,10,5,3]
 # print(arr)
@@ -723,7 +787,7 @@ Space complexity: O(n). We store n tuples and return at most n of them.
 # print(interval_schedule(times)) #[(1, 4), (4, 7), (8, 11)]
 
 """
-Interval Partitioning:
+------------------------Interval Partitioning------------------------
 Say you have n classes and k classrooms. You want to find the the best
 set such that we utilize the least amount of k classrooms to hold n classes.
 
@@ -771,7 +835,7 @@ direction.
 #     print(f"{i}: {schedule[i]}")
 
 """
-Minimizing Lateness:
+------------------------Minimum Lateness------------------------
 
 When forced to use a single recourse we might still want to run every task,
 but minimize how many deadlines we pass.
@@ -894,11 +958,11 @@ class TupleMinHeap:
         """String representation of the heap."""
         return str(self.heap)
 
+"""
+------------------------Dijkstra's Algorithm------------------------
+find shortest path from node 's' to all other nodes in a graph
+"""
 def dijkstra(G,s):
-    """
-    Dijkstra's Algorithm:
-    find shortest path from node 's' to all other nodes in a graph
-    """
     n = len(G)
     distances = [np.inf] * n # list of shortest paths for each node
     parents = [None] * n     # parent child table
@@ -921,11 +985,11 @@ def dijkstra(G,s):
                     parents[next[1]] = node
     return distances, parents
 
-"""
+r"""
 Time complexity: O(mlog(n)). For 'm' edges and 'n' nodes. Since in our BFS
 approach we visit all edges. For every new edge, we insert into our queue
 which takes log(n) time.
-
+\approx 
 Space complexity: (n+m)
 """
 
@@ -954,17 +1018,17 @@ H = {
 # print(dijkstra(G,0))
 # print(dijkstra(H,0))
 
+"""
+------------------------Prim's Algorithm------------------------
+finds the Minimal Spanning Tree (MST)
+Strategy:
+    The same as dijkstra, except for the relax function.
+    (Relax meaning, smoothing out the graph, like in spinning
+    pottery, we relax the clay to get a desired shape).
+    here we want to find minimum edges so we don't 
+    care about keeping track of the accumulated weights
+"""
 def prims(G,s):
-    """
-     Prim's algorithm:
-     finds the Minimal Spanning Tree (MST)
-     Strategy:
-         The same as dijkstra, except for the relax function.
-         (Relax meaning, smoothing out the graph, like in spinning
-         pottery, we relax the clay to get a desired shape).
-         here we want to find minimum edges so we don't 
-         care about keeping track of the accumulated weights
-     """
     n = len(G)
     distances = [np.inf] * n # list of shortest paths for each node
     parents = [None] * n     # parent child table
@@ -1030,12 +1094,12 @@ r"""
 """       
 
 #Page 54
+"""
+------------------------Forest Data Structure------------------------
+What do you call a group of pair-wise disjoint trees? A forest!
+(to me this wasn't obvious at first, and I found it very funny)
+"""
 class UnionFind():
-    """
-    Forest Data structure: 
-    What do you call a group of pair-wise disjoint trees? A forest!
-    (to me this wasn't obvious at first, and I found it very funny)
-    """
 
     def __init__(self, elements=None, is_compressed=True):
         """
@@ -1130,23 +1194,22 @@ class UnionFind():
 # print(R.parents())
 # R.find('e')
 # print(R.parents()) # e is now compressed to a
+"""
+------------------------Kruskal's Algorithm------------------------
+Find MST by sorting edges, adding them to a forest for n-1,
+we know to break early at n-1 iterations.
 
+Strategy: 
+We know the MST contains the lightest nodes. So if we order 
+the lightest nodes, and add willy-nilly we should get our MST.
+
+Constraints:
+    - We don't add an edge if it doesn't create a new connection to 
+        a node outside of the MST we are generating
+    We can track this with a UnionFind data structure. This will tell 
+    us if a node is already part of a group
+"""
 def kruskals(G):
-    """
-    Kruskal's algorithm:
-    Find MST by sorting edges, adding them to a forest for n-1,
-    we know to break early at n-1 iterations.
-
-    Strategy: 
-    We know the MST contains the lightest nodes. So if we order 
-    the lightest nodes, and add willy-nilly we should get our MST.
-
-    Constraints:
-        - We don't add an edge if it doesn't create a new connection to 
-          a node outside of the MST we are generating
-        We can track this with a UnionFind data structure. This will tell 
-        us if a node is already part of a group
-    """
     edges = TupleMinHeap()
     keys = list(G.keys())
     T = UnionFind(keys)
@@ -1164,7 +1227,9 @@ def kruskals(G):
             T.union(v,u)
             MST[v].append(u)
     return MST
-
+"""
+Time complexity: O(E log E) or O(E log V)
+"""
 
 # Figure 5.8
 # parent: (weight, child)
@@ -1257,7 +1322,7 @@ Space complexity: O(n).
 # print(fib(100))
 
 """
-Weighted interval Scheduling:
+------------------------Weighted Interval Scheduling------------------------
 
 say we have n paying jobs which overlap each other. We want to find 
 the best set of jobs to maximize our profits.
@@ -1324,16 +1389,16 @@ S = [
 # print(A)
 
 #p84
-def subset_sum(A, W):
-    """
-    Subset Sum (Weighted Ceiling)
-    Given a set of integers, say S = {3, 6, 1, 7, 2}, 
-    and a target sum T = 9, find the max subset P
-    of S, such that P ≤ T .
+"""
+------------------------Subset Sum (Weighted Ceiling)------------------------
+Given a set of integers, say S = {3, 6, 1, 7, 2}, 
+and a target sum T = 9, find the max subset P
+of S, such that P ≤ T .
 
-    2d problems, 2d combinations
-    we track both weight and index
-    """
+2d problems, 2d combinations
+we track both weight and index
+"""
+def subset_sum(A, W):
     n = len(A)
     # Don't do this VVVVV it makes all rows reference the same array
     # M = [[0] * (W+1)] * (n + 1)
@@ -1350,9 +1415,8 @@ def subset_sum(A, W):
     return M
 
 """
-Time complexity: O(nW). 
+Time complexity: O(nW), the dimension of our 2d array. We iterate through
 """
-
 def subset_sum_backtrack(A,M):
     sol = []
     i = len(M)-1 
@@ -1367,18 +1431,21 @@ def subset_sum_backtrack(A,M):
         i -= 1
     return sol
 
+"""
+Time complexity: O(n).
+"""
+
 arr = [2,7,1,6,3]
 
 # S = subset_sum(arr, 9)
 # print(subset_sum_backtrack(arr,S))
 
-
+"""
+------------------------Unbounded Knapsack------------------------
+    Subset sum, but each item can be taken infinitely and has 
+    a value to be taken.
+"""
 def unbounded_knapsack(A, W):
-    """
-    Unbounded Knapsack:
-        Subset sum, but each item can be taken infinitely and has 
-        a value to be taken.
-    """
     n = len(A)
     M = [[0] * (W + 1) for _ in range(n+1)]
     
@@ -1418,21 +1485,85 @@ arr = [(1,1),(6,2),(18,5),(22,6),(28,7)]
 
 # print(unbounded_knapsack_backtrack(arr,U))
 
+"""
+------------------------Bellman-Ford Shortest Paths------------------------
+
+"""
 
 
+def bellman_ford(A,s):
+    paths = {}
+    parents = {}
+    n = len(A)
+    # setup the starting paths
+    paths[s] = 0
+    parents[s] = None
+    for t in A[s]: # tuples (weight, node)
+        paths[t[1]] = t[0] 
+        parents[t[1]] = s
+    changed = False
+    for _ in range(n-1):
+        # iterate all node connections n-1 times
+        changed = False
+        for v in A:
+            # skip entries (not yet reached)
+            if v not in paths: continue 
+            for u in A[v]:
+                # first entry for node
+                if u[1] not in paths:
+                    paths[u[1]] = paths[v] + u[0]
+                    parents[u[1]] = v
+                    changed = True
+                # if the new path found is shorter than that in paths swap
+                elif paths[u[1]] > paths[v] + u[0]:
+                    paths[u[1]] = paths[v] + u[0]
+                    parents[u[1]] = v
+                    changed = True
+        # In bellman-ford we know to end early when there are no changes,
+        # as there will be no new paths to evaluate
+        if not changed:
+            break
+    isNeg = changed # if we still changed an element after the n-1th iteration there is a negative cycle
+    return paths, parents, isNeg
+"""
+Time complexity: O(nm), for n nodes and m edges. We loop (n-1) times running n+m, so (n)(n+m)=n^2+mn. m can be at
+most n^2 (full adjacencies). Hence O(nm) or O(n^3).
+
+Space complexity: O(n+m)
+"""
+
+# Figure 5.3
+G = {
+    0: [(10,1),(3,2)],
+    1: [(1,0),(2,3)],
+    2: [(4,1),(2,4),(8,3)],
+    3: [(7,4)],
+    4: [(9,3)]
+}
+
+# Figure 8.4
+H = {
+    "S": [(10,"A"),(8,"E")],
+    "E": [(1,"D")],
+    "A": [(2,"C")],
+    "D": [(-4,"A"),(-1,"C")],
+    "C": [(-2,"B")],
+    "B": [(1,"A")]
+}
+
+# Negative cycle. Figure 8.5 #3
+K = {
+    "a": [(5,"b")],
+    "b": [(-7,"c")],
+    "c": [(-1,"a")]
+}
+
+# print(dijkstra(G, 0))
+# print(bellman_ford(G,0)) 
+# print(bellman_ford(H,"S"))
+# print(bellman_ford(K, "a")) # returns true for negative cycle
 
 
-
-
-
-
-
-
-
-
-
-
-        
 
 
 

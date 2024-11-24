@@ -43,7 +43,7 @@ geometric problems.
 
     \vspace{-.5em}
     \noindent
-    \textbf{MSORT function:}\\
+    \textbf{MSORT function}\textit{(A,temp,i,j)}:\\
     \begin{algorithm}[H]
         \label{algo:mergesort}
         \If{$i \geq j$}{
@@ -59,7 +59,7 @@ geometric problems.
     \vspace{.5em}
 
     \noindent
-    \textbf{Merge function:}\\
+    \textbf{Merge function}\textit{(A,temp,i,leftEnd,j,rightEnd)}:\\
     \begin{algorithm}[H]
         $i \gets lefti$; \tcp{Left subarray}
         $j \gets righti$; \tcp{Right subarray}
@@ -98,14 +98,14 @@ geometric problems.
 
 \newpage 
 
-\begin{Func}[Quicksort - \texttt{QSORT(A)}]
+\begin{Func}[Quicksort - \texttt{QSORT(A,high,low)}]
     \textbf{Input:} Array $A$ of $n$ elements.\\
     \textbf{Output:} Sorted array $A$ in ascending order.\\
     \textbf{Initial Call:} $QSORT(A, 0, n-1)$\\
 
     \vspace{-.5em}
     \noindent
-    \textbf{QSORT function:}\\
+    \textbf{QSORT function}\textit{(A,low,high)}\\
     \begin{algorithm}[H]
         \label{algo:quicksort}
         \If{$low < high$}{
@@ -118,7 +118,7 @@ geometric problems.
     \vspace{.5em}
 
     \noindent
-    \textbf{Partition function:}\\
+    \textbf{Partition function}\textit{(A,low,high)}:\\
     \begin{algorithm}[H]
         $pivot \gets A[\left\lfloor (low + high)/2 \right\rfloor]$\;
         $i \gets low - 1$\;
