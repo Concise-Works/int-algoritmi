@@ -338,10 +338,153 @@ The below diagram demonstrates a maximum matching achieved through a max-flow al
 
 \noindent
 By the Ford-Fulkerson algorithm, the residual graph blocks the same path from being taken again.
+\newpage 
+\section{Multiple Sources \& Sinks}
+\textbf{Scenario - \textit{Farmer's Dilemma}:} There are multiple $c$ communities in the area
+which require $x$ number of resources, and $f$ farmers. The farmers need know with the routes they have,
+are they meeting community needs?
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.6\textwidth]{Sections/net/farm.png}
+    \caption{A graph showing $f_j$ farms' variation connections to $c_k$ communities. (+) denoting the amount of 
+    resources added and (-) the amount of resources taken.}
+    \label{fig:farm}
+\end{figure}
+
+\begin{Def}[Super Source \& Sink]
+
+    Given a graph $G=(V,E)$, with multiple sources $s_1,\dots,s_f$ and sinks $t_1,\dots,t_c$. A node 
+    which acts as a source for all sources is called a \textbf{Super Source}, and a node which acts as a sink for all sinks, a \textbf{Super Sink}.
+\end{Def}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.6\textwidth]{Sections/net/farmres.png}
+    \caption{A graph with a super source $s$ and super sink $t$ on Figure (\ref{fig:farm}).}
+\end{figure}
+
+\vspace{-1em}
+\noindent
+Converting the graph into a flow network allows us to find the max-flow, via algorithms like Ford-Fulkerson. To verify
+if demands are met, we check that the edges entering the super sink $t$ are fully saturated.\\
+
+\noindent
+The strategy is to identify a \textbf{Supply} and \textbf{Demand} relationship. If this relationship can be established, 
+a bipartite graph can be formed, and a source and sink added to find the max-flow.
+
+\newpage
+
+\noindent
+\textbf{Scenario - \textit{Eldritch Curse}:} A wizardry school requires $j$ adjunct students on 
+$k$ days to help keep an Eldritch Curse sealed beneath the school. Students $W_z$, $z:=\{1,\dots,n\}$, give a list $A$ of availability on
+$D_y$, $y:=\{1,\dots,m\}$ days. The school needs to know if they have enough students to keep the curse sealed.\\
+
+\noindent
+We identify: \textbf{Suppliers} students $W_z$, and \textbf{demands} as days $D_y$. We now form a bipartite graph.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.7\textwidth]{Sections/net/wizards.png}
+    \caption{A network flow of $W_z$'s availability on $D_y$ nodes showing the students needed.}
+\end{figure}
+
+\noindent
+Here the capacities leaving source node $s$ are infinite, as they will be bottleneck by the students' availability. 
+We match each student to their days all with a capacity of 1. We take all capacities $C$ and flows $F$ entering the sink node $t$
+and verify if $\ \displaystyle{\sum_{c\in C} c = \sum_{f\in F} f}$, or $\ \displaystyle{\sum_{c\in C} c \leq \sum_{f\in F} f}$ 
+to verify that we at least have enough students to keep the curse sealed (allowing flow to be more than the capacity).
+\begin{theo}[Supply \& Demand Verification]
+
+    Given a flow network $G=(V,E)$ with a super source and sinks $s$ and $t$. If all flows $F$ and capacities $C$ entering $t$ satisfy,
+    $\displaystyle{\sum_{c\in C} c = \sum_{f\in F} f}$, demands are met. Then \textbf{minimum} demands are met if we allow flows to exceed
+    capacities entering $t$. Then we verify, $\displaystyle{\sum_{c\in C} c \leq \sum_{f\in F} f}$.
+\end{theo}
 
 
+\newpage 
 
+\newpage
+\noindent
+\textbf{Scenario - \textit{Image Segmentation}:} Given an image $I(V,E)$, $V$ pixels, and $E$ neighboring pixels, we want to
+separate the foreground from the background. We ask a visual specialist to give us three variables: 
 
+\begin{itemize}
+    \item $a_i\geq 0$: the likelihood of pixel $i$ being in the foreground.
+    \item $b_i \geq 0$: the likelihood of pixel $i$ being in the background.
+    \item $p_{ij} \geq 0$: the penalty for disconnecting pixels $i$ and $j$ (higher similarities, higher penalties).
+\end{itemize}
+
+\vspace{-1em}
+\noindent\rule{\textwidth}{0.4pt}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.7\textwidth]{Sections/net/butterfly.png}
+    \noindent\rule{\textwidth}{0.4pt}
+    \caption{A high-level diagram of image segmentation.}
+    \label{fig:butterfly}
+    % Christian J. Rudder took this photo
+\end{figure}
+
+\noindent
+We partition the image into two sets, via cut $C(A,B)$, $A$ the foreground and $B$ the background.
+We the find a partition maximizing the likelihood of pixels in the foreground and background, while minimizing the penalties.
+Hence, 
+$$\displaystyle\max\left\{\sum_{i\in A} a_i + \sum_{j\in B} b_j - \sum_{(i,j)\in E} p_{ij}\right\}.$$
+
+\noindent
+However, we don't on hand have an algorithm to solve the maximum cut problem. We can however invert the max-cut into a min-cut problem.
+\begin{theo}[Min-Max Inverse Function]
+
+    Given a min function $f(x)$, the max function $-f(x)$ is equivalent to the min function $f(-x)$.
+\end{theo}
+We convert the previous function into the following min-cut problem: 
+$\displaystyle\min\left\{-\sum a_i - \sum b_j + \sum p_{ij}\right\}.$ 
+\textbf{Our Trick:} If we add a constant $C$ to our deciding function, the result is still the same, just shifted,
+as all terms are still the same relative to each other. E.g., $\max\{x\} = \max\{x-C\}= \min\{-x+C\}= \min\{-x\}$, within a constant $C$.
+We add back $\sum a_i + \sum b_j$ from the general set $V$ and group terms yielding:
+$$\min\left\{\left(\sum_{j\in V} b_j - \sum_{i\in A} a_i \right) + \left(\sum_{i\in V} a_i - \sum_{j\in B} b_j\right) + \sum_{(i,j)\in E} p_{ij}\right\}=
+\min\left\{\sum_{j\in B} a_j + \sum_{i\in A} b_i + \sum_{(i,j)\in E} p_{ij}\right\},$$
+Giving us mis-labeling of $a$ and $b$ in $V$. Despite the inversion, it retains the same selection.
+
+\newpage
+
+\section*{Network Flow Setup}
+We take $I(V,E)$ and convert it into a graph $G=(V,E)$, where each neighboring pixel $i$ and $j$ are connected by an edge $(i,j)$, with
+$p_{ij}$ capacity. In the residual graph $G'$, we add two edges to represent flow from either $i\to j$ and $j\to i$.
+
+\begin{Def}[Anti-parallel Edges]
+    Given an edge $e$ and endpoints $i$ and $j$, the anti-parallel edges are $i\to j$ and $j\to i$, both 
+    independent of each other.
+\end{Def}
+
+\vspace{-1em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{Sections/net/anti.png}
+    \caption{Showing an edge in $G$ vs. its anti-parallel edges in $G'$.}
+\end{figure}
+
+\vspace{-1em}
+\begin{Def}[Net-flow of Anti-parallel Edges]
+
+    The net flow of the anti-parallel edges from a residual graph on endpoints $i$ and $j$ is given by,
+    $$f(i,j) = f(i,j') - f(j,i').$$
+\end{Def}
+\noindent
+This means the flow through endpoints $i$ and $j$ could be negative, zero, or positive. If negative, we have more flow from $j\to i$ than $i\to j$.
+We now apply this to the Ford-Fulkerson algorithm.
+\vspace{-1em}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{Sections/net/img.png}
+    \caption{A flow network $G$ where the min-cut is highlighted in blue. Solid lines represent edges leaving the min-cut
+    (not all connections from $s$ and $t$ to and from the image are shown).}
+\end{figure}
+
+\noindent
+The derived min-cut yields the optimal partitioning of the image, separating foreground from background.
 
 
 
