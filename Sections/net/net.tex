@@ -376,9 +376,9 @@ a bipartite graph can be formed, and a source and sink added to find the max-flo
 \newpage
 
 \noindent
-\textbf{Scenario - \textit{Eldritch Curse}:} A wizardry school requires $j$ adjunct students on 
+\textbf{Scenario - \textit{Eldritch Curse}:} A wizardry school needs $j$ adjunct students on 
 $k$ days to help keep an Eldritch Curse sealed beneath the school. Students $W_z$, $z:=\{1,\dots,n\}$, give a list $A$ of availability on
-$D_y$, $y:=\{1,\dots,m\}$ days. The school needs to know if they have enough students to keep the curse sealed.\\
+$D_y$, $y:=\{1,\dots,m\}$ days. The school needs to know if they have enough students to keep the curse sealed for each day.\\
 
 \noindent
 We identify: \textbf{Suppliers} students $W_z$, and \textbf{demands} as days $D_y$. We now form a bipartite graph.
@@ -446,7 +446,7 @@ as all terms are still the same relative to each other. E.g., $\max\{x\} = \max\
 We add back $\sum a_i + \sum b_j$ from the general set $V$ and group terms yielding:
 $$\min\left\{\left(\sum_{j\in V} b_j - \sum_{i\in A} a_i \right) + \left(\sum_{i\in V} a_i - \sum_{j\in B} b_j\right) + \sum_{(i,j)\in E} p_{ij}\right\}=
 \min\left\{\sum_{j\in B} a_j + \sum_{i\in A} b_i + \sum_{(i,j)\in E} p_{ij}\right\},$$
-Giving us mis-labeling of $a$ and $b$ in $V$. Despite the inversion, it retains the same selection.
+Giving us mis-labelings of $a$ and $b$ in $V$. Despite the inversion, it retains the same selection.
 
 \newpage
 
@@ -455,6 +455,7 @@ We take $I(V,E)$ and convert it into a graph $G=(V,E)$, where each neighboring p
 $p_{ij}$ capacity. In the residual graph $G'$, we add two edges to represent flow from either $i\to j$ and $j\to i$.
 
 \begin{Def}[Anti-parallel Edges]
+    
     Given an edge $e$ and endpoints $i$ and $j$, the anti-parallel edges are $i\to j$ and $j\to i$, both 
     independent of each other.
 \end{Def}
