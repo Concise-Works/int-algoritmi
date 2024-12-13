@@ -7,8 +7,8 @@
 \newpage
 
 \noindent
-\textbf{Growth Rates}: $1 < \log n < n < n \log n < n^2 < n^3 < 2^n < n! < n^n$ (\ref{thm:growth_rates})\\
-\textbf{$O$(Upper Bound)}: $f(n) < g(n)\implies $lim$_{n\to\infty}\frac{f(n)}{g(n)}=0$ (\ref{def:bigO})\\
+\textbf{Growth Rates}: $1 < \log n < n < n \log n < n^2 < n^3 < 2^n < n! < n^n$ (\ref{thm:growth_rates}) | \textbf{(htbl)}:= hash-table\\
+\textbf{$O$(Upper Bound)}: $f(n) < g(n)\implies $lim$_{n\to\infty}\frac{f(n)}{g(n)}=0$ (\ref{def:bigO}) \hspace{5.47em}| \textbf{(conn.)}:= connected\\
 \textbf{$\Omega$(Lower Bound)}: $f(n) > g(n)\implies $lim$_{n\to\infty}0<\frac{f(n)}{g(n)}=$ (\ref{def:bigOmega})\\
 \textbf{$\Theta$(Upper \& Lower Bound)}: $f(n) = g(n)\implies 0<\frac{f(n)}{g(n)}<\infty$ (\ref{def:bigTheta})\\
 \noindent\rule{\textwidth}{0.4pt}
@@ -43,8 +43,8 @@ $\textcolor{OliveGreen}{d} = \log_{\textcolor{blue}{b}} \textcolor{red}{a} \impl
 \textbf{BFS}: $O(n+m)$ (\ref{sec:bfs_dfs}). Siblings before children, shortest paths tree.\\
 \textbf{DFS}: $O(n+m)$ (\ref{sec:bfs_dfs}). Children before siblings, not longest paths.\\
 \textbf{Heap}: sorting $O(n\log n)$, operations $O(\log n)$ except for extract-min $O(1)$ (\ref{sec:priority}).\\
-\textbf{Dijkstra}: $O((n+m)\log n)$. If conn.$O(m \log n)$. Shortest paths from $s$ (no negatives paths) (\ref{sec:dstra}).\\
-\textbf{Prim's}: $O((n+m)\log n)$. MST, dijkstra like routine (\ref{theo:prim}).\\
+\textbf{Dijkstra}:$O((n+m)\log n)$;$O(m \log n)$(conn.);$O(n^2)$(htbl). Min paths from $s$ (no neg.paths) (\ref{sec:dstra}).\\
+\textbf{Prim's}: $O((n+m)\log n)$. $O(n^2)$(htbl). MST, dijkstra like routine, (\ref{theo:prim}).\\
 \textbf{Kruskal's}: $O(m \log n)$ or $O(m \log m)$. MST, sort \& pick edges ascending, union-find (\ref{theo:kruskal}).\\
 \textbf{Bellman-Ford}: $O(nm)$. Shortest paths from $s$ via relax rounds on $n$ (no negatives cycles) (\ref{theo:bellman}).\\
 \textbf{Ford-Fulkerson}: $O(mnC)$, $C:=$ largest capacity, finds max flow (\ref{theo:bellman}).\\
@@ -73,7 +73,7 @@ $\textcolor{OliveGreen}{d} = \log_{\textcolor{blue}{b}} \textcolor{red}{a} \impl
 
 \vspace{-1em}
 \noindent
-$\log(ba)=\log b+\log a,\log(\frac{b}{a})=\log b-\log a,\log_ba=\frac{\log a}{\log b}$ (\ref{thm:logrules}).
+$\log(ba)=\log b+\log a,\log(\frac{b}{a})=\log b-\log a,\log_ba=\frac{\log a}{\log b},2\log a= \log a^2$ (\ref{thm:logrules}).
 
 
 

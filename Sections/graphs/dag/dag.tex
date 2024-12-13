@@ -71,3 +71,92 @@ Another possible ordering of $[1,2,3,4,5,6,7]$ is $[5, 6,1,2,3,4,7]$, as $5\righ
     \end{center}
      \caption{A graph with 5 strongly connected components.}\label{fig:strong_conn}
 \end{figure}
+
+\newpage 
+
+\begin{Exercise}Based on the images which are trees, and if not, why?
+
+    \label{ex:tree}
+    \vspace{1em}
+    \hspace{-2em}
+    \includegraphics[height=2.4in]{./Sections/graphs/dag/tree_example.png}
+
+\end{Exercise}
+
+\begin{Exercise} Based on Exercise (\ref{ex:tree}) above, starting with the $s$ nodes,
+    what are possible results of BFS and DFS?
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} What type of edges do BFS and DFS traversals produce?
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} BFS can find shortest paths, does DFS find longest paths (True/False)?
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} To find a path and return such path from node $s$ to node $t$ in a graph, should we use 
+    BFS or DFS?
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} To detect cycles in a graph, should we use BFS or DFS, or both?
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} Say we wanted to find the shortest round-trip path, that is, the minimal path starting from origin node $s$ visiting a set of
+    nodes exactly once returning to $s$. How should we use BFS or DFS?
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} Which of the below images are DAGs.
+
+    \label{ex:dag}
+    \vspace{1em}
+    \hspace{-2em}
+    \includegraphics[height=1.2in]{./Sections/graphs/dag/dag_example.png}
+\end{Exercise}
+
+\vspace{.5em}
+\begin{Exercise} Based on Exercise (\ref{ex:dag}) above, what are possible topological orderings?
+\end{Exercise}
+
+\newpage 
+
+\begin{Answer} 1, 3, 4, 5, 8 are trees. 2 has a cycle, 6 has a cycle, 7 is disconnected.
+\end{Answer}
+\begin{Answer} There are other possible solutions depending on order of traversal. For 7,
+    BFS and DFS don't alone handle disconnected graphs. Though modifications could be made to handle such.
+    \includegraphics[height=4in]{./Sections/graphs/dag/bfs_dfs.png}
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} False, as of today, there is no known algorithm to find the longest path in a graph.
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} BFS, it finds shortest child-parent connections, giving us a direct path from $s$ to $t$.
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} Both, as DFS when it encounters a node that has already been visited, it has found a cycle. BFS when two branches meet, a cycle is found.
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} BFS, one implementation is to run BFS from $s$ to all nodes, the first cycle found is the shortest round-trip path.
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} 1, 2, and 4 are DAGs. 3 has a cycle (f,s,e,a).
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} 
+    \begin{itemize}
+        \item[1.] $[s,a,b,c]$, $[s,b,a,c]$, $[s,a,c,b]$. 
+        \item[2.] $[s,a,d,c,b,e]$, $[d,c,s,a,e,b]$ or $[d,c,s,a,b,e]$
+        \item[4.] $[s,f,a,g,h,e,b,c,d]$ 
+    \end{itemize}
+\end{Answer}
+

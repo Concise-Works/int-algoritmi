@@ -1,4 +1,0 @@
-- Fermats littile theorem
-    - Binomial theorem
-
-- Wilsions thm

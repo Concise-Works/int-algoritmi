@@ -408,3 +408,142 @@ Hence, merge sort has a time complexity of $O(n\log n)$.
 \begin{Tip}
     Live Demo: \url{https://youtu.be/Ob8SM0fz6p0?si=Z4PZQDWOXa7deEHA}
 \end{Tip}
+
+\newpage 
+
+\begin{Exercise} Evaluate the following functions with the Master Method and Substitution:
+    \begin{enumerate}
+        \item makes 2 recursive calls, recursive calls of length $n/3$, and does $\Theta(n)$ work.
+        \item makes 4 recursive calls, recursive calls of length $n/3$, and does $\Theta(n)$ work.
+        \item makes 9 recursive calls, recursive calls of length $n/3$, and does $\Theta(n^2)$ work.
+    \end{enumerate}
+\end{Exercise}
+
+\vspace{-.5em}
+\begin{Note}
+    \textbf{Note:} Helpful log identities: $\log_a 2b = 2\log_a b$; $a^{\log_a b} = b$; $a^{\log_b c} = c^{\log_b a}$.
+\end{Note}
+
+\begin{Exercise} Find the recurrence relation for the below function then solve it:
+\end{Exercise}
+
+\vspace{-.5em}
+\begin{Func}[Mystery Function - \texttt{MYST(n)}]
+
+    \vspace{-1em}
+    \begin{algorithm}[H]
+    \If{$n \leq 1$}{
+        \Return 1
+    }
+    \ElseIf{$x > 6$}{
+        \Return \texttt{MYST($n/2$)} + $O(n)$
+    }
+    \ElseIf{$x > 3$}{
+        \Return \texttt{MYST($n/3$)} + $O(n)$
+    }
+    \Else{
+        \Return \texttt{MYST($n-1$)} + $O(n)$
+    }
+    \end{algorithm}
+\end{Func}
+
+\vspace{-.5em}
+\begin{Exercise} Find the recurrence relation for the below function then solve it:
+\end{Exercise}
+
+\vspace{-.5em}
+\begin{Func}[Mystery Function - \texttt{MYST2(n)}]
+
+    \vspace{-1em}
+    \begin{algorithm}[H]
+    \If{$n \leq 1$}{
+        \Return 1
+    }
+    \Else{
+        \Return \texttt{MYST2($n-1$)} + \texttt{MYST2($n-1$)}
+    }
+    \end{algorithm}
+\end{Func}
+
+\vspace{-.5em}
+\begin{Exercise} Find the recurrence relation for the below function then solve it:
+\end{Exercise}
+
+\vspace{-.5em}
+\begin{Func}[Mystery Function - \texttt{MYST3(A,n)}]
+
+    \vspace{-1em}
+    Takes an array $A$, and an integer $n$. The min, max functions
+    returns the smallest and largest numbers in $A$ respectively.\\
+    \begin{algorithm}[H]
+    \If{$A.length \leq 1$}{
+        \Return 1
+    }
+    \Else{
+        \texttt{MYST3($A[0,\dots,n/2]$), min($A$)}\;
+        \texttt{MYST3($A[0,\dots,n/2]$), max($A$)}\;
+        \texttt{MYST3($A[0,\dots,n/2]$), 0}\;
+    }
+    \end{algorithm}
+\end{Func}
+
+\newpage 
+
+\begin{Exercise} Are the following statements ``Always True,'' ``Sometimes True,'' or ``Never True.''
+    
+    \begin{enumerate}
+        \item If \(f(n) = O(g(n))\), then \(2^{f(n)} = O(2^{g(n)})\).
+        \item If \(f(n) = O(g(n))\), then \(g(n) - f(n) = \Omega(g(n))\).
+        \item If \(f(n) = O(g(n))\), then \(f(n) = \Omega(g(n))\).
+        \item If \(f(n) = O(g(n))\), then \(\lim_{n \to \infty} \frac{g(n)}{f(n)} = 0\).
+    \end{enumerate}
+    
+\end{Exercise}
+
+\noindent\rule{\textwidth}{0.4pt}
+    
+
+\begin{Answer}
+
+    \begin{enumerate}
+        \item $2^{k}\ T \left(\dfrac{n}{3^k} \right) + k \Theta(n)$: Start by rewriting as $2^{\log_3n}\ T \left(\dfrac{n}{3^{\log_3n}} \right) + \log_3n \Theta(n)$.
+        Simplifying this gives $2^{\log_3n} + \Theta(1) + n^{\log_3n}$. Using the identity $a^{\log_b c} = c^{\log_b a}$,
+        we find that the expression becomes $n^{\log_3 2} + n \log_3n$. Since $n^{\log_3n} = \Theta(n)$, the result simplifies further to $n^{\log_3 2} + O(n)$. Noting that $n^{\log_3 2} < O(n)$ (because $\log_3 2$ is a fraction), the final result is $O(n)$.
+    
+        \item $4^{k}\ T \left(\dfrac{n}{3^k} \right) + k \Theta(n)$: Rewriting gives $4^{\log_3n} + n^{\log_3n} = n^{\log_3 4} + O(n)$. Since $n^{\log_3 4} > n$, the final result is $O(n^{\log_3 4})$.
+    
+        \item $9^{k}\ T \left(\dfrac{n}{3^k} \right) + k \Theta(n^2)$: Start by observing as $9^{\log_3n} = 3^{2 \cdot \log_3n} = 3^{\log_3n^2} = n^2$. Then\\ $n^2\cdot\Theta(1)+(\log_3n)\Theta(n^2)=n^2+n^2\log_3n$, hence $O(n^2 \log_3n)$.
+    \end{enumerate}
+    
+\end{Answer}
+
+\begin{Note}
+    \textbf{Note:} Log magnitudes: $\log_2(8)=3;\ \log_8(2)=\frac{1}{3};\ \log_2(\frac{1}{8})=-3;\ \log_8(\frac{1}{2})=-\frac{1}{3};\ \log_2(\frac{1}{8})=-3$. 
+\end{Note}
+
+\begin{Answer} Equation: $T(n-2) + \Theta(n)$, Time Complexity: $O(n^2)$.
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} Equation: $2 T(n-1) + \Theta(1)$. General Case: $2^kT(n-k) + k\Theta(1)$, solve $n-k=0$.
+    Base Case $(n=k)$: $2^n T(0) + n\Theta(1)=2^n \Theta(1) + n\Theta(1)$. Hence $O(2^n)$.
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} Equation: $T(n/2) + \Theta(n)$, Recurrence: $O(n log_2 )$. 
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer}
+    \begin{enumerate}
+        \item Sometimes True: $f(n)=g(n)=n$, then $2^{f(n)} = O(2^{g(n)})$. $f(n)=2n, g(n)=n$, then $2^{f(2n)} \neq O(2^{g(n)})$ as $4^n > 2^n$.
+        \item Sometimes True: $f(n)=g(n)=n$, then $g(n) - f(n) = 0 \neq \Omega(g(n))$. $f(n)=n, g(n)=2n$, then $n2 - n = n = O(g(n))$.
+        \item Sometimes True: $f(n)=\Theta(g(n))=O(g(n))$. $f(n) = 1, g(n) = n$, then $1 \neq \Omega(n)$.
+        \item Never True: $g(n)$ should dominate the expression, hence $\lim_{n \to \infty} \frac{g(n)}{f(n)} = \infty$.
+    \end{enumerate}
+\end{Answer}
+    
+
+
+
+
