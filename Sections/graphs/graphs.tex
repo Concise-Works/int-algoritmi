@@ -111,7 +111,7 @@ Node $a$ has a degree of 3, and node $c$ has a degree of 4.\\
     \end{itemize}
     \noindent
     \textbf{Space Complexity:} $\Theta (n^2)$; \textbf{Time Complexities:}\\
-    \textbf{Check edges $A[i][j]$:} $\Theta (1)$; \textbf{List neighbors $A[i]$}: $\Theta(n)$; \textbf{List all edges:} $\Theta(n^2)$.
+    \textbf{Index edge $A[i][j]$:} $\Theta (1)$; \textbf{List neighbors $A[i]$}: $\Theta(n)$; \textbf{List all edges:} $\Theta(n^2)$.
 \end{theo}
 \begin{figure}[h]
   \begin{center}
@@ -123,13 +123,14 @@ Node $a$ has a degree of 3, and node $c$ has a degree of 4.\\
 \newpage
 \begin{Def}[Adjacency List]
 
+  \label{def:adj_list}
     An \textbf{adjacency list} is a list of keys where each key has a list of neighbors.\\
 
     \noindent
     Often taking form as a dictionary or hash-table:\\
     \textbf{Space Complexity:} $\Theta (n+m)$ for $n$ nodes and $m$ total edges; \textbf{Time Complexities:}\\
-    \textbf{Check key:} $\Theta (1)$; \textbf{List neighbors:} $\Theta(\text{|outdegrees| of key})$; \textbf{List all edges:} $\Theta(n+m)$;
-    \textbf{Insert edge:} $\Theta(1)$.
+    \textbf{Index key:} $\Theta (1)$; \textbf{List key neighbors:} $\Theta(\text{\# of outdegrees})$; \textbf{List all edges:} $\Theta(n+m)$;
+    \textbf{Insert edge:} $\Theta(1)$. \textbf{Note:} $m\leq n^2$ (all nodes connected to all nodes), though typically $m < n$.
 \end{Def}
 
 \begin{figure}[h]

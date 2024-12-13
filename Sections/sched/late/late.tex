@@ -63,6 +63,7 @@ We know each dish takes $p_j$ time to prepare. With only one kitchen, we want to
 
 \begin{theo}[Minimizing Lateness]
     
+    \label{theo:late}
     Given a set of jobs $j$ with start and finish times $t_j$ and $p_j$ under one resource, we can obtain a like-optimal solution by scheduling in ascending order of $p_j$.
 \end{theo}
 
@@ -135,6 +136,9 @@ We know each dish takes $p_j$ time to prepare. With only one kitchen, we want to
             }
             \KwRet{intervals}
         \end{algorithm}
+
+        \vspace{1em}
+        \noindent\rule{\textwidth}{0.4pt}
 
         \noindent
         \textbf{Time Complexity:} $O(n\log n)$ assuming our sorting algorithm is $O(n\log n)$. Then we iterate through $n$ jobs.\\

@@ -244,3 +244,78 @@
     \end{mdframed}
 }
 
+% EXAMPLE BOXES
+
+\newcounter{Example}[section]\setcounter{Example}{0}
+\renewcommand{\theExample}{\arabic{section}.\arabic{Example}}
+
+\newenvironment{Example}[1][]{%
+    \refstepcounter{Example}
+
+    \ifstrempty{#1}%
+    % if condition (without title)
+    {\mdfsetup{%
+            frametitle={%
+                    \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                    \node[anchor=east,rectangle,fill=white,text=black]
+                    {\strut Example~\theExample};}
+        }%
+        % else condition (with title)
+    }{\mdfsetup{%
+            frametitle={%
+                    \tikz[baseline=(current bounding box.east),outer sep=0pt]
+                    \node[anchor=east,rectangle,fill=white,text=black]
+                    {\strut Example~\theExample:~#1};}%
+        }%
+    }%
+    % Both conditions
+    \mdfsetup{%
+        innertopmargin=6pt,
+        innerbottommargin=12pt,
+        linecolor=black,%
+        linewidth=1pt,topline=true,%
+        frametitleaboveskip=\dimexpr-\ht\strutbox\relax%
+    }
+
+    \begin{mdframed}[]\relax}{
+        \hfill$\blacksquare$
+    \end{mdframed}
+}
+
+% EXERCISE BOXES (BOLDED AND UNDERLINED)
+
+\newcounter{Exercise}[section]\setcounter{Exercise}{0}
+\renewcommand{\theExercise}{\arabic{section}.\arabic{Exercise}}
+
+\newenvironment{Exercise}[1][]{%
+    \refstepcounter{Exercise}
+
+    \ifstrempty{#1}% 
+    % if condition (without title)
+    {\noindent\textbf{\underline{Exercise~\theExercise:} }}% 
+    % else condition (with title)
+    {\noindent\textbf{\underline{Exercise~\theExercise:~#1}}}% 
+    % Both conditions
+    \ignorespaces
+}{%
+    \par\noindent
+}
+
+% ANSWER BOXES
+
+\newcounter{Answer}[section]\setcounter{Answer}{0}
+\renewcommand{\theAnswer}{\arabic{section}.\arabic{Answer}}
+
+\newenvironment{Answer}[1][]{%
+    \refstepcounter{Answer}
+
+    \ifstrempty{#1}% 
+    % if condition (without title)
+    {\noindent\textbf{\underline{Answer~\theAnswer:} }}% 
+    % else condition (with title)
+    {\noindent\textbf{\underline{Answer~\theAnswer:~#1} }}% 
+    % Both conditions
+    \ignorespaces
+}{%
+    \par\noindent
+}

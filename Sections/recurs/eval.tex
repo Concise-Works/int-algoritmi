@@ -186,6 +186,7 @@ Let us examine merge sort at a high-level.
 
 \begin{Proof}[Merge Sort - Time Complexity]
 
+    \label{proof:merge}
 We make the following observations, generalizing $n$ to each recursive call:
 \begin{enumerate}
     \item [(i.)] We make 2 recursive calls.
@@ -355,6 +356,7 @@ To illustrate the above proof, we can draw a recursion tree for merge sort:\\
 
 \begin{theo}[Iterative Substitution Method (plug-and-chug)]
 
+    \label{theo:iterative}
     Given a function $T(n)$ which has a recurrence relation---meaning it calls 
     upon itself in its own definition---we may repeatedly substitute such self-references
     back into $T(n)$.

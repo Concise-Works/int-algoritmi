@@ -6,6 +6,7 @@ account for negative edge weights. This was a result of fixing nodes too early i
 as it assumes paths can only get larger beyond each point. We look to correct this by considering all possible paths from the source node.
 \begin{theo}[Bellman-Ford Algorithm]
 
+    \label{theo:bellman}
     Given a connected graph $G$ with $n$ nodes and a source node $s$, begin with setting 
     every node's distance as $\infty$ and $s$ as 0. Keep a parent-child list to build our solution. Let $d(v):=$ ``current distance of $s\to v$,'' and 
     $w(v,u):=$ ``edge-weight $v\to u$.'' Then, for $n-1$ iterations:

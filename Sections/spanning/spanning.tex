@@ -284,6 +284,7 @@ Given Figure (\ref{fig:cut_example}), the cut-set $G'$ intersects the cycle $(a,
 \vspace{-1em}
 \begin{theo}[Prim's Algorithm]
 
+    \label{theo:prim}
     Given a connected graph $G$ with $n$ nodes and $m$ edges, we produce the MST via:
     \begin{enumerate}
         \item [(i.)] Initialize an MST table $T$, and a priority queue $Q$ with each $n$ of weight $\infty$.
@@ -385,7 +386,7 @@ The above example shows how our parent table will result with the following tabl
     By the cut property, any new lightest edge $w(u,v)$ is added or replaces a heavier edge in $T$. Thus forming an MST as all nodes are considered.\\
     \textbf{Time Complexity:} $O((n+m)\log n)$. Line 7 at worse checks every adjacency, $O(n+m)$, for $m$ edges of $n$ nodes. 
     Say lines 8-9 takes $O(1)$ time to find $v\in Q$ via hash-table. Line 10 takes $O(\log n)$ time to re-balance the heap.
-    Thus, $O((n+m)\log n)$.\\
+    Thus, $O((n+m)\log n)$ or $O(m\log n)$.\\
     \textbf{Space Complexity:} $O(n+m)$, as we at most store the data items a hash-table representation of our graph.
 \end{Func}
 
@@ -399,6 +400,8 @@ points to $v$ node in $Q$. Once we update $R[v]$, we tell the $Q$ to sort the ne
 To check if a node has been visited before, doesn't matter in our case, as we update our solution $T$ with 
 a better solution once it is found. We additionally discard the lightest node each round to avoid infinite loops. If one wanted to, they could use $T$'s entries as a visited list. If entries are
 undefined upon access, then they have not been visited.\\
+
+\newpage 
 
 \begin{figure}[h]
 \centering
@@ -421,6 +424,39 @@ undefined upon access, then they have not been visited.\\
 The above diagram shows Prim's algorithm each round, pick the lightest edge at the top of the heap, check its degrees which have not been, 
 update weights, re-balance the heap, and repeat. The algorithm will terminate when all nodes have been picked from the heap.\\ 
 
+\newpage
+\begin{Proof}[Prim's Hash-tables vs. Min-heaps Implementation]
+    Say we had a hash-table of priorities where $R[v]$ returns weight $w(u,v)$:
+    % Under light loads, a hash-table preforms better than a min-heap. However, under heavy loads, a min-heap.
+    \begin{itemize}
+        \item \textbf{Hash-table} - \textbf{Extract:} $O(n)$, search all indices, \textbf{Decrease-Key:} $O(1)$, update $R[v]$.
+        \item \textbf{Min-heap} - \textbf{Extract:} $O(1)$, top element, \textbf{Decrease-Key:} $O(\log n)$, re-balance heap.
+    \end{itemize}
+    \begin{center}
+    \includegraphics[height=2.3in]{./Sections/spanning/alg.png}
+    \end{center}
+
+    line 5 stores all $n$ nodes to be visited $O(n)$, line 7 iterates all neighbors for each $n$. Let all edges be $m$, then $\sum_{v \in n} \text{degree}(v)=m$.
+    Since line 6 is $O(1)$, we have $O(n+m)$ for iterating all edges. Now for every edge, we might evaluate Decrease-Key, which is $O(\log n)$. This gives us 
+    $O((n+m)\log n)$, or $O(m\log n)$.
+    
+    When using a hash-table, line 6 becomes $O(n)$, and Decrease-Key is $O(1)$. Thus,\\
+    $O((n(n)+m)\cdot 1)= O(n^2+m)$ or $O(n^2)$. Hence,
+
+    \begin{center}
+        \textbf{Hash-table:} $O(n^2)$. \textbf{Min-heap:} $O(m\log n)$.\\
+    \end{center}
+
+    \noindent
+    For any connected graph $n-1\leq m \leq \frac{n(n-1)}{2}$, where $m$ is the number of edges. Most often $m$ is much less than $n$, making the min-heap the better choice.
+    E.g., say $m=\frac{n^2}{2}$, then $O(n^2)$ vs. $O(n^2\log n)$, hash-table wins. However, say $m=\frac{n}{2}$, then $O(n^2)$ vs. $O(n\log n)$, min-heap wins.
+\end{Proof}
+
+\begin{theo}[Prim's Hash-tables vs. Min-heaps]
+
+    For Prim's algorithm,\\
+    when $m \leq n$, min-heap is better ($O(n\log n)<O(n^2)$). When $m$ is significantly larger than $n$, hash-tables are better ($O(n^2)<O(n^2\log n)$).
+\end{theo}
 \newpage
 \subsection{Union-Find Data Structures}
 \begin{Def}[Union-Find Data Structure]
@@ -510,6 +546,7 @@ We compare all of our techniques in the following table:
 
 \begin{theo}[Kruskal's Algorithm]
 
+    \label{theo:kruskal}
     Given a connected graph $G$ of $V$ nodes and $E$ edges, we produce the MST via:
     \begin{enumerate}
         \item [(i.)] Sort all $e\in E$ by weight in ascending order into an array $W$.
@@ -557,3 +594,60 @@ We compare all of our techniques in the following table:
 
 \noindent
 \textbf{Note:} Lines 1 and 4, might require additional implementation such as a reference hash-table $R$ to keep track of edges and their end-points after sorting.
+
+\newpage
+
+\begin{Exercise} Let there be a graph $G(V,E)$ with an MST $T$ and a shortest paths tree $S$. Now 
+    suppose a weight of 1 is added to each edge in $G$.
+\begin{enumerate}
+    \item Will the MST $T$ change?
+    \item Will the shortest paths tree $S$ change?
+\end{enumerate}
+\end{Exercise} 
+
+\begin{Exercise} Let there be a graph $G(V,E)$ with an MST $T$ and a shortest paths tree $S$.
+    Suppose a new edge $e$ is added to $G$.
+    \begin{enumerate}
+        \item The weight of $e$ is the heaviest in $G$.
+            \begin{enumerate}
+                \item Will the MST $T$ change?
+                \item Will the shortest paths tree $S$ change?
+            \end{enumerate}
+        \item The weight of $e$ is the lightest in $G$.
+            \begin{enumerate}
+                \item Will the MST $T$ change?
+                \item Will the shortest paths tree $S$ change?
+            \end{enumerate}
+    \end{enumerate}
+\end{Exercise}
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\vspace{1em}
+\begin{Answer} 
+    \begin{enumerate}
+        \item \textbf{No.} All edges in $T$ are still the lightest edges in $G$.
+        \item \textbf{Yes.} Shortest paths is not MST. Here is a counter example:\\
+        \vspace{1em}
+        \includegraphics[height=1in]{./Sections/spanning/counter.png}\\
+
+        \vspace{-2em}
+        \noindent
+        The shortest path from $s$ to $t$ changed when all edges were increased by 1.
+    \end{enumerate}
+\end{Answer}
+
+\begin{Answer} 
+    \begin{enumerate}
+        \item \begin{enumerate}
+            \item \textbf{No.} By the cycle property, the heaviest edge is not necessary in the MST.
+            \item \textbf{Yes.} The new edge may present a shorter path. Here is a counter example:\\
+            \includegraphics[height=1.1in]{./Sections/spanning/counter_2.png}\\
+        \end{enumerate}
+        \item \begin{enumerate}
+            \item \textbf{Yes.} By the cycle property, an existing edge will be replaced by a lighter edge.
+            \item \textbf{Yes.} Consider a long expensive path, a new edge may present a shorter path.
+        \end{enumerate}
+    \end{enumerate}
+    
+\end{Answer}

@@ -108,6 +108,7 @@ We appear to make no improvement, however there's a small trick to reduce the nu
 
 \newpage
 
+\label{page:karatsuba}
 \noindent
 Observe our full term, $c:=(\textcolor{red}{A_1B_1})2^{n}+(\textcolor{blue}{A_1B_0+B_1A_0})2^{\ceil{n/2}}+\textcolor{red}{A_0B_0}.$ Say we computed another term,
 \[z:=(A_1+A_0)(B_1+B_0)=(\textcolor{red}{A_1B_1})+\textcolor{blue}{(A_1B_0)+(B_1A_0)}+(\textcolor{red}{A_0B_0}).\]
@@ -149,7 +150,6 @@ We employ the above strategy, which is \textbf{Karatsuba's multiplication algori
     \end{algorithm}
     \noindent\rule{\textwidth}{0.4pt}
 
-    \noindent
     \textbf{Time Complexity:} $O(n^{\log_2 3}) \approx O(n^{1.585})$, as in our master method $T(n)=3T(n/2)+O(n)$, Theorem (\ref{theo:master}).\\
     \textbf{Space Complexity:} $O(n)$.
 \end{Func}

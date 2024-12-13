@@ -14,6 +14,8 @@ Asymptotic analysis is a method for describing the limiting behavior of function
 
 \begin{Def}[Big-O: (Upper Bound)]
 
+    \label{def:bigO}
+
     Let $f$ and $g$ be functions. $f(n)$ our function of interest, and $g(n)$
     our function of comparison.\\
 
@@ -45,6 +47,8 @@ Asymptotic analysis is a method for describing the limiting behavior of function
 \end{enumerate}
 
 \begin{Proof}[$\log n = O(\sqrt{n})$]
+
+    \label{proof:logn}
 We setup our ratio:
 \[\lim_{n\to\infty}\dfrac{\log n}{\sqrt{n}}\]
 \noindent
@@ -64,6 +68,8 @@ Our limit approaches 0, as we have a constant factor in the numerator, and a gro
 
 \begin{Def}[Big-$\Omega$: (Lower Bound)]
 
+    \label{def:bigOmega}
+
     The symbol $\Omega$ reads ``Omega.'' Let $f$ and $g$ be functions. Then 
     $f(n)=\Omega(g(n))$ if $f(n)$ grows no slower than $g(n)$, up to a constant factor. I.e.,
     lower bounded by $g(n)$. Let $n_0$ be our asymptotic threshold. Then, for all $n\geq n_0$,
@@ -82,6 +88,7 @@ Our limit approaches 0, as we have a constant factor in the numerator, and a gro
 
 \begin{Def}[Big $\Theta$: (Tight Bound)]
 
+    \label{def:bigTheta}
     The symbol $\Theta$ reads ``Theta.'' Let $f$ and $g$ be functions. Then $f(n)=\Theta(g(n))$ if $f(n)$ grows at the same rate as $g(n)$, up to a constant factor. I.e., $f(n)$ is both upper and lower bounded by $g(n)$. Let $n_0$ be our asymptotic threshold, and $c_1>0,c_2>0$ be some constants. Then, for all $n\geq n_0$,
     \large
     \[0\leq c_1\cdot g(n) \leq f(n) \leq c_2\cdot g(n)\]
@@ -164,21 +171,30 @@ Our limit approaches 0, as we have a constant factor in the numerator, and a gro
 \end{theo}
 
 \newpage 
-\section{Evaluating Algorithms}
-\noindent
-When analyzing algorithms, we are interested in two primary factors: time and space complexity.
 
-\begin{Def}[Time Complexity]
-    
-        The \textbf{time complexity} of an algorithm is the amount of time it takes to run as a function of the input size. We use asymptotic notation to describe the time complexity of an algorithm.
-\end{Def}
+\begin{Proof}[$O(logn)=O(n)$]
 
-\begin{Def}[Space Complexity]
+    \label{proof:logn}
+    We prove that $\log_2 n$ is $O(n)$ by induction. Claim: for all $n\geq 1$, $\log_2 n \leq n$.\\
+      \textbf{Inductive step:} Assume $n = k$ for some $k\geq 1$. We show that $n = k+1$ holds.
+
+        \vspace{-1em}
+        \begin{align*}
+            \log_2(k+1) \leq \log_2(2k) &\quad \text{(Choosing $2k$ as a convenient upper bound.)}\\
+            \log_2(2k) = \log_2 k + \log_2 2 &\quad \text{(Product Rule)}\\
+            \log_2(2k) = \log_2 k + 1 &\quad \text{(Simplifying.)}\\
+            \log_2(k+1) \leq \log_2 k + 1 &\quad \text{(Substituting.)}
+        \end{align*}
+        
+        \noindent
+        Hence, $\log_2(k+1) \leq k+1$. Thus, by induction, $\log_2 n$ is $O(n)$.
+\end{Proof}
+
+\begin{Def}[Time Complexity \& Space Complexity]
     
-        The \textbf{space complexity} of an algorithm is the amount of memory it uses to store inputs and subsequent variables during the algorithm's execution. We use asymptotic notation to describe the space complexity of an algorithm.
+        In terms of input size, The \textbf{time complexity} measures the run-time of an algorithm.
+        \textbf{Space complexity} measures the memory usage of an algorithm. Both are expressed in asymptotic notation.
 \end{Def}
-\noindent
-Below is an example of a function and its time and space complexity analysis.
 
 \begin{Func}[Arithmetic Series - \texttt{Fun1($A$)}]
     Computes a result based on a length-$n$ array of integers:

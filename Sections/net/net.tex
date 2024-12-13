@@ -205,7 +205,7 @@ so until we no longer can reach $t$ from $s$ in $G_f$.
         \KwOut{$f$: maximum flow}
 
         \vspace{.5em}
-        \Fn{\textit{Ford-Fulkerson($G, s, t, c$)}}{
+        \Fn{\textit{Ford-Fulkerson($G, s, t$)}}{
 
             \vspace{.5em}
             \ForEach{$e \in E$}{
@@ -213,11 +213,11 @@ so until we no longer can reach $t$ from $s$ in $G_f$.
             }
 
             \vspace{.5em}
-            $G_f \gets \textit{residual}(G, c, f)$ \tcp{Construct the residual graph}
+            $G_f \gets \textit{residual}(G, f)$ \tcp{Construct the residual graph}
 
             \vspace{.5em}
             \While{there exists path $P:= s\to t$ in $G_f$}{
-            $f \gets \textit{Augment}(f, c, P)$ \tcp{Augment the flow along path $P$}
+            $f \gets \textit{Augment}(f, P)$ \tcp{Augment the flow along path $P$}
             Update $G_f$ along $P$\;
             }
 
@@ -242,7 +242,7 @@ so until we no longer can reach $t$ from $s$ in $G_f$.
         \KwOut{$f$: updated flow}
 
         \vspace{.5em}
-        \Fn{\textit{Augment($f, c, P$)}}{
+        \Fn{\textit{Augment($f, P$)}}{
             $b \gets \textit{bottleneck}(P)$ \tcp{Minimum residual capacity of an edge in $P$}
                 
             \ForEach{$e \in P$}{
@@ -261,6 +261,26 @@ so until we no longer can reach $t$ from $s$ in $G_f$.
     \rule{\textwidth}{0.4pt}
     \textbf{Time Complexity:} $O(n)$, where $n$ is the number of nodes in $G$. At worst our path $P$ contains all nodes.
 \end{Func}
+
+\newpage 
+
+\begin{theo}[Residual Graph Min-cut Corollary]
+    
+        Given a network-flow that has reached its max-flow, a min cut can be found in one of two ways using an s-t cut $C(A,B)$:
+        \begin{itemize}
+            \item \textbf{From s}: Let $A$ be the partition of nodes reachable from $s$ in the residual graph. Then the cut formed by a is a min cut.
+            \item \textbf{To t}: Let $B$ be the partition of nodes that reach $t$ in the residual graph. Then the cut formed by $B$ is a min cut.
+        \end{itemize}
+\end{theo}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\textwidth]{Sections/net/tot.png}
+    \caption{Network flows graphs adjacent to their residual graphs showing min-cut partitions.}
+    \label{fig:tot}
+\end{figure}
+
+\noindent
+The above graph shows examples of $C(A,B)$ cuts forming min-cuts by nodes in $B$ reaching the sink $t$ in the residual graph.
 
 \newpage
 \section{Bipartite Matching}
@@ -333,11 +353,11 @@ The below diagram demonstrates a maximum matching achieved through a max-flow al
 \begin{figure}[h]
     \centering
     \includegraphics[width=.4\textwidth]{Sections/net/resdis.png}
-    \caption{\underline{A \textbf{Residual Graph} of Figure (\ref{fig:dis})} after one round of FFA, where $p_1$(\textcolor{red}{red}) is taken.}
+    \caption{Figure (\ref{fig:dis}) of flow 2, now of flow 1 after deleting $p_1(\textcolor{red}{red})$.}
 \end{figure}
 
 \noindent
-By the Ford-Fulkerson algorithm, the residual graph blocks the same path from being taken again.
+Deleting a path subtracts 1 from the flow. Hence, the number of unique paths equates to max-flow.
 \newpage 
 \section{Multiple Sources \& Sinks}
 \textbf{Scenario - \textit{Farmer's Dilemma}:} There are multiple $c$ communities in the area

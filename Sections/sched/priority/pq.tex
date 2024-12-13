@@ -2,6 +2,7 @@
 In this section we will discuss \textbf{min-heaps} which will help us sort
 maintain elements in a sorted data structure.
 
+\label{sec:priority}
 \begin{Def}[Balanced Tree]
 
     A \textbf{balanced tree} is a tree where the height of the left and right subtrees of every node differ by at most one.
@@ -13,34 +14,10 @@ maintain elements in a sorted data structure.
 \newpage
 \noindent
 Below is an example of a balanced tree and an unbalanced tree:
+
 \begin{figure}[h!]
     \centering
-    \begin{tikzpicture}[
-        node/.style={circle, draw, fill=OliveGreen!10, minimum size=1cm},
-        level distance=1.5cm,
-        sibling distance=2cm
-    ]
-
-    % Left tree: height balanced
-    \node[node] {}
-        child {node[node] {}
-            child {node[node] {}}
-            child[missing]}
-        child {node[node] {}};
-
-    \node at (0, 1) {A balanced tree};
-
-    % Right tree: not height balanced
-    \node[node] at (5, 0) {}
-        child {node[node] {}
-            child {node[node] {}
-            child {node[node] {}}}}
-        child {node[node] {}};
-            
-
-    \node at (5, 1) {An unbalanced tree};
-
-    \end{tikzpicture}
+    \includegraphics[width=.6\textwidth]{./Sections/sched/priority/tree.png}
     \caption{Examples of a balanced tree and an unbalanced tree}
     \label{fig:balanced_unbalanced_trees}
 \end{figure}
@@ -102,6 +79,9 @@ We use a min-heap as a data structure to maintain a sorted list as an input.
         }
     \end{algorithm}
 
+    \vspace{1em}
+    \noindent\rule{\textwidth}{0.4pt}
+
     \noindent
     \textbf{Time Complexity:} $O(n)$ as now we only need to check the minimum finish time in the priority queue.\\
     \textbf{Space Complexity:} $O(n+m)$ if our min-heap is implemented as a hash table.
@@ -139,6 +119,9 @@ We can also implement a min-heap for sorting classes as well.
         }
         \KwRet{$\mathcal{A}$}
     \end{algorithm}
+
+    \vspace{1em}
+    \noindent\rule{\textwidth}{0.4pt}
 
     \noindent
     \textbf{Time Complexity:} $O(n\log n)$ as inserting into a min heap is $O(\log n)$ and reading is $O(1)$.\\

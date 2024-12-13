@@ -223,3 +223,85 @@ First we will prove the correctness, then implement the algorithm and analyze it
     \textbf{Space Complexity:} $O(n^2)$ space, where we store $|E|\cdot|A|=n\cdot n$ pairs.
 \end{Func}
 
+\newpage 
+
+\noindent
+
+
+\begin{Exercise}Given sets $A=\{a_1,a_2,\dots,a_n\}$ and $B=\{b_1,b_2,\dots,b_n\}$ (True/False):
+    \begin{enumerate}
+        \item If $a_i$ and $b_j$ rank each other first, then in any stable matching, $a_i$ and $b_j$ must be matched.
+        \item If $a_i$ and $b_j$ rank each other last, then in any stable matching, $a_i$ and $b_j$ are never matched.
+        \item If $A$'s are proposing to $B$'s, with $a_i$ and $a_j$ both preferring $b_k$, but $a_i$ ranked $b_k$ higher, then $a_i$ will be matched with $b_k$.
+    \end{enumerate}
+    
+
+\end{Exercise}
+
+
+\begin{Exercise} Given the following preference lists, in any stable matching:\\
+    \begin{enumerate}
+        \item What is the highest ranked match Alice can receive from her list?
+        \item What is the lowest ranked match Alice can receive from her list?
+        \item Is there a unique stable matching?
+        \item Dolly put Dakar last on their list. Can Dolly be matched with Dakar?
+    \end{enumerate}
+   
+    \vspace{1em}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \rowcolor{OliveGreen!10}\textbf{Hospital} & \textbf{1st} & \textbf{2nd} & \textbf{3rd} & \textbf{4th} & \textbf{5th} \\ \hline
+        Acton & Bart & Edgar & Alice & Dolly & Carol \\ \hline
+        Boston & Alice & Carol & Edgar & Bart & Dolly \\ \hline
+        Chicago & Carol & Alice & Dolly & Edgar & Bart \\ \hline
+        Dakar & Dolly & Bart & Carol & Alice & Edgar \\ \hline
+        Erie & Edgar & Dolly & Bart & Carol & Alice \\ \hline
+    \end{tabular}
+    
+
+    \vspace{1em}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \rowcolor{OliveGreen!10}\textbf{Resident} & \textbf{1st} & \textbf{2nd} & \textbf{3rd} & \textbf{4th} & \textbf{5th} \\ \hline
+        Alice & Erie & Chicago & Boston & Dakar & Acton \\ \hline
+        Bart & Erie & Acton & Dakar & Boston & Chicago \\ \hline
+        Carol & Dakar & Boston & Chicago & Acton & Erie \\ \hline
+        Dolly & Acton & Erie & Chicago & Boston & Dakar \\ \hline
+        Edgar & Boston & Acton & Dakar & Erie & Chicago \\ \hline
+    \end{tabular}
+\end{Exercise}
+
+\vfill
+\begin{center}
+    \textit{Answers on the next page.}
+\end{center}
+
+\newpage
+
+\begin{Answer}
+    \begin{enumerate}
+        \item \textbf{True.} The proposing side gets their best pick. If there are collisions, then the other side gets their best pick.
+        \item \textbf{False.} If all other matches prefer each other over $a_i$ and $b_j$, then $a_i$ and $b_j$ will be matched.
+        \item \textbf{False.} $b_k$ will choose their best pick, either $a_i$ or $a_j$.
+    \end{enumerate}
+\end{Answer}
+
+\begin{Answer}
+    \begin{enumerate}
+        \item \textbf{Chicago.} If Residents propose first, Alice and Bart collide in preferring Erie. Though Bart ranks higher on Erie's list. Alice then prefers Chicago, for which no one else prefers.
+        \item \textbf{Boston.} If Hospitals propose first, Boston gets their 1st choice, Alice.
+        \item \textbf{No.} Matchings change depending on who proposes first.
+        \item \textbf{No.} If Hospitals propose first, Dakar matches with Dolly, as no other Hospitals prefer Dolly.
+    \end{enumerate}
+\end{Answer}
+
+\begin{Tip} 
+    The key is to look for collisions in preferences. If there are no collisions, the proposing side gets their best pick. 
+    If there are collisions, the other side gets their best pick. After each collision is resolved look again for new collisions.
+
+    In the above example, if Residents propose first, after sorting out Alice and Bart's collision, everyone else got their first pick, leaving Chicago to Alice.
+    If Hospitals propose first, they all get their first pick having no collisions.
+\end{Tip}
+
+\newpage
+

@@ -250,7 +250,7 @@ a graph G is a tree if any two statements are true:
 Types of Edges in a graph:
 1. Tree-edges: an edge in a BFS tree
 2. Forward-edges: a non-tree-edge connecting an ancestor to a descendant
-3. Backward-edges: descendant to ancestor
+3. Backward-edges: descendant to ancestor that has been visited
 4. Cross-edge: connects two nodes that don't have ancestor or defendant
                connections (Does not create cycles).
 """
@@ -1568,6 +1568,165 @@ K = {
 # print(bellman_ford(H,"S"))
 # print(bellman_ford(K, "a")) # returns true for negative cycle
 
+
+
+"""
+------------------------Ford-Fulkerson Max Flow------------------------
+    Given a graph G(V,E) with a source s and a sink t, find the max flow
+    from s to t. This is done by finding the shortest path from s to t, 
+    and augmenting the flow along that path. We keep doing this until we 
+    can't find a path from s to t.
+
+    This is done by using a BFS to find the shortest path. If we can't find
+    a path from s to t, we've found the max flow. If we can find a path, we
+    augment the flow along that path, and repeat.
+"""
+
+def ford_fulkerson(G,s,t):
+    def create_flow_graph():
+        new = {}
+        for v in G:
+            new[v] = {}
+            for u in G[v]:
+                new[v][u] = 0
+        return new
+    def create_residual_graph():
+        new = {}
+        for v in G: 
+            new[v] = {}
+            for u in G[v]:
+                #           (direction, value)
+                new[v][u] = ("forward", G[v][u]) 
+        return new
+    def find_path(R): 
+        """
+        BFS to find sink by maintaining a parents table.
+        Since BFS is shortest paths (parent to child), we'll get the direct path from 
+        s to t.
+        """
+        q = deque()
+        q.append(s)
+        visited = {}
+        bottle_neck = np.inf
+        parents = {}
+        parents[s] = None
+        found_sink = False
+        while q:
+            v = q.popleft()
+            if v == t:
+                found_sink = True
+                break
+            if v not in visited:
+                visited[v] = True 
+                for u in R[v]:
+                    if u not in visited and R[v][u][1] > 0:
+                        if R[v][u][1] < bottle_neck:
+                            bottle_neck = R[v][u][1]
+                        q.append(u)
+                        parents[u] = v
+        path = []
+        if found_sink:
+            p = parents[t]
+            path.append(t)
+            path.append(p)
+            while parents[p] != None: 
+                p = parents[p]
+                path.append(p)
+        # path returns the path taken in reverse order
+        return path, bottle_neck
+
+    # initialize a graphs to manage flows and residual graphs
+    F = create_flow_graph() # flow
+    R = create_residual_graph() # residual
+
+    
+    while True:
+        path, bottle_neck = find_path(R)
+        if len(path) < 2:
+            break
+        i = len(path) - 1 # path is in reverse order
+        while i > 0: # take edge pairs (i, i-1)
+            u = path[i]
+            v = path[i-1]
+            # R[u][v][0]: direction
+            # R[u][v][1]: value
+            if R[u][v][0] == "forward":
+                F[u][v] += bottle_neck
+                R[u][v] = ("forward", R[u][v][1] - bottle_neck)
+                if u not in R[v]: # create back-edge
+                    R[v][u] = ("backward", bottle_neck)
+                else:
+                    R[v][u] = ("backward", R[v][u][1] + bottle_neck)
+            else: # else we traversed a backwards-edge
+                F[v][u] -= bottle_neck # swap b/c flow has no backwards edges
+                R[u][v] = ("backward", R[u][v][1] - bottle_neck)
+                R[v][u] = ("forward", R[v][u][1] + bottle_neck)
+            i -= 1
+
+    max_flow = 0
+    for v in F[s]:
+        max_flow += F[s][v]
+    return max_flow, F
+
+# pset-11 example
+F = {
+    0: {1: 10, 2: 5, 3: 15},
+    1: {2: 4, 4: 9, 5: 15},
+    2: {3: 4, 5: 8},
+    3: {6: 15},
+    4: {5: 15, 7: 10},
+    5: {6: 15, 7: 10},
+    6: {2: 6, 7: 10},
+    7: {},
+    10: {}
+}
+
+# print(ford_fulkerson(F,0,7))
+
+
+# Figure 1.7
+H = {
+    "s": {"a":20, "b":10},
+    "a": {"b": 30, "t": 10},
+    "b": {"t": 20},
+    "t":{}
+}
+
+# print(ford_fulkerson(H,"s","t"))
+
+# Figure 1.8 (G, H, J)
+
+G = {
+    "s": {"a": 10, "b": 10},
+    "a": {"c": 1},
+    "b": {"d":1},
+    "c": {"e": 1},
+    "d": {"f": 1},
+    "e": {"t": 10},
+    "f": {"t": 10},
+    "t": {}
+}
+
+# print(ford_fulkerson(G,"s","t"))
+
+H = {
+    "s": {"e": 7, "f": 7},
+    "e": {"t": 3},
+    "f": {"t": 3},
+    "t": {}
+}
+
+# print(ford_fulkerson(H,"s","t"))
+
+J = {
+    "s": {"e": 3, "f": 3},
+    "e": {"t": 7},
+    "f": {"t": 7},
+    "t": {}
+}
+
+# print(ford_fulkerson(J,"s","t"))
+    
 
 
 

@@ -60,6 +60,7 @@ We choose the \textbf{Earliest Finish Time} approach:
 \noindent
 \begin{theo}[Interval Scheduling \& Earliest Finish Time]
     
+    \label{thm:eft}
     Given a set of jobs $j$ with start and finish times $s_j$ and $f_j$, we can obtain an optimal like solution by scheduling in ascending order of $f_j$,
     choosing the next compatible job.
 \end{theo}
@@ -103,7 +104,8 @@ Interval partitioning generalizes our interval scheduling to multiple resources,
 
 \begin{Def}[Interval Partitioning]
     
-    Given a schedule of jobs $j$ with start and finish times $s_j$ and $f_j$. We \textbf{partition} jobs into a minimal amount of $k$ resources such that no two jobs on the same resource overlap.
+    Given a schedule of jobs $j$ with start and finish times $s_j$ and $f_j$. We \textbf{partition}
+    jobs into a minimal amount of $k$ resources such that no two jobs on the same resource overlap.
 \end{Def}
 \textbf{Scenario: \textit{Class Scheduling}}\\
 \noindent
@@ -141,6 +143,8 @@ We observe in Example (\ref{ex:class_1}) that $\{c,b,a\}$ strictly overlap. More
     \hspace{9.3em} Schedule in ascending order of $c_j$.
 \end{itemize}
 \begin{theo}[Interval Partitioning \& Earliest Start Time]
+
+    \label{theo:est}
 
     Given a set of jobs $j$ with start and finish times $s_j$ and $f_j$, we can obtain an optimal like solution by scheduling in ascending order of $s_j$.
     If two jobs overlap, we allocate a new resource.
