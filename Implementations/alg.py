@@ -1580,6 +1580,8 @@ K = {
     This is done by using a BFS to find the shortest path. If we can't find
     a path from s to t, we've found the max flow. If we can find a path, we
     augment the flow along that path, and repeat.
+
+    Time Complexity: O(nmC), where C is the largest capacity in the graph.
 """
 
 def ford_fulkerson(G,s,t):
