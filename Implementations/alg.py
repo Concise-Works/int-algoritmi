@@ -1684,7 +1684,7 @@ F = {
 # print(ford_fulkerson(F,0,7))
 
 
-# Figure 1.7
+# Figure 9.7
 H = {
     "s": {"a":20, "b":10},
     "a": {"b": 30, "t": 10},
@@ -1694,7 +1694,7 @@ H = {
 
 # print(ford_fulkerson(H,"s","t"))
 
-# Figure 1.8 (G, H, J)
+# Figure 9.8 (G, H, J)
 
 G = {
     "s": {"a": 10, "b": 10},
