@@ -1582,6 +1582,8 @@ K = {
     augment the flow along that path, and repeat.
 
     Time Complexity: O(nmC), where C is the largest capacity in the graph.
+    This is in the scenario where weights keep increases by at most 1 each 
+    iteration. This stops when C is reached.
 """
 
 def ford_fulkerson(G,s,t):
