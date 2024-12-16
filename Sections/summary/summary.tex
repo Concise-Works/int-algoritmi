@@ -9,7 +9,7 @@
 \noindent
 \textbf{Growth Rates}: $1 < \log n < n < n \log n < n^2 < n^3 < 2^n < n! < n^n$ (\ref{thm:growth_rates}) | \textbf{(htbl)}:= hash-table\\
 \textbf{$O$(Upper Bound)}: $f(n) < g(n)\implies $lim$_{n\to\infty}\frac{f(n)}{g(n)}=0$ (\ref{def:bigO}) \hspace{5.47em}| \textbf{(conn.)}:= connected\\
-\textbf{$\Omega$(Lower Bound)}: $f(n) > g(n)\implies $lim$_{n\to\infty}0<\frac{f(n)}{g(n)}=$ (\ref{def:bigOmega})\\
+\textbf{$\Omega$(Lower Bound)}: $f(n) > g(n)\implies $lim$_{n\to\infty}0<\frac{f(n)}{g(n)}$ (\ref{def:bigOmega})\\
 \textbf{$\Theta$(Upper \& Lower Bound)}: $f(n) = g(n)\implies 0<\frac{f(n)}{g(n)}<\infty$ (\ref{def:bigTheta})\\
 \noindent\rule{\textwidth}{0.4pt}
 \textbf{Interval Scheduling}: sort by finish time ascending order, choose next compatible job (\ref{thm:eft})\\
@@ -44,7 +44,7 @@ $\textcolor{OliveGreen}{d} = \log_{\textcolor{blue}{b}} \textcolor{red}{a} \impl
 \textbf{DFS}: $O(n+m)$ (\ref{sec:bfs_dfs}). Children before siblings, not longest paths.\\
 \textbf{Heap}: sorting $O(n\log n)$, operations $O(\log n)$ except for extract-min $O(1)$ (\ref{sec:priority}).\\
 \textbf{Dijkstra}:$O((n+m)\log n)$;$O(m \log n)$(conn.);$O(n^2)$(htbl). Min paths from $s$ (no neg.paths) (\ref{sec:dstra}).\\
-\textbf{Prim's}: $O((n+m)\log n)$. $O(n^2)$(htbl). MST, dijkstra like routine, (\ref{theo:prim}).\\
+\textbf{Prim's}: $O(m\log n)$. $O(n^2)$(htbl). MST, dijkstra like routine, (\ref{theo:prim}).\\
 \textbf{Kruskal's}: $O(m \log n)$ or $O(m \log m)$. MST, sort \& pick edges ascending, union-find (\ref{theo:kruskal}).\\
 \textbf{Bellman-Ford}: $O(nm)$. Shortest paths from $s$ via relax rounds on $n$ (no negatives cycles) (\ref{theo:bellman}).\\
 \textbf{Ford-Fulkerson}: $O(mnC)$, $C:=$ largest capacity, finds max flow (\ref{theo:bellman}).\\
