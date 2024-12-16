@@ -88,7 +88,7 @@ Another possible ordering of $[1,2,3,4,5,6,7]$ is $[5, 6,1,2,3,4,7]$, as $5\righ
 \end{Exercise}
 
 \vspace{.5em}
-\begin{Exercise} What type of edges do BFS and DFS traversals produce?
+\begin{Exercise} What type of edges do BFS and DFS traversals produce on directed and undirected graphs?
 \end{Exercise}
 
 \vspace{.5em}
@@ -129,6 +129,10 @@ Another possible ordering of $[1,2,3,4,5,6,7]$ is $[5, 6,1,2,3,4,7]$, as $5\righ
 \begin{Answer} There are other possible solutions depending on order of traversal. For 7,
     BFS and DFS don't alone handle disconnected graphs. Though modifications could be made to handle such.
     \includegraphics[height=4in]{./Sections/graphs/dag/bfs_dfs.png}
+\end{Answer}
+
+\vspace{.5em}
+\begin{Answer} Undirected - BFS: Tree edges, DFS: Tree edges, Back edges. Directed - BFS: Tree edges, Back edges, Cross edges, DFS: Tree edges, Back edges, Forward edges, Cross edges \cite{cse417dfs2021,dukegraph2017,clrs22-1}
 \end{Answer}
 
 \vspace{.5em}
