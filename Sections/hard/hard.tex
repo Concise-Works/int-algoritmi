@@ -104,7 +104,7 @@
 
         \noindent
         $\land:=\text{AND}, \lor:=\text{OR}, \neg:=\text{NOT}$. Given an input formula, the function determines if there's a possible 
-        true/false assignments to evaluate the formula to true. The best approach today is by brute-force, trying all possible assignments.
+        true/false assignment to evaluate the formula to true. The best approach today is by brute force, trying all possible assignments.
 
         This problem is NP-Complete, as any function could theoretically be reduced to a true-false table for which an SAT function could be solved.
         
@@ -130,7 +130,7 @@
     \end{algorithm}
     \noindent
     \rule{\textwidth}{0.4pt}
-    \textbf{Explanation:} There are $n$ different sized disks stacked in decreasing order of size, and three rods. Rules:
+    \textbf{Explanation:} There are $n$ different sized disks stacked in decreasing order of size and three rods. Rules:
     \textbf{(1).} One disk is moved at a time. \textbf{(2).} Each turn, a top disk moves from one stack to another. \textbf{(3).} Bigger over smaller disks are prohibited.
     Given the above, $O(2^n)$ (\ref{theo:master}).
     \begin{center}
@@ -148,7 +148,7 @@ For emphasis and clarity:
     \begin{itemize}
         \item \textbf{P=NP, NP$\neq$P} - all P are NP as they are verifiable in polynomial time. Though as of today, no proof exists that all verifiable problems are solvable in polynomial time.
         \item \textbf{X reducing to Y} - If $X$ is solvable in $O(n^2)$ and $X$ reduces to $Y$, then $Y$ is solvable in polynomial time. However, 
-        this does not grantee that $Y$ is $O(n^2)$. As $X$ is a sub-routine while $Y$'s outer function could run any number of times. For $Y$ to have $O(n^2)$ implies 
+        this does not guarantee that $Y$ is $O(n^2)$. As $X$ is a sub-routine while $Y$'s outer function could run any number of times. For $Y$ to have $O(n^2)$ implies 
         $Y$'s main routine runs in $O(1)$.
         \item \textbf{Verification} - To verify an example is given and a criteria checked. E.g., is this path at least 10 units long?
         However to verify ``No'' requires the program to provide proof that the solution is not possible. I.e., to verify a ``No'' answer, we must check all possible solutions for which 
@@ -180,7 +180,7 @@ all NP are P, or whether all EXP are NP. \textbf{(2)} shows that it could be tha
     \end{center}
     \noindent
     \textbf{Note:} that this does not mean MST, as MST finds the minimal cost to connect all nodes. It isn't strictly shortest paths
-    from the origin to all nodes and back, as we'd double count nodes.\\
+    from the origin to all nodes and back, as we'd double-count nodes.\\
 
     \noindent
     \textbf{NP Verification:}\\
