@@ -61,7 +61,7 @@ $\textcolor{OliveGreen}{d} = \log_{\textcolor{blue}{b}} \textcolor{red}{a} \impl
 \begin{itemize}
     \item[(a)] $2^{k}\ T \left(\dfrac{n}{3^k} \right)+k \Theta(n)$: $2^{log_3n}\ T \left(\dfrac{n}{3^{log_3n}} \right)+log_3n \Theta(n)$.
     Simplifying: $2^{log_3n}+\Theta(1)+nlog_3n$. Then apply the identity $a^{log_bc}=c^{log_ba}$.
-    Then $n^{log_32}+nlog_3n$. We know $log_3n=O(n)$, so $n^{log_32}+nO(n)=n^{log_32}+O(n)$.
+    Then $n^{log_32}+log_3(n)n$. Then,$log_3(n)n=log_3(n^2)=O(n)$.
     Then $n^{log_32}<O(n)$, as $log_32$ must be some fraction rooting $n$. hence $O(n)$
 
     \item[(b)] $4^{k}\ T \left(\dfrac{n}{3^k} \right)+k \Theta(n)$: $4^{log_3n}+n^{log_3n}=n^{log_34}+O(n)$. Then $O(n^{log_34})$ as $log_34>1$
@@ -136,8 +136,162 @@ $\log(ba)=\log b+\log a,\log(\frac{b}{a})=\log b-\log a,\log_ba=\frac{\log a}{\l
 
 \newpage
 
-\noindent
-(\ref{sec:subset})
+(\ref{fig:fib})
+\begin{Func}[Slow Fibonacci Sequence - \textit{Fib()}]
+    \noindent
+    \textbf{Input:} $n$ the index of the Fibonacci sequence we wish to compute.\\
+    \textbf{Output:} $F_n$ the $n_{th}$ Fibonacci number.\\
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{\KwRet{}}
+        \Fn{\textit{Fib}($n$)}{
+            \If{$n \leq 1$}{
+                \textbf{return} $n$\;
+            }
+            \Else{
+                \textbf{return} $\textit{Fib}(n-1)+\textit{Fib}(n-2)$\;
+            }
+        }
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(2^n)$. $T(n)=T(n-1)+T(n-2)+O(1)$, Theorem (\ref{theo:master}).
+\end{Func}
+
+\begin{Func}[Memo Fibonacci Sequence - \textit{Fib()}]
+
+    \textbf{Input:} $n$ the index of the Fibonacci sequence we wish to compute.\\
+    \textbf{Output:} $F_n$ the $n_{th}$ Fibonacci number.\\
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{\KwRet{}}
+        $F[\ ]$; \tcp{Table to store Fibonacci numbers}
+        \Fn{\textit{Fib}($n$)}{
+            \If{$n \leq 1$}{
+                \textbf{return} $n$\;
+            }
+            \Else{
+                \If{$F[n]$ is not defined}{
+                    $F[n] = \textit{Fib}(n-1)+\textit{Fib}(n-2)$\;
+                }
+                \textbf{return} $F[n]$\;
+            }
+        }
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n)$.
+    \textbf{Space Complexity:} $O(n)$.
+\end{Func}
+
+\begin{Func}[Bottom-Up Fibonacci Sequence - \textit{Fib()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{}
+        $F[0] \gets 0$; $F[1] \gets 1$; \tcp{Base cases (array of size $n+1$)}
+        \For{$i \gets 2$ \KwTo $n$}{
+            $F[i] \gets F[i-1]+F[i-2]$\;
+        }
+        \textbf{return} $F[n]$\;
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n)$.
+\end{Func}
+
+\newpage 
+
+(\ref{func:wis})
+\begin{Func}[Bottom-Up Weighted Interval Scheduling - \textit{OPT()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{}
+        Sort jobs by finish time; \tcp{$O(n\log n)$}
+        Compute all $p(1),\dots,p(n)$; \tcp{$O(n)$}
+        $OPT[0] \gets 0$; \tcp{Base case (array of size $n+1$)}
+        \For{$j \gets 1$ \KwTo $n$}{
+            $OPT[j] \gets max\{v_j+OPT[p(j)], OPT[j-1]\}$\;
+        }
+        \textbf{return} $OPT[n]$\;
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n\log n)$. We sort our jobs, and compute $p(1),\dots,p(n)$ in $O(n)$ time. We then compute $OPT(j)$ linearly, only needing to compute $OPT(j)$ once.
+\end{Func}
+
+\begin{Func}[Backtracking Weighted Interval Scheduling - \textit{Backtrack()}]
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{}
+        \tcp{$OPT[\ ]$ (optimal solutions of $j$ job) and $p()$ (next comptible job) are already computed for $1,\dots,j$}
+        $j \gets OPT.length-1$; $S \gets \{\}$; \tcp{$S$ is our set of jobs}
+        $Backtrack(OPT, j)$\;
+        \Fn{\textit{Backtrack}(OPT, j)}{
+
+                \If{$v_j+OPT[p(j)] > OPT[j-1]$}{
+                    \Return $S \cup Backtrack(OPT, p(j))$\;
+                }
+                \Else{
+                    \Return $Backtrack(OTP, j-1)$\;
+                }
+
+        }
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Correctness:} In our example above, the WIS's last index was the optimal solution. However, let $8=\$1$, then
+    jobs $(6,1)$ would have been the optimal solution. This leaves $OPT[8]=\$19$, rather than $\$20$. Line 4 finds the first occurance where
+    we found the optimal solution. As if we first found the optimal solution at index $6$, then $6,\dots,j$ would contain $OPT(6)$. This is why
+    we exclude the choice $(7,3)=\$19$.\\
+
+    \noindent
+    We then repeat such pattern on the next compatible job. We know the set $N:=\{1\dots p(j)\}$ must contain an element of the optimal solution.
+    Similar to our Dijkstra's proof (\ref{fig:dstra_proof}), that within the optimal path, a subpath's shortest path is also optimal. We check if
+    $p(j)$ is the first occurance of the optimal solution in $N$, if not we continue to backtrack.\\
+
+    \noindent
+    \textbf{Time Complexity:} $O(n)$. At most, iterate through all $n$ jobs, and add them to our set $S$.
+\end{Func}
+
+\newpage
+
+(\ref{func:subset})
+\begin{Func}[Subset Sum - \textit{OPT()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetAlgoLined
+        \SetKwProg{Fn}{Function}{:}{}
+        $S$; $T$; $OPT[\ ][\ ]$; \tcp{Set $S$, Weight ceiling $T$, DP table $OPT(i, T)$}
+        $OPT[0][*] \gets 0$; \tcp{Base case (array of size $0$)}
+        $OPT[*][0] \gets 0$; \tcp{Base case (array of size $T=0$)}
+        \For{$i \gets 1$ \KwTo $S.length$}{
+            \For{$t \gets 1$ \KwTo $T$}{
+                
+                \If{$S[i] > t$}{
+                    $OPT[i][t] \gets OPT[i-1][t]$\;
+                }
+                \Else{
+                    $OPT[i][t] \gets max\{\underbracket{OPT[i-1][t]}_{\text{next solution}}, \underbracket{S[i]+OPT[i-1][t-S[i]]}_{\text{build solution}}\}$\;
+                }
+            }
+        }
+        \textbf{return} $OPT$\;
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(nT)$. We iterate through all $n$ jobs, and for each job, we iterate through all $T$ target sums.
+\end{Func}
+
 \begin{Func}[Backtracking Subset Sum - \textit{Backtrack()}]
 
     \vspace{-.5em}
@@ -161,7 +315,99 @@ $\log(ba)=\log b+\log a,\log(\frac{b}{a})=\log b-\log a,\log_ba=\frac{\log a}{\l
     \rule{\textwidth}{0.4pt}
     \textbf{Time Complexity:} $O(n)$. At most, iterate through all $n$ jobs, and add them to our set $S$.
 \end{Func}
-(\ref{sec:unbounded})
+
+\newpage 
+
+\noindent
+Knapsack is skipped as it is similar to Subset Sum and Unbounded Knapsack (\ref{func:knapsack}). Below is the unoptimal version of Unbounded Knapsack (\ref{func:unbounded}).
+    \begin{Func}[Unbounded Knapsack - \textit{UnboundedKnapsack()}]
+
+        \vspace{-.5em}
+        \begin{algorithm}[H]
+            \SetKwProg{Fn}{Function}{:}{}
+            $M \gets (n+1) \times (W+1)$ table \tcp{DP table}
+            $C \gets (n+1) \times (W+1)$ table \tcp{Number of copies}
+            $M[0][*] \gets 0$ and $M[*][0] \gets 0$\;
+            
+            \For{$i \gets 1$ \KwTo $n$}{
+                \For{$w \gets 1$ \KwTo $W$}{
+                    $M[i][w] \gets M[i-1][w]$; \tcp{Start with previous solution}
+                    $m \gets 1$\;
+                    
+                    \While{$m \cdot w_i \leq w$}{
+                        $val \gets m \cdot v_i + M[i-1][w - m \cdot w_i]$\;
+                        \If{$val > M[i][w]$}{
+                            $M[i][w] \gets val$\;
+                            $C[i][w] \gets m$\;
+                        }
+                        $m \gets m + 1$\;
+                    }
+                }
+            }
+            \Return $M, C$\;
+        \end{algorithm}
+        
+        \noindent
+        \rule{\textwidth}{0.4pt}
+        \textbf{Time Complexity:} $O(n \times W^2)$ \textbf{Space Complexity:} $O(n \times W)$
+    \end{Func}
+    \begin{Func}[Backtracking Unbounded Knapsack - \textit{BKBacktrack()}]
+
+        \vspace{-.5em}
+        \begin{algorithm}[H]
+            \SetKwProg{Fn}{Function}{:}{}
+            $sol \gets \emptyset$\;
+            $i \gets n$ and $w \gets W$\;
+            
+            \While{$i > 0$ \textbf{and} $w > 0$}{
+                $sol \gets sol \cup \{i \cdot C[i][w]\}$; \tcp{Add item $i$ with its count $C[i][w]$}
+                $w \gets w - C[i][w] \cdot w_i$\;
+                
+                $i \gets i - 1$\;
+            }
+            
+            \Return $sol$\;
+        \end{algorithm}
+        
+        \noindent
+        \rule{\textwidth}{0.4pt}
+        \textbf{Time Complexity:} $O(n)$.
+    \end{Func}
+\newpage
+
+(\ref{func:unbounded2})
+\begin{Func}[Unbounded Knapsack - \textit{UnboundedKnapsack2()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $M \gets (n+1) \times (W+1)$ table$^*$ \tcp{DP table}
+        $M[0][*] \gets 0$ and $M[*][0] \gets 0$ \tcp{Set first row and column to 0}
+        
+        \For{$i \gets 1$ \KwTo $n$}{
+            \For{$w \gets 1$ \KwTo $W$}{
+                \If{$w_i > w$}{
+                    $M[i][w] \gets M[i-1][w]$;
+                }
+                \Else{
+                    $val \gets v_i + M[i][w - w_i]$ \tcp{Take one more copy of $i$}
+                    \If{$val > M[i-1][w]$}{
+                        $M[i][w] \gets val$;
+                    }
+                    \Else{
+                        $M[i][w] \gets M[i-1][w]$;
+                    }
+                }
+            }
+        }
+        \Return $M$\;
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n \times W)$.
+\end{Func}
+
 \begin{Func}[Traceback Solution for Unbounded Knapsack - \textit{Traceback()}]
 
     \vspace{-.5em}
@@ -185,9 +431,7 @@ $\log(ba)=\log b+\log a,\log(\frac{b}{a})=\log b-\log a,\log_ba=\frac{\log a}{\l
     
     \noindent
     \rule{\textwidth}{0.4pt}
-    \textbf{Time Complexity:} $O(n + W)$, as we traverse the DP table in reverse order.
+    \textbf{Time Complexity:} $O(n + W)$.
 \end{Func}
-\noindent
-
-
+\newpage
 

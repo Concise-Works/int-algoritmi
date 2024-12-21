@@ -508,7 +508,7 @@ Hence, merge sort has a time complexity of $O(n\log n)$.
     \begin{enumerate}
         \item $2^{k}\ T \left(\dfrac{n}{3^k} \right) + k \Theta(n)$: Start by rewriting as $2^{\log_3n}\ T \left(\dfrac{n}{3^{\log_3n}} \right) + \log_3n \Theta(n)$.
         Simplifying this gives $2^{\log_3n} + \Theta(1) + n^{\log_3n}$. Using the identity $a^{\log_b c} = c^{\log_b a}$,
-        we find that the expression becomes $n^{\log_3 2} + n \log_3n$. Since $n^{\log_3n} = \Theta(n)$, the result simplifies further to $n^{\log_3 2} + O(n)$. Noting that $n^{\log_3 2} < O(n)$ (because $\log_3 2$ is a fraction), the final result is $O(n)$.
+        we find that the expression becomes $n^{\log_3 2} + n \log_3n$. Since $nlog_3(n)=log_3(n^2)=O(n)$, the result simplifies further to $n^{\log_3 2} + O(n)$. Noting that $n^{\log_3 2} < O(n)$ (because $\log_3 2$ is a fraction), the final result is $O(n)$.
     
         \item $4^{k}\ T \left(\dfrac{n}{3^k} \right) + k \Theta(n)$: Rewriting gives $4^{\log_3n} + n^{\log_3n} = n^{\log_3 4} + O(n)$. Since $n^{\log_3 4} > n$, the final result is $O(n^{\log_3 4})$.
     

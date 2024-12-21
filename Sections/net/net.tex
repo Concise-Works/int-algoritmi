@@ -412,13 +412,12 @@ We identify: \textbf{Suppliers} students $W_z$, and \textbf{demands} as days $D_
 \noindent
 Here the capacities leaving source node $s$ are infinite, as they will be bottleneck by the students' availability. 
 We match each student to their days all with a capacity of 1. We take all capacities $C$ and flows $F$ entering the sink node $t$
-and verify if $\ \displaystyle{\sum_{c\in C} c = \sum_{f\in F} f}$, or $\ \displaystyle{\sum_{c\in C} c \leq \sum_{f\in F} f}$ 
-to verify that we at least have enough students to keep the curse sealed (allowing flow to be more than the capacity).
+and verify if $\ \displaystyle{\sum_{c\in C} c = \sum_{f\in F} f}$. This also ensures that 
+we at least meet the minimum demands.
 \begin{theo}[Supply \& Demand Verification]
 
     Given a flow network $G=(V,E)$ with a super source and sinks $s$ and $t$. If all flows $F$ and capacities $C$ entering $t$ satisfy,
-    $\displaystyle{\sum_{c\in C} c = \sum_{f\in F} f}$, demands are met. Then \textbf{minimum} demands are met if we allow flows to exceed
-    capacities entering $t$. Then we verify, $\displaystyle{\sum_{c\in C} c \leq \sum_{f\in F} f}$.
+    $\displaystyle{\sum_{c\in C} c = \sum_{f\in F} f}$, demands are met. This also ensures that we at least meet the \textbf{minimum demands}.
 \end{theo}
 
 
