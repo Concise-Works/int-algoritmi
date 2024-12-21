@@ -9,7 +9,7 @@
 \noindent
 \textbf{Growth Rates}: $1 < \log n < n < n \log n < n^2 < n^3 < 2^n < n! < n^n$ (\ref{thm:growth_rates}) | \textbf{(htbl)}:= hash-table\\
 \textbf{$O$(Upper Bound)}: $f(n) < g(n)\implies $lim$_{n\to\infty}\frac{f(n)}{g(n)}=0$ (\ref{def:bigO}) \hspace{5.47em}| \textbf{(conn.)}:= connected\\
-\textbf{$\Omega$(Lower Bound)}: $f(n) > g(n)\implies $lim$_{n\to\infty}0<\frac{f(n)}{g(n)}=$ (\ref{def:bigOmega})\\
+\textbf{$\Omega$(Lower Bound)}: $f(n) > g(n)\implies $lim$_{n\to\infty}0<\frac{f(n)}{g(n)}$ (\ref{def:bigOmega})\\
 \textbf{$\Theta$(Upper \& Lower Bound)}: $f(n) = g(n)\implies 0<\frac{f(n)}{g(n)}<\infty$ (\ref{def:bigTheta})\\
 \noindent\rule{\textwidth}{0.4pt}
 \textbf{Interval Scheduling}: sort by finish time ascending order, choose next compatible job (\ref{thm:eft})\\
@@ -44,7 +44,7 @@ $\textcolor{OliveGreen}{d} = \log_{\textcolor{blue}{b}} \textcolor{red}{a} \impl
 \textbf{DFS}: $O(n+m)$ (\ref{sec:bfs_dfs}). Children before siblings, not longest paths.\\
 \textbf{Heap}: sorting $O(n\log n)$, operations $O(\log n)$ except for extract-min $O(1)$ (\ref{sec:priority}).\\
 \textbf{Dijkstra}:$O((n+m)\log n)$;$O(m \log n)$(conn.);$O(n^2)$(htbl). Min paths from $s$ (no neg.paths) (\ref{sec:dstra}).\\
-\textbf{Prim's}: $O((n+m)\log n)$. $O(n^2)$(htbl). MST, dijkstra like routine, (\ref{theo:prim}).\\
+\textbf{Prim's}: $O(m\log n)$. $O(n^2)$(htbl). MST, dijkstra like routine, (\ref{theo:prim}).\\
 \textbf{Kruskal's}: $O(m \log n)$ or $O(m \log m)$. MST, sort \& pick edges ascending, union-find (\ref{theo:kruskal}).\\
 \textbf{Bellman-Ford}: $O(nm)$. Shortest paths from $s$ via relax rounds on $n$ (no negatives cycles) (\ref{theo:bellman}).\\
 \textbf{Ford-Fulkerson}: $O(mnC)$, $C:=$ largest capacity, finds max flow (\ref{theo:bellman}).\\
@@ -75,6 +75,119 @@ $\textcolor{OliveGreen}{d} = \log_{\textcolor{blue}{b}} \textcolor{red}{a} \impl
 \noindent
 $\log(ba)=\log b+\log a,\log(\frac{b}{a})=\log b-\log a,\log_ba=\frac{\log a}{\log b},2\log a= \log a^2$ (\ref{thm:logrules}).
 
+\newpage 
+
+\noindent
+\textbf{Dynamic Programming}:\\
+
+\noindent
+\textbf{Weighted Int. Sched.} ($O(n\log n)$): sort by finish time, find next compatible job (\ref{sec:WIS})\\
+ \begin{align*}
+     OPT(j) =
+    \begin{cases}
+        0 & \text{if $j=0$}\\
+        max\{\underbracket{v_j+OPT(p(j))}_{\text{build solution}}, \underbracket{OPT(j-1)}_{\text{next solution}}\} & \text{else}
+    \end{cases}
+\end{align*}
+
+\noindent
+\textbf{Subset Sum}($O(nT)$)(\ref{sec:subset}): 
+\begin{align*}
+    OPT(i, T) =
+    \begin{cases}
+        0 & \text{if $T=0$}\\
+        OPT(i-1, T) & \text{if $S_i > T$}\\
+        max\{\underbracket{OPT(i-1, T)}_{\text{next solution}}, \underbracket{S_i+OPT(i-1, T-S_i)}_{\text{build solution}}\} & \text{else}
+    \end{cases}
+\end{align*}
+
+\noindent
+\textbf{Knapsack}($O(nW)$)(\ref{sec:knapsack}):
+\begin{align*}
+    OPT(i, w) =
+    \begin{cases}
+        0 & \text{if $i==0$}\\
+        OPT(i-1, w) & \text{if $w_i > w$}\\
+        max\{\underbracket{OPT(i-1, w)}_{\text{next solution}}, \underbracket{v_i+OPT(i-1, w-w_i)}_{\text{build solution}}\} & \text{else}
+    \end{cases}
+\end{align*}
+
+\noindent
+\textbf{Knapsack Unbounded (unoptimal)}($O(nW^2)$)(\ref{sec:unop_unbounded}):
+\begin{align*}
+    OPT(i, w) =
+    \begin{cases}
+        0 & \text{if $i==0$}\\
+        OPT(i-1, w) & \text{if $w_i > w$}\\
+        {\displaystyle \max_{j = 0, \dots, \infty}}\{\underbracket{OPT(i-1, w)}_{\text{next solution}}, \underbracket{j\cdot v_i+OPT(i-1, w-j\cdot w_i)}_{\text{build solution}}\} & \text{else}
+    \end{cases}
+\end{align*}
+
+\noindent
+\textbf{Knapsack Unbounded (optimal)}($O(nW)$)(\ref{sec:unbounded}):
+\[
+\text{OPT}(i, w) = 
+\begin{cases} 
+    0 & \text{if } i = 0, \\
+    \text{OPT}(i-1, w) & \text{if } w_i > w, \\
+    \max\left(\text{OPT}(i-1, w), v_i + \text{OPT}(i, w - w_i)\right) & \text{otherwise.}
+\end{cases}
+\]
+
+\newpage
+
+\noindent
+(\ref{sec:subset})
+\begin{Func}[Backtracking Subset Sum - \textit{Backtrack()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $i \gets 0$; $t \gets T$; $S \gets \{\}$; \tcp{$S$ is our set of jobs}
+        $Backtrack(OPT, i, t)$\;
+        \Fn{\textit{Backtrack}(OPT, i, t)}{
+            \tcp{Where $OTP.length$ is the number of rows}
+            \While{$i < OPT.length$}{
+                \If{$OPT[i][t] > OPT[i+1][t]$}{
+                    $S \gets S \cup \{S[i]\}$\;
+                    $t \gets t-S[i]$\;
+                }
+                $i \gets i+1$\;
+            }
+            \Return $S$\;
+        }
+    \end{algorithm}
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n)$. At most, iterate through all $n$ jobs, and add them to our set $S$.
+\end{Func}
+(\ref{sec:unbounded})
+\begin{Func}[Traceback Solution for Unbounded Knapsack - \textit{Traceback()}]
+
+    \vspace{-.5em}
+    \begin{algorithm}[H]
+        \SetKwProg{Fn}{Function}{:}{}
+        $i \gets n$ \tcp{Start from the last item}
+        $w \gets W$ \tcp{Start from the maximum weight}
+        $sol \gets \emptyset$ \tcp{Initialize the solution set}
+        
+        \While{$i > 0$ \textbf{and} $w > 0$}{
+            \If{$w \geq w_i$ \textbf{and} $(v_i + M[i][w - w_i] > M[i-1][w])$}{
+                $sol.\textit{add}(i)$ \tcp{Add item $i$ to the solution}
+                $w \gets w - w_i$ \tcp{Reduce the weight}
+            }
+            \Else{
+                $i \gets i - 1$ \tcp{Move to the previous item}
+            }
+        }
+        \Return $sol$\;
+    \end{algorithm}
+    
+    \noindent
+    \rule{\textwidth}{0.4pt}
+    \textbf{Time Complexity:} $O(n + W)$, as we traverse the DP table in reverse order.
+\end{Func}
+\noindent
 
 
 

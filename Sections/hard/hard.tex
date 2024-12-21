@@ -147,9 +147,11 @@ For emphasis and clarity:
 
     \begin{itemize}
         \item \textbf{P=NP, NP$\neq$P} - all P are NP as they are verifiable in polynomial time. Though as of today, no proof exists that all verifiable problems are solvable in polynomial time.
-        \item \textbf{X reducing to Y} - If $X$ is solvable in $O(n^2)$ and $X$ reduces to $Y$, then $Y$ is solvable in polynomial time. However, 
-        this does not guarantee that $Y$ is $O(n^2)$. As $X$ is a sub-routine while $Y$'s outer function could run any number of times. For $Y$ to have $O(n^2)$ implies 
-        $Y$'s main routine runs in $O(1)$.
+
+        \item \textbf{X reducing to Y} - If $X$ reduces to $Y$ and $Y$ is solvable in $O(n^2)$, then $X$ is also solvable in polynomial time. 
+        However, this does not mean that $Y$'s solution alone determines the overall complexity of solving $X$. The reduction itself 
+        may introduce additional overhead, or $Y$ could be invoked multiple times during the solution of $X$.
+
         \item \textbf{Verification} - To verify an example is given and a criteria checked. E.g., is this path at least 10 units long?
         However to verify ``No'' requires the program to provide proof that the solution is not possible. I.e., to verify a ``No'' answer, we must check all possible solutions for which 
         we don't even know how to compute.

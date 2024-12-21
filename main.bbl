@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{cse417dfs2021}
+Dfs, graph modeling.
+\newblock
+  \url{https://courses.cs.washington.edu/courses/cse417/21wi/lecture/06-DFS-model.pdf},
+  2021.
+\newblock Lecture 6.
+
+\bibitem{clrs22-1}
+P.-Y. Chen.
+\newblock Chapter 22.1: Breadth-first search -- clrs solutions.
+\newblock \url{https://walkccc.me/CLRS/Chap22/Problems/22-1/}, 2017--2024.
+\newblock Built by P.-Y. Chen, made with Material for MkDocs. Accessed:
+  2024-06-15.
+
+\bibitem{dukegraph2017}
+Rong Ge and Will~Long (Scribe).
+\newblock Graph algorithms: Types of edges.
+\newblock
+  \url{https://courses.cs.duke.edu/fall17/compsci330/lecture12note.pdf}, 2017.
+\newblock Lecture 12.
+
+\end{thebibliography}

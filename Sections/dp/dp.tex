@@ -310,6 +310,7 @@ to find the jobs that gave us our optimal solution.
 \newpage
 \section{Subset Sum}
 \subsection{Weighted Ceiling}
+\label{sec:subset}
 
 
 \begin{Def}[Problem - Subset Sum (Weighted Ceiling)]
@@ -493,6 +494,7 @@ We reduce again hitting $0$, hence, $P=\{7,2\}$.
 
 \newpage
 \subsection{Knapsack}
+\label{sec:knapsack}
 
 \begin{Def}[Problem - Subset Sum (Knapsack)]
 
@@ -577,6 +579,8 @@ We reduce again hitting $0$, hence, $P=\{7,2\}$.
     \end{Func}
 
 \subsection{Unbounded Knapsack}
+\label{sec:unop_unbounded}
+
 \begin{Def}[Problem - Unbounded Knapsack]
 
     Given a set $S$ of $n$ items, each with a weight $w_i$ and value $v_i$, and a knapsack of capacity $W$, find a subset
@@ -704,6 +708,7 @@ Our backtracking algorithm is almost identical to the previous knapsack problem 
 
 
 \subsection*{Unbounded knapsack (Bottom-Up Approach)}
+\label{sec:unbounded}
 \noindent
 Alternatively we can use a bottom-up approach with a slight modification to our recursive formula. Instead of iterating over $j$, we iterate over $w$, 
 continuously taking $v_j$ until we exceed $w$ or move onto the next item. This is shown by:
