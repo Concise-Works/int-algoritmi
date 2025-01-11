@@ -1445,7 +1445,7 @@ arr = [2,7,1,6,3]
 """
 def unbounded_knapsack(A, W):
     n = len(A)
-    M = [[0] * (W + 1) for _ in range(n+1)]
+    M = [[0] * (W+1) for _ in range(n+1)]
     
     for i in range(1,(n+1)):
         for w in range(1,(W+1)):
@@ -1462,26 +1462,25 @@ Time complexity: O(nW).
 
 def unbounded_knapsack_backtrack(A,M):
     sol = []
-    W = len(M[-1])-1
+    W = len(M[0])-1
+    i = len(M)-1
 
-    i = len(A)-1
-    while i > 0:
-        v = A[i-1][0]
+    while i > 0 and W > 0:
         wi = A[i-1][1]
-        if W >= wi and (v + M[i-1][W] > M[i-1][W]):
+        if  M[i][W] == M[i-1][W]:
+            i -= 1
+        else:
             sol.append(A[i-1])
             W -= wi
-        else:
-            i -= 1
     return sol
 
 #(value, weight)
 arr = [(1,1),(6,2),(18,5),(22,6),(28,7)]
-# U = unbounded_knapsack(arr,11)
-# for u in U:
-#     print(u)
+U = unbounded_knapsack(arr,11)
+for u in U:
+    print(u)
 
-# print(unbounded_knapsack_backtrack(arr,U))
+print(unbounded_knapsack_backtrack(arr,U))
 
 """
 ------------------------Bellman-Ford Shortest Paths------------------------
